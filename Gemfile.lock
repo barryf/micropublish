@@ -3,6 +3,7 @@ GEM
   specs:
     backports (3.6.4)
     daemons (1.1.9)
+    dotenv (1.0.2)
     eventmachine (1.0.5)
     httparty (0.13.3)
       json (~> 1.8)
@@ -41,6 +42,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  dotenv
   httparty
   nokogiri
   shotgun

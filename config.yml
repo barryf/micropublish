@@ -1,5 +1,0 @@
-development:
-  root_url: 'http://localhost:3303'
-  
-production:
-  root_url: 'https://micropublish.herokuapp.com'

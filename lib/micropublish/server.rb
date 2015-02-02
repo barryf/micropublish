@@ -1,18 +1,16 @@
 module Micropublish
   class Server < Sinatra::Base
-    register Sinatra::ConfigFile
   
     configure do 
-      config_file File.join(File.dirname(__FILE__),'../../config.yml')
       set :views, "#{File.dirname(__FILE__)}/../../views"
 
       # use a cookie that lasts for 30 days
-      use Rack::Session::Cookie, secret: "LJyuMbeLdvwJ2F4tAfWRoo7uwenvxn", expire_after: 2592000
+      use Rack::Session::Cookie, secret: ENV['COOKIE_SECRET'], expire_after: 2592000
     end
   
     before do
       if logged_in?
-        @bookmark_url = "#{settings.root_url}/?micropub_endpoint=#{CGI::escape(session[:micropub_endpoint])}"
+        @bookmark_url = "#{request.base_url}/?micropub_endpoint=#{CGI::escape(session[:micropub_endpoint])}"
         @bookmark_url += "&token=#{CGI::escape(session[:token])}" 
       end
     end
@@ -44,7 +42,7 @@ module Micropublish
         client_id: "Micropublish",
         state: session[:state],
         scope: "post",
-        redirect_uri: "#{settings.root_url}/auth/callback"
+        redirect_uri: "#{request.base_url}/auth/callback"
       }
       query = URI.encode_www_form(hash)
       redirect "#{endpoints[:authorization_endpoint]}?#{query}"
@@ -52,7 +50,7 @@ module Micropublish
   
     get '/auth/callback' do
       puts "params=#{params.inspect}"
-      endpoints_and_token = Auth.callback(params[:me], params[:code], session[:state], "#{settings.root_url}/auth/callback")
+      endpoints_and_token = Auth.callback(params[:me], params[:code], session[:state], "#{request.base_url}/auth/callback")
       logout! if endpoints_and_token.nil?
       # login and token grant was successful so store in session
       session.merge!(endpoints_and_token)

@@ -15,7 +15,7 @@ module Micropublish
       entry = {}
       entry['h'] = 'entry'
       entry['category'] = params['category'].split(' ').join(',') unless params['category'].empty?
-      %w(name content in_reply_to repost_of like_of).each do |field|
+      %w(name content bookmark in_reply_to repost_of like_of).each do |field|
         entry[field.gsub('_','-')] = params[field] unless params[field].nil? || params[field].empty?
       end
       puts "entry=#{entry.inspect}"
