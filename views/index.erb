@@ -1,0 +1,6 @@
+<% unless logged_in? %>
+  <form action="/auth" method="get">
+    <input type="url" name="me" value="<%= @me %>">
+    <input type="submit" value="Log in">
+  </form>
+<% end %>

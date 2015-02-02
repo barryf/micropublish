@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<head>
+  <title>Micropublish</title>
+  <style>
+    input, textarea {
+      font-size: 120%;
+    }
+  </style>
+</head>
+<body>
+  
+<h1>Micropublish</h1>
+
+<% if logged_in? %>
+  <form action="/logout" method="post"><input type="submit" value="Log out"></form>
+  <br>
+  <a href="/new">New Post</a> |
+  Bookmark: <a href="<%= @bookmark_url %>">Micropublish</a>
+  <br><br>
+<% end %>
+
+<%= yield %>
+
+</body>
+</html>
