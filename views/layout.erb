@@ -1,25 +1,45 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Micropublish</title>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
   <style>
-    input, textarea {
-      font-size: 120%;
+    body {
+      padding-top: 1em;
+    }
+    @media screen and (max-width: 700px) {
+      .post-type-label { display: none; }
     }
   </style>
 </head>
 <body>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <%= yield %>
+      </div>
+    </div>
+  </div>
   
-<h1>Micropublish</h1>
-
-<% if logged_in? %>
-  <form action="/logout" method="post"><input type="submit" value="Log out"></form>
-  <br>
-  <a href="/new">New Post</a> |
-  Bookmark: <a href="<%= @bookmark_url %>">Micropublish</a>
-  <br><br>
-<% end %>
-
-<%= yield %>
+  <hr>
+  
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <% if logged_in? %>
+          <form action="/logout" method="post" class="form-inline" style="float: right;">
+            <button class="btn btn-default btn-xs" type="submit">Log out</button>
+          </form>
+        <% end %>
+        <a href="https://github.com/barryf/micropublish">Micropublish</a>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>

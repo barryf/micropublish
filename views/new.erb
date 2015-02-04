@@ -1,11 +1,65 @@
-<form action="/create" method="post">
-  <p><input type="text" name="name" placeholder="name" size="50"></p>
-  <p><input type="url" name="bookmark" placeholder="bookmark" size="50"></p>
-  <p><input type="url" name="like_of" placeholder="like-of" size="50"></p>
-  <p><input type="url" name="repost_of" placeholder="repost-of" size="50"></p>
-  <p><input type="url" name="in_reply_to" placeholder="in-reply-to" size="50"></p>
-  <p><input type="text" name="category" placeholder="category1 category2" size="50"></p>
-  <p><textarea name="content" placeholder="content" cols="50" rows="10"></textarea></p>
+<ul class="nav nav-pills">
+  <% @post_types.each_with_index do |post_type, i| %>
+    <li role="presentation" class="<% if @post_type == post_type %>active<% end %>">
+      <a href="/new/<%= post_type %>" title="<%= post_type.capitalize %>">
+        <span class="fa fa-<%= @post_type_icons[i] %>"></span>
+        <span class="post-type-label"><%= post_type.capitalize %></span>
+      </a>
+    </li>
+  <% end %>
+</ul>
 
-  <p><input type="submit" value="Post"></p>
+<br>
+<form action="/create" method="post">
+
+  <% if @fields.include?(:bookmark) %>
+    <div class="form-group">
+      <label for="bookmark">Bookmark</label>
+      <input type="url" class="form-control" name="bookmark" id="bookmark" placeholder="http://" value="<%= params['bookmark'] || '' %>">
+    </div>
+  <% end %>
+  
+  <% if @fields.include?(:in_reply_to) %>
+    <div class="form-group">
+      <label for="in_reply_to">In Reply To</label>
+      <input type="url" class="form-control" name="in_reply_to" id="in_reply_to" placeholder="http://">
+    </div>
+  <% end %>
+  
+  <% if @fields.include?(:like_of) %>
+    <div class="form-group">
+      <label for="Like Of">Like Of</label>
+      <input type="url" class="form-control" name="like_of" id="like_of" placeholder="http://">
+    </div>
+  <% end %>
+  
+  <% if @fields.include?(:repost_of) %>
+    <div class="form-group">
+      <label for="repost_of">Repost Of</label>
+      <input type="url" class="form-control" name="repost_of" id="repost_of" placeholder="http://">
+    </div>
+  <% end %>
+  
+  <% if @fields.include?(:name) %>
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" name="name">
+    </div>
+  <% end %>
+  
+  <% if @fields.include?(:content) %>
+    <div class="form-group">
+      <label for="content">Content</label>
+      <textarea class="form-control" rows="8" id="content" name="content"></textarea>
+    </div>
+  <% end %>
+  
+  <% if @fields.include?(:category) %>
+    <div class="form-group">
+      <label for="category">Tags</label>
+      <input type="text" class="form-control" name="category" id="category" placeholder="tag1 tag2 tag3">
+    </div>
+  <% end %>
+
+  <button type="submit" class="btn btn-default">Post</button>
 </form>

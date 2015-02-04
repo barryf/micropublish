@@ -1,7 +1,7 @@
 module Micropublish
   class Server < Sinatra::Base
   
-    configure do 
+    configure do
       set :views, "#{File.dirname(__FILE__)}/../../views"
 
       # use a cookie that lasts for 30 days
@@ -61,8 +61,12 @@ module Micropublish
       logout!
     end
   
-    get '/new' do
+    get %r{^/new/?(note|article|bookmark|reply|repost|like)?/?$} do |post_type|
       require_session
+      @post_type = post_type || 'note'
+      @fields = post_type_fields(post_type)
+      @post_types = %w(note article bookmark reply repost like)
+      @post_type_icons = %w(comment file-text bookmark reply retweet heart)
       erb :new
     end
   
@@ -87,6 +91,23 @@ module Micropublish
   
     def logged_in?
       session.key?(:micropub_endpoint) && session.key?(:token)
+    end
+    
+    def post_type_fields(post_type)
+      case post_type
+      when 'article'
+        %i(name content category)
+      when 'bookmark'
+        %i(bookmark content category)
+      when 'reply'
+        %i(in_reply_to content category)
+      when 'repost'
+        %i(repost_of category)
+      when 'like'
+        %i(like_of category)
+      else
+        %i(content category)
+      end
     end
 
   end
