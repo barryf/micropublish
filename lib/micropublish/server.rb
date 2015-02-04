@@ -22,6 +22,7 @@ module Micropublish
     end
 
     get '/' do
+      redirect :new if logged_in?
       # allow for bookmarked login
       if params.key?('micropub_endpoint') && params.key?('token')
         session[:micropub_endpoint] = params[:micropub_endpoint]
