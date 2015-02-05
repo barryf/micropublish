@@ -69,7 +69,7 @@
 
   <% if post_types[@post_type][:fields].include?(:syndications) && !syndicate_to.nil? %>
     <div class="form-group">
-      <label>Syndications:</label> &nbsp;
+      <label>Syndications</label><br>
       <% syndicate_to.each do |syndication| %>
         <label class="checkbox-inline">
           <input type="checkbox" name="syndicate_to" value="<%= syndication %>">
