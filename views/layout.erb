@@ -8,11 +8,11 @@
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
   <style>
-    body {
-      padding-top: 1em;
-    }
+    body { padding-top: 1em; }
+    form.logout { float: right; }
     @media screen and (max-width: 700px) {
       .post-type-label { display: none; }
+      form.logout { float: none; }
     }
   </style>
 </head>
@@ -32,13 +32,17 @@
     <div class="row">
       <div class="col-md-12">
         <% if logged_in? %>
-          <form action="/logout" method="post" class="form-inline" style="float: right;">
-            <button class="btn btn-default btn-xs" type="submit">Log out</button>
+          <form action="/logout" method="post" class="form-inline logout">
+            <p>
+              <code><%= session[:micropub_endpoint] %></code>&nbsp;
+              <button class="btn btn-default btn-xs" type="submit">Log out</button>
+            </p>
           </form>
         <% end %>
-        <a href="https://github.com/barryf/micropublish">Micropublish</a>
-        &middot;
-        <a href="https://barryfrost.com">Barry Frost</a>
+        <p>
+          <a href="https://github.com/barryf/micropublish">Micropublish</a> &mdash;
+          <a href="https://barryfrost.com">Barry Frost</a>
+        </p>
       </div>
     </div>
   </div>
