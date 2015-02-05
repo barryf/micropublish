@@ -6,12 +6,12 @@ Currently running at https://micropublish.herokuapp.com
 
 ## To do
 
-- Group/split fields based on post types.
+- ~~Group/split fields based on post types.~~
 - Fields:
     - syndications (use q=syndicate-to ?)
     - slug
     - photo
-- Styling. Bootstrap probably.
+- ~~Styling. Bootstrap probably.~~
 - Getting started information.
 
 ## Licence
