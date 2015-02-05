@@ -5,14 +5,8 @@ module Micropublish
       set :views, "#{File.dirname(__FILE__)}/../../views"
 
       # use a cookie that lasts for 30 days
-      use Rack::Session::Cookie, secret: ENV['COOKIE_SECRET'], expire_after: 2592000
-    end
-
-    before do
-      if logged_in?
-        @bookmark_url = "#{request.base_url}/?micropub_endpoint=#{CGI::escape(session[:micropub_endpoint])}"
-        @bookmark_url += "&token=#{CGI::escape(session[:token])}"
-      end
+      secret = ENV['COOKIE_SECRET'] || Random.new_seed.to_s
+      use Rack::Session::Cookie, secret: secret, expire_after: 2592000
     end
 
     helpers do
@@ -23,12 +17,6 @@ module Micropublish
 
     get '/' do
       redirect :new if logged_in?
-      # allow for bookmarked login
-      if params.key?('micropub_endpoint') && params.key?('token')
-        session[:micropub_endpoint] = params[:micropub_endpoint]
-        session[:token] = params[:token]
-        redirect '/'
-      end
       erb :index
     end
 
