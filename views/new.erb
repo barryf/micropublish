@@ -15,49 +15,55 @@
   <% if post_types[@post_type][:fields].include?(:bookmark) %>
     <div class="form-group">
       <label for="bookmark">Bookmark</label>
-      <input type="text" class="form-control" name="bookmark" id="bookmark" placeholder="http://" value="<%= params['bookmark'] || '' %>">
+      <input type="url" class="form-control" name="bookmark" id="bookmark"
+        placeholder="http://" value="<%= params['bookmark'] %>">
     </div>
   <% end %>
 
   <% if post_types[@post_type][:fields].include?(:in_reply_to) %>
     <div class="form-group">
       <label for="in_reply_to">In Reply To</label>
-      <input type="text" class="form-control" name="in_reply_to" id="in_reply_to" placeholder="http://">
+      <input type="url" class="form-control" name="in_reply_to" id="in_reply_to"
+        placeholder="http://" value="<%= params['in_reply_to'] %>">
     </div>
   <% end %>
 
   <% if post_types[@post_type][:fields].include?(:like_of) %>
     <div class="form-group">
-      <label for="Like Of">Like Of</label>
-      <input type="text" class="form-control" name="like_of" id="like_of" placeholder="http://">
+      <label for="like_of">Like Of</label>
+      <input type="url" class="form-control" name="like_of" id="like_of"
+        placeholder="http://" value="<%= params['like_of'] %>">
     </div>
   <% end %>
 
   <% if post_types[@post_type][:fields].include?(:repost_of) %>
     <div class="form-group">
       <label for="repost_of">Repost Of</label>
-      <input type="text" class="form-control" name="repost_of" id="repost_of" placeholder="http://">
+      <input type="url" class="form-control" name="repost_of" id="repost_of"
+        placeholder="http://" value="<%= params['repost_of'] %>">
     </div>
   <% end %>
 
   <% if post_types[@post_type][:fields].include?(:name) %>
     <div class="form-group">
       <label for="name">Name</label>
-      <input type="text" class="form-control" id="name" name="name">
+      <input type="text" class="form-control" id="name" name="name"
+        value="<%= params['name'] %>">
     </div>
   <% end %>
 
   <% if post_types[@post_type][:fields].include?(:content) %>
     <div class="form-group">
       <label for="content">Content</label>
-      <textarea class="form-control" rows="8" id="content" name="content"></textarea>
+      <textarea class="form-control" rows="8" id="content" name="content"><%= params['content'] %></textarea>
     </div>
   <% end %>
 
   <% if post_types[@post_type][:fields].include?(:category) %>
     <div class="form-group">
       <label for="category">Tags</label>
-      <input type="text" class="form-control" name="category" id="category" placeholder="tag1 tag2 tag3">
+      <input type="text" class="form-control" name="category" id="category"
+        placeholder="tag1 tag2 tag3" value="<%= params['category'] %>">
     </div>
   <% end %>
 
