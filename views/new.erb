@@ -67,5 +67,17 @@
     </div>
   <% end %>
 
+  <% if post_types[@post_type][:fields].include?(:syndications) && !syndicate_to.nil? %>
+    <div class="form-group">
+      <label>Syndications:</label> &nbsp;
+      <% syndicate_to.each do |syndication| %>
+        <label class="checkbox-inline">
+          <input type="checkbox" name="syndicate_to" value="<%= syndication %>">
+          <%= syndication_label(syndication) %>
+        </label>
+      <% end %>
+    </div>
+  <% end %>
+
   <button type="submit" class="btn btn-default">Create <%= post_types[@post_type][:label] %></button>
 </form>

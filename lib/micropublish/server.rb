@@ -13,6 +13,9 @@ module Micropublish
       def h(text)
         Rack::Utils.escape_html(text)
       end
+      def syndication_label(syndication)
+        Micropub.syndication_label(syndication)
+      end
     end
 
     get '/' do
@@ -81,13 +84,17 @@ module Micropublish
 
     def post_types
       {
-        note:     { label: 'Note',     icon: 'comment',   fields: %i(content category) },
-        article:  { label: 'Article',  icon: 'file-text', fields: %i(name content category) },
-        bookmark: { label: 'Bookmark', icon: 'bookmark',  fields: %i(bookmark content category) },
-        reply:    { label: 'Reply',    icon: 'reply',     fields: %i(in_reply_to content category) },
-        repost:   { label: 'Repost',   icon: 'retweet',   fields: %i(repost_of category) },
-        like:     { label: 'Like',     icon: 'heart',     fields: %i(like_of category) }
+        note:     { label: 'Note',     icon: 'comment',   fields: %i(content category syndications) },
+        article:  { label: 'Article',  icon: 'file-text', fields: %i(name content category syndications) },
+        bookmark: { label: 'Bookmark', icon: 'bookmark',  fields: %i(bookmark name content category syndications) },
+        reply:    { label: 'Reply',    icon: 'reply',     fields: %i(in_reply_to content category syndications) },
+        repost:   { label: 'Repost',   icon: 'retweet',   fields: %i(repost_of category syndications) },
+        like:     { label: 'Like',     icon: 'heart',     fields: %i(like_of category syndications) }
       }
+    end
+
+    def syndicate_to
+      session[:syndicate_to] ||= Micropub.syndicate_to(session[:micropub_endpoint], session[:token])
     end
 
   end
