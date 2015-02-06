@@ -43,7 +43,8 @@ module Micropublish
     end
 
     def text_fields
-      %w(name content bookmark in_reply_to repost_of like_of syndicate_to)
+      %w(name content summary bookmark in_reply_to repost_of like_of
+         syndicate_to)
     end
   end
 end

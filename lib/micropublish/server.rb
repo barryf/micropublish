@@ -2,6 +2,7 @@ module Micropublish
   class Server < Sinatra::Base
     configure do
       set :views, "#{File.dirname(__FILE__)}/../../views"
+      set :public_folder, "#{File.dirname(__FILE__)}/../../public"
 
       # use a cookie that lasts for 30 days
       secret = ENV['COOKIE_SECRET'] || Random.new_seed.to_s
@@ -57,6 +58,7 @@ module Micropublish
 
     get %r{^/new/?(note|article|bookmark|reply|repost|like)?/?$} do |post_type|
       require_session
+      params['content'] ||= '@username ' if post_type == 'reply'
       @post_type = (post_type || 'note').to_sym
       erb :new
     end
@@ -87,18 +89,15 @@ module Micropublish
 
     def post_types
       {
-        note:     { label: 'Note',     icon: 'comment',
-                    fields: %i(content category syndications) },
-        article:  { label: 'Article',  icon: 'file-text',
-                    fields: %i(name content category syndications) },
+        note:     { label: 'Note', icon: 'comment', fields: %i(content) },
+        article:  { label: 'Article', icon: 'file-text',
+                    fields: %i(name content) },
         bookmark: { label: 'Bookmark', icon: 'bookmark',
-                    fields: %i(bookmark name content category syndications) },
-        reply:    { label: 'Reply',    icon: 'reply',
-                    fields: %i(in_reply_to content category syndications) },
-        repost:   { label: 'Repost',   icon: 'retweet',
-                    fields: %i(repost_of category syndications) },
-        like:     { label: 'Like',     icon: 'heart',
-                    fields: %i(like_of category syndications) }
+                    fields: %i(bookmark name content) },
+        reply:    { label: 'Reply', icon: 'reply',
+                    fields: %i(in_reply_to content) },
+        repost:   { label: 'Repost', icon: 'retweet', fields: %i(repost_of) },
+        like:     { label: 'Like', icon: 'heart', fields: %i(like_of) }
       }
     end
 

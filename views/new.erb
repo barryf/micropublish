@@ -55,19 +55,28 @@
   <% if post_types[@post_type][:fields].include?(:content) %>
     <div class="form-group">
       <label for="content">Content</label>
-      <textarea class="form-control" rows="8" id="content" name="content"><%= params['content'] %></textarea>
+      <textarea class="form-control" rows="6" id="content" name="content"><%= params['content'] %></textarea>
     </div>
   <% end %>
 
-  <% if post_types[@post_type][:fields].include?(:category) %>
+  <div class="form-group">
+    <label for="category">Tags</label>
+    <input type="text" class="form-control" name="category" id="category"
+      placeholder="tag1 tag2 tag3" value="<%= params['category'] %>">
+  </div>
+
+  <% if post_types[@post_type][:fields].include?(:content) %>
     <div class="form-group">
-      <label for="category">Tags</label>
-      <input type="text" class="form-control" name="category" id="category"
-        placeholder="tag1 tag2 tag3" value="<%= params['category'] %>">
+      <label>
+        Summary
+        <a href="#" id="refresh_summary_button" class="btn btn-default btn-xs">Refresh</a>
+        <span id="summary_count"></span>
+      </label>
+      <textarea class="form-control" rows="2" id="summary" name="summary"><%= params['content'] %></textarea>
     </div>
   <% end %>
 
-  <% if post_types[@post_type][:fields].include?(:syndications) && !syndicate_to.nil? %>
+  <% unless syndicate_to.nil? %>
     <div class="form-group">
       <label>Syndications</label><br>
       <% syndicate_to.each do |syndication| %>
@@ -81,3 +90,24 @@
 
   <button type="submit" class="btn btn-default">Create <%= post_types[@post_type][:label] %></button>
 </form>
+
+<% if post_types[@post_type][:fields].include?(:content) %>
+  <script>
+    function update_summary_count() {
+      var summary = document.getElementById('summary');
+      var summary_count = document.getElementById('summary_count');
+      summary_count.innerHTML = twttr.txt.getTweetLength(summary.value);
+    }
+    function refresh_summary() {
+      var summary = document.getElementById('summary');
+      var content = document.getElementById('content');
+      var category = document.getElementById('category');
+      var tags_text = category.value.length ? " #" + category.value.split(' ').join(' #') : "";
+      summary.value = content.value + tags_text;
+      update_summary_count();
+      return false
+    }
+    document.getElementById('summary').onkeyup = update_summary_count;
+    document.getElementById('refresh_summary_button').onclick = refresh_summary;
+  </script>
+<% end %>
