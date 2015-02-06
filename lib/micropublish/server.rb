@@ -1,18 +1,18 @@
 module Micropublish
   class Server < Sinatra::Base
-
     configure do
       set :views, "#{File.dirname(__FILE__)}/../../views"
 
       # use a cookie that lasts for 30 days
       secret = ENV['COOKIE_SECRET'] || Random.new_seed.to_s
-      use Rack::Session::Cookie, secret: secret, expire_after: 2592000
+      use Rack::Session::Cookie, secret: secret, expire_after: 2_592_000
     end
 
     helpers do
       def h(text)
         Rack::Utils.escape_html(text)
       end
+
       def syndication_label(syndication)
         Micropub.syndication_label(syndication)
       end
@@ -31,9 +31,9 @@ module Micropublish
       logout! if endpoints.nil?
       hash = {
         me: params[:me],
-        client_id: "Micropublish",
+        client_id: 'Micropublish',
         state: session[:state],
-        scope: "post",
+        scope: 'post',
         redirect_uri: "#{request.base_url}/auth/callback"
       }
       query = URI.encode_www_form(hash)
@@ -42,7 +42,9 @@ module Micropublish
 
     get '/auth/callback' do
       puts "params=#{params.inspect}"
-      endpoints_and_token = Auth.callback(params[:me], params[:code], session[:state], "#{request.base_url}/auth/callback")
+      endpoints_and_token = Auth.callback(params[:me], params[:code],
+                                          session[:state],
+                                          "#{request.base_url}/auth/callback")
       logout! if endpoints_and_token.nil?
       # login and token grant was successful so store in session
       session.merge!(endpoints_and_token)
@@ -61,7 +63,8 @@ module Micropublish
 
     post '/create' do
       require_session
-      post_url = Micropub.post(session[:micropub_endpoint], params, session[:token])
+      post_url = Micropub.post(session[:micropub_endpoint], params,
+                               session[:token])
       if post_url.nil?
         redirect :new
       else
@@ -84,18 +87,24 @@ module Micropublish
 
     def post_types
       {
-        note:     { label: 'Note',     icon: 'comment',   fields: %i(content category syndications) },
-        article:  { label: 'Article',  icon: 'file-text', fields: %i(name content category syndications) },
-        bookmark: { label: 'Bookmark', icon: 'bookmark',  fields: %i(bookmark name content category syndications) },
-        reply:    { label: 'Reply',    icon: 'reply',     fields: %i(in_reply_to content category syndications) },
-        repost:   { label: 'Repost',   icon: 'retweet',   fields: %i(repost_of category syndications) },
-        like:     { label: 'Like',     icon: 'heart',     fields: %i(like_of category syndications) }
+        note:     { label: 'Note',     icon: 'comment',
+                    fields: %i(content category syndications) },
+        article:  { label: 'Article',  icon: 'file-text',
+                    fields: %i(name content category syndications) },
+        bookmark: { label: 'Bookmark', icon: 'bookmark',
+                    fields: %i(bookmark name content category syndications) },
+        reply:    { label: 'Reply',    icon: 'reply',
+                    fields: %i(in_reply_to content category syndications) },
+        repost:   { label: 'Repost',   icon: 'retweet',
+                    fields: %i(repost_of category syndications) },
+        like:     { label: 'Like',     icon: 'heart',
+                    fields: %i(like_of category syndications) }
       }
     end
 
     def syndicate_to
-      session[:syndicate_to] ||= Micropub.syndicate_to(session[:micropub_endpoint], session[:token])
+      session[:syndicate_to] ||= Micropub.syndicate_to(
+        session[:micropub_endpoint], session[:token])
     end
-
   end
 end
