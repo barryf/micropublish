@@ -16,6 +16,9 @@ module Micropublish
       unless params['category'].empty?
         entry['category'] = params['category'].split(' ').join(',')
       end
+      unless params['syndicate_to'].empty?
+        entry['syndicate-to'] = params['syndicate_to'].split(',')
+      end
       text_fields.each do |field|
         unless params[field].nil? || params[field].empty?
           entry[field.gsub('_', '-')] = params[field]
@@ -43,8 +46,7 @@ module Micropublish
     end
 
     def text_fields
-      %w(name content summary bookmark in_reply_to repost_of like_of
-         syndicate_to)
+      %w(name content summary bookmark in_reply_to repost_of like_of)
     end
   end
 end
