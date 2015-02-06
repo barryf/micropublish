@@ -8,7 +8,7 @@ Currently running at https://micropublish.herokuapp.com
 
 - ~~Group/split fields based on post types.~~
 - Fields:
-    - syndications (use q=syndicate-to ?)
+    - ~~syndications (use q=syndicate-to ?)~~
     - slug
     - photo
 - ~~Styling. Bootstrap probably.~~
