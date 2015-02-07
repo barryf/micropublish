@@ -48,5 +48,13 @@ module Micropublish
     def text_fields
       %w(name content summary bookmark in_reply_to repost_of like_of)
     end
+
+    def reply_username(url)
+      if url.start_with?('https://twitter.com') ||
+          url.start_with?('https://mobile.twitter.com')
+        url.split('/')[3]
+      end
+    end
+
   end
 end
