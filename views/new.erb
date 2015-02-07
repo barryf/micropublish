@@ -1,4 +1,4 @@
-<ul class="nav nav-pills">
+<ul class="nav nav-tabs">
   <% post_types.keys.each do |post_type| %>
     <li role="presentation" class="<% if @post_type == post_type %>active<% end %>">
       <a href="/new/<%= post_type.to_s %>" title="<%= post_types[post_type][:label] %>">
@@ -16,7 +16,7 @@
     <div class="form-group">
       <label for="bookmark">Bookmark</label>
       <input type="url" class="form-control" name="bookmark" id="bookmark"
-        placeholder="http://" value="<%= params['bookmark'] %>">
+        placeholder="http://" value="<%= h params['bookmark'] %>">
     </div>
   <% end %>
 
@@ -24,7 +24,7 @@
     <div class="form-group">
       <label for="in_reply_to">In Reply To</label>
       <input type="url" class="form-control" name="in_reply_to" id="in_reply_to"
-        placeholder="http://" value="<%= params['in_reply_to'] %>">
+        placeholder="http://" value="<%= h params['in_reply_to'] %>">
     </div>
   <% end %>
 
@@ -32,7 +32,7 @@
     <div class="form-group">
       <label for="like_of">Like Of</label>
       <input type="url" class="form-control" name="like_of" id="like_of"
-        placeholder="http://" value="<%= params['like_of'] %>">
+        placeholder="http://" value="<%= h params['like_of'] %>">
     </div>
   <% end %>
 
@@ -40,7 +40,7 @@
     <div class="form-group">
       <label for="repost_of">Repost Of</label>
       <input type="url" class="form-control" name="repost_of" id="repost_of"
-        placeholder="http://" value="<%= params['repost_of'] %>">
+        placeholder="http://" value="<%= h params['repost_of'] %>">
     </div>
   <% end %>
 
@@ -48,21 +48,21 @@
     <div class="form-group">
       <label for="name">Name</label>
       <input type="text" class="form-control" id="name" name="name"
-        value="<%= params['name'] %>">
+        value="<%= h params['name'] %>">
     </div>
   <% end %>
 
   <% if post_types[@post_type][:fields].include?(:content) %>
     <div class="form-group">
       <label for="content">Content</label>
-      <textarea class="form-control" rows="6" id="content" name="content"><%= params['content'] %></textarea>
+      <textarea class="form-control" rows="6" id="content" name="content"><%= h params['content'] %></textarea>
     </div>
   <% end %>
 
   <div class="form-group">
     <label for="category">Tags</label>
     <input type="text" class="form-control" name="category" id="category"
-      placeholder="tag1 tag2 tag3" value="<%= params['category'] %>">
+      placeholder="tag1 tag2 tag3" value="<%= h params['category'] %>">
   </div>
 
   <% if post_types[@post_type][:fields].include?(:content) %>
@@ -70,9 +70,11 @@
       <label>
         Summary
         <a href="#" id="refresh_summary_button" class="btn btn-default btn-xs">Refresh</a>
-        <span id="summary_count"></span>
+        &nbsp;
+        <span class="fa fa-twitter"></span>
+        <span id="summary_count">-</span>
       </label>
-      <textarea class="form-control" rows="2" id="summary" name="summary"><%= params['content'] %></textarea>
+      <textarea class="form-control" rows="2" id="summary" name="summary"><%= h params['content'] %></textarea>
     </div>
   <% end %>
 
