@@ -58,7 +58,7 @@ module Micropublish
 
     get %r{^/new/?(note|article|bookmark|reply|repost|like)?/?$} do |post_type|
       require_session
-      if post_type == 'reply'
+      if post_type == 'reply' && params.key?('in-reply-to')
         reply_username = Micropub.reply_username(params['in_reply_to'])
         params['content'] ||= "@#{reply_username} " unless reply_username.nil?
       end
