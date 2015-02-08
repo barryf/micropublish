@@ -16,7 +16,7 @@ module Micropublish
       unless params['category'].empty?
         entry['category'] = params['category'].split(' ').join(',')
       end
-      unless params['syndicate_to'].empty?
+      unless !params.key?('syndicate-to') || params['syndicate_to'].empty?
         entry['syndicate-to'] = params['syndicate_to'].split(',')
       end
       text_fields.each do |field|
