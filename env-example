@@ -1,0 +1,3 @@
+# change to your values and rename this to .env for local development
+
+COOKIE_SECRET=MY_RANDOM_STRING
