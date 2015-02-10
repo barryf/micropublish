@@ -55,6 +55,20 @@ module Micropublish
         url.split('/')[3]
       end
     end
+    
+    def post_types
+      {
+        note:     { label: 'Note', icon: 'comment', fields: %i(content) },
+        article:  { label: 'Article', icon: 'file-text',
+                    fields: %i(name content) },
+        bookmark: { label: 'Bookmark', icon: 'bookmark',
+                    fields: %i(bookmark name content) },
+        reply:    { label: 'Reply', icon: 'reply',
+                    fields: %i(in_reply_to content) },
+        repost:   { label: 'Repost', icon: 'retweet', fields: %i(repost_of) },
+        like:     { label: 'Like', icon: 'heart', fields: %i(like_of) }
+      }
+    end
 
   end
 end
