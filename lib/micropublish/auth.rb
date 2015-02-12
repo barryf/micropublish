@@ -38,23 +38,23 @@ module Micropublish
       if response.code == 200
         endpoints = {}
 
-        # TODO: check http header for endpoints
-        #
+        # check http header for endpoints
+        endpoints[:micropub_endpoint] = micropub_endpoint_from_header(response.headers['Link'])
 
         # check html head for endpoints
         doc = Nokogiri::HTML(response.body)
         doc.css('link').each do |link|
           if link[:rel].downcase == 'micropub' && !link[:href].empty?
-            endpoints[:micropub_endpoint] = link[:href]
+            endpoints[:micropub_endpoint] ||= link[:href]
           elsif link[:rel].downcase == 'token_endpoint' && !link[:href].empty?
-            endpoints[:token_endpoint] = link[:href]
+            endpoints[:token_endpoint] ||= link[:href]
           elsif link[:rel].downcase == 'authorization_endpoint' &&
                 !link[:href].empty?
-            endpoints[:authorization_endpoint] = link[:href]
+            endpoints[:authorization_endpoint] ||= link[:href]
           end
         end
-        %w(micropub_endpoint token_endpoint authorization_endpoint).each do |e|
-          unless endpoints.key?(e.to_sym)
+        %i(micropub_endpoint token_endpoint authorization_endpoint).each do |endpoint|
+          unless endpoints.key?(endpoint)
             puts "Could not find #{e} at #{me}."
             return
           end
@@ -118,5 +118,16 @@ module Micropublish
       rescue URI::InvalidURIError
       end
     end
+    
+    # adapted from 
+    # https://github.com/indieweb/mention-client-ruby/blob/master/lib/webmention/client.rb#L143
+    def micropub_endpoint_from_header(link)
+      if matches = link.match(%r{<(https?://[^>]+)>; rel="micropub"})
+        matches[1]
+      elsif matches = link.match(%r{rel="micropub"; <(https?://[^>]+)>})
+        matches[1]
+      end
+    end
+
   end
 end
