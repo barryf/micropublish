@@ -77,6 +77,10 @@ module Micropublish
         redirect post_url
       end
     end
+    
+    get '/about' do
+      erb :about
+    end
 
     def require_session
       redirect '/' unless logged_in?

@@ -1,0 +1,38 @@
+<p class="lead">This is <strong>Micropublish</strong>, a simple client that you can use to publish content to your 
+<a href="http://indiewebcamp.com/micropub">Micropub</a>-enabled site.</p>
+
+<figure>
+  <a href="https://barryf.s3-eu-west-1.amazonaws.com/micropublish.png">
+    <img src="https://barryf.s3-eu-west-1.amazonaws.com/micropublish.png" alt="Micropublish screenshot" style="max-height: 400px;">
+  </a>
+</figure>
+
+<hr>
+<h4 id="features">Features</h4>
+<ul>
+  <li>Supports <strong>Note</strong>, <strong>Article</strong>, <strong>Bookmark</strong>, <strong>Reply</strong>, 
+    <strong>Repost</strong> and <strong>Like</strong> post types.</li>
+  <li>Includes syndication checkboxes based on <code>q=syndicate-to</code>
+    <a href="http://indiewebcamp.com/Micropub#Discovering_Supported_Syndication_Targets">discovery</a>.</li>
+  <li>Summary field for use in syndication with a Twitter-compatible character counter (adjusting for t.co URLs).</li>
+  <li>Pass in a tweet URL in a reply and the @username is used to prepopulate the content field.</li>
+  <li>Mobile-friendly responsive layout.</li>
+</ul>
+
+<hr>
+<h4 id="bookmarklets">Bookmarklets</h4>
+<p>Drag these links to your bookmarks bar for shortcuts to the following actions:</p>
+<ul>
+  <li><a href="javascript:window.location='https://micropublish.herokuapp.com/new/reply?in_reply_to='+encodeURIComponent(location.href);">↩ Reply</a></li>
+  <li><a href="javascript:window.location='https://micropublish.herokuapp.com/new/repost?repost_of='+encodeURIComponent(location.href);">♺ Repost</a></li>
+  <li><a href="javascript:window.location='https://micropublish.herokuapp.com/new/like?like_of='+encodeURIComponent(location.href);">❤ Like</a></li>
+  <li><a href="javascript:window.location='https://micropublish.herokuapp.com/new/bookmark?bookmark='+encodeURIComponent(location.href)+'&name='+encodeURIComponent(document.title);">✂ Bookmark</a></li>
+</ul>
+
+<hr>
+<h4 id="author">Author</h4>
+<p>Micropublish was created by <a href="https://barryfrost.com" rel="author">Barry Frost</a> based on the fine work of the
+  <a href="http://indiewebcamp.com">IndieWebCamp</a> community.</p>
+<p>You can browse the full <a href="https://github.com/barryf/micropublish">source code on GitHub</a>. Please fork and send a 
+  pull request if you have any improvements to make. I recommend <a href="http://heroku.com">Heroku</a> if you want to run it
+  yourself.</p>
