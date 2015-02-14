@@ -10,6 +10,8 @@ module Micropublish
       # use a cookie that lasts for 30 days
       secret = ENV['COOKIE_SECRET'] || Random.new_seed.to_s
       use Rack::Session::Cookie, secret: secret, expire_after: 2_592_000
+      
+      use Rack::Flash
     end
 
     helpers do
@@ -28,13 +30,13 @@ module Micropublish
     end
 
     get '/auth' do
-      halt 400 unless params.key?('me')
+      logout!("Please enter your site's URL.") unless params.key?('me') && !params['me'].empty?
       # prepend http:// if missing
       me = params['me']
       me << "http://" unless params[:me].start_with?('http://') || params[:me].start_with?('https://')
       # find endpoints for 'me'
       endpoints = Auth.find_endpoints(me)
-      logout! if endpoints.nil?
+      logout!("No endpoints were found at #{me}. Please check your site is Micropub-compliant.") if endpoints.nil?
       # define random state string
       session[:state] = Auth.generate_state
       hash = {
@@ -54,7 +56,7 @@ module Micropublish
                                           session[:state],
                                           "#{request.base_url}/auth/callback",
                                           @client_id)
-      logout! if endpoints_and_token.nil?
+      logout!("No endpoints were found at #{me}. Please check your site is Micropub-compliant.") if endpoints_and_token.nil?
       # login and token grant was successful so store in session
       session.merge!(endpoints_and_token)
       redirect :new
@@ -94,8 +96,9 @@ module Micropublish
       redirect '/' unless logged_in?
     end
 
-    def logout!
+    def logout!(message=nil)
       session.clear
+      flash[:notice] = message unless message.nil?
       redirect '/'
     end
 

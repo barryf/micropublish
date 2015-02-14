@@ -7,6 +7,7 @@ gem 'httparty'
 gem 'nokogiri'
 gem 'thin'
 gem 'rack-ssl'
+gem 'rack-flash3', require: 'rack-flash'
 
 group :development do
   gem 'shotgun'

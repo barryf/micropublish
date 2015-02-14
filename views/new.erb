@@ -9,6 +9,12 @@
   <% end %>
 </ul>
 
+<% if flash['notice'] %>
+  <div class="alert alert-danger" role="alert">
+    <%= flash[:notice] %>
+  </div>
+<% end %>
+
 <br>
 <form action="/create" method="post">
 

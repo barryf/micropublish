@@ -1,6 +1,12 @@
 <p class="lead">Log in with your <a href="http://indiewebcamp.com/micropub">Micropub</a>-enabled
   URL to post content to your site.</p>
 
+<% if flash['notice'] %>
+  <div class="alert alert-danger" role="alert">
+    <%= flash[:notice] %>
+  </div>
+<% end %>
+
 <form action="/auth" method="get" class="form-inline">
   <div class="form-group">
     <input type="url" class="form-control" name="me" placeholder="http://" value="<%= @me %>">
