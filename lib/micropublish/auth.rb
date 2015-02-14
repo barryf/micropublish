@@ -39,7 +39,9 @@ module Micropublish
         endpoints = {}
 
         # check http header for endpoints
-        endpoints[:micropub_endpoint] = micropub_endpoint_from_header(response.headers['Link'])
+        if link = response.headers.key?('Link')
+          endpoints[:micropub_endpoint] = micropub_endpoint_from_header(link)
+        end
 
         # check html head for endpoints
         doc = Nokogiri::HTML(response.body)
