@@ -25,14 +25,18 @@ module Micropublish
     end
 
     get '/auth' do
+      halt 400 unless params.key?('me')
+      # prepend http:// if missing
+      me = params['me']
+      me << "http://" unless params[:me].start_with?('http://') || params[:me].start_with?('https://')
+      # find endpoints for 'me'
+      endpoints = Auth.find_endpoints(me)
+      logout! if endpoints.nil?
       # define random state string
       session[:state] = Auth.generate_state
-      # find endpoints for 'me'
-      endpoints = Auth.find_endpoints(params[:me])
-      logout! if endpoints.nil?
       hash = {
-        me: params[:me],
-        client_id: 'Micropublish',
+        me: me,
+        client_id: client_id,
         state: session[:state],
         scope: 'post',
         redirect_uri: "#{request.base_url}/auth/callback"
@@ -45,7 +49,8 @@ module Micropublish
       puts "params=#{params.inspect}"
       endpoints_and_token = Auth.callback(params[:me], params[:code],
                                           session[:state],
-                                          "#{request.base_url}/auth/callback")
+                                          "#{request.base_url}/auth/callback",
+                                          @client_id)
       logout! if endpoints_and_token.nil?
       # login and token grant was successful so store in session
       session.merge!(endpoints_and_token)
@@ -102,6 +107,10 @@ module Micropublish
     def syndicate_to
       session[:syndicate_to] ||= Micropub.syndicate_to(
         session[:micropub_endpoint], session[:token])
+    end
+    
+    def client_id
+      @client_id ||= "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}"
     end
   end
 end

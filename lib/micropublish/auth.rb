@@ -2,7 +2,7 @@ module Micropublish
   module Auth
     module_function
 
-    def callback(me, code, state, redirect_uri)
+    def callback(me, code, state, redirect_uri, client_id)
       # check that me is a url
       unless valid_uri?(me)
         puts "Param 'me' must be a valid URI."
@@ -20,11 +20,11 @@ module Micropublish
       return if endpoints.nil?
 
       # confirm the auth with auth endpoint
-      return unless confirm_auth?(me, code, state, redirect_uri,
+      return unless confirm_auth?(me, code, state, redirect_uri, client_id,
                                   endpoints[:authorization_endpoint])
 
       # find out if we're allowed a token to post
-      token = get_token(me, code, state, redirect_uri,
+      token = get_token(me, code, state, redirect_uri, client_id,
                         endpoints[:token_endpoint])
       return if token.nil?
 
@@ -68,11 +68,11 @@ module Micropublish
       end
     end
 
-    def confirm_auth?(me, code, state, redirect_uri, authorization_endpoint)
+    def confirm_auth?(me, code, state, redirect_uri, client_id, authorization_endpoint)
       response = HTTParty.post(authorization_endpoint, body:
         {
           code: code,
-          client_id: 'Micropublish',
+          client_id: client_id,
           state: state,
           scope: 'post',
           redirect_uri: redirect_uri
@@ -90,13 +90,13 @@ module Micropublish
       end
     end
 
-    def get_token(me, code, state, redirect_uri, token_endpoint)
+    def get_token(me, code, state, redirect_uri, client_id, token_endpoint)
       response = HTTParty.post(token_endpoint, body:
         {
           me: me,
           code: code,
           redirect_uri: redirect_uri,
-          client_id: 'Micropublish',
+          client_id: client_id,
           state: state,
           scope: 'post'
         })
