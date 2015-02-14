@@ -3,6 +3,9 @@ module Micropublish
     configure do
       set :views, "#{File.dirname(__FILE__)}/../../views"
       set :public_folder, "#{File.dirname(__FILE__)}/../../public"
+      
+      # ensure ssl
+      use Rack::SSL unless settings.development?
 
       # use a cookie that lasts for 30 days
       secret = ENV['COOKIE_SECRET'] || Random.new_seed.to_s
@@ -110,7 +113,7 @@ module Micropublish
     end
     
     def client_id
-      @client_id ||= "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}"
+      @client_id ||= request.base_url
     end
   end
 end

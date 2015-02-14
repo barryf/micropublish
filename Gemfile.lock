@@ -15,6 +15,8 @@ GEM
     rack (1.5.2)
     rack-protection (1.5.3)
       rack
+    rack-ssl (1.4.1)
+      rack
     shotgun (0.9)
       rack (>= 1.0)
     sinatra (1.4.5)
@@ -34,6 +36,7 @@ DEPENDENCIES
   dotenv
   httparty
   nokogiri
+  rack-ssl
   shotgun
   sinatra
   thin

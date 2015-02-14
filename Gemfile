@@ -6,6 +6,7 @@ gem 'sinatra'
 gem 'httparty'
 gem 'nokogiri'
 gem 'thin'
+gem 'rack-ssl'
 
 group :development do
   gem 'shotgun'
