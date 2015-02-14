@@ -57,7 +57,7 @@ module Micropublish
         end
         %i(micropub_endpoint token_endpoint authorization_endpoint).each do |endpoint|
           unless endpoints.key?(endpoint)
-            puts "Could not find #{e} at #{me}."
+            puts "Could not find #{endpoint} at #{me}."
             return
           end
         end
