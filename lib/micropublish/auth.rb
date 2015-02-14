@@ -39,8 +39,8 @@ module Micropublish
         endpoints = {}
 
         # check http header for endpoints
-        if link = response.headers.key?('Link')
-          endpoints[:micropub_endpoint] = micropub_endpoint_from_header(link)
+        if response.headers.key?('Link')
+          endpoints[:micropub_endpoint] = micropub_endpoint_from_header(response.headers['Link'])
         end
 
         # check html head for endpoints
@@ -69,7 +69,7 @@ module Micropublish
     end
 
     def confirm_auth?(me, code, state, redirect_uri, authorization_endpoint)
-      response = HTTParty.post(authorization_endpoint, query:
+      response = HTTParty.post(authorization_endpoint, body:
         {
           code: code,
           client_id: 'Micropublish',
@@ -91,7 +91,7 @@ module Micropublish
     end
 
     def get_token(me, code, state, redirect_uri, token_endpoint)
-      response = HTTParty.post(token_endpoint, query:
+      response = HTTParty.post(token_endpoint, body:
         {
           me: me,
           code: code,
