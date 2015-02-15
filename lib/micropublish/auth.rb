@@ -40,7 +40,10 @@ module Micropublish
 
         # check http header for endpoints
         if response.headers.key?('Link')
-          endpoints[:micropub_endpoint] = micropub_endpoint_from_header(response.headers['Link'])
+          links = LinkHeader.parse(response.headers['Link'])
+          endpoints[:micropub_endpoint] = links.find_link(['rel', 'micropub']).try(:href)
+          endpoints[:token_endpoint] = links.find_link(['rel', 'token_endpoint']).try(:href)
+          endpoints[:authorization_endpoint] = links.find_link(['rel', 'authorization_endpoint']).try(:href)
         end
 
         # check html head for endpoints
@@ -118,16 +121,6 @@ module Micropublish
         uri = URI.parse(u)
         uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
       rescue URI::InvalidURIError
-      end
-    end
-    
-    # adapted from 
-    # https://github.com/indieweb/mention-client-ruby/blob/master/lib/webmention/client.rb#L143
-    def micropub_endpoint_from_header(link)
-      if matches = link.match(%r{<(https?://[^>]+)>; rel="micropub"})
-        matches[1]
-      elsif matches = link.match(%r{rel="micropub"; <(https?://[^>]+)>})
-        matches[1]
       end
     end
 
