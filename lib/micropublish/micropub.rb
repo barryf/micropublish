@@ -65,7 +65,7 @@ module Micropublish
                     fields: %i(bookmark name content) },
         reply:    { label: 'Reply', icon: 'reply',
                     fields: %i(in_reply_to content) },
-        repost:   { label: 'Repost', icon: 'retweet', fields: %i(repost_of) },
+        repost:   { label: 'Repost', icon: 'retweet', fields: %i(repost_of content) },
         like:     { label: 'Like', icon: 'heart', fields: %i(like_of) }
       }
     end

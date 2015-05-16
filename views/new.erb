@@ -111,7 +111,8 @@
       var content = document.getElementById('content');
       var category = document.getElementById('category');
       var tags_text = category.value.length ? " #" + category.value.split(' ').join(' #') : "";
-      summary.value = content.value + tags_text;
+      var repost_text = <% if @post_type == :repost %> " " + document.getElementById('repost_of').value<% else %>""<% end %>;
+      summary.value = content.value + tags_text + repost_text;
       update_summary_count();
       return false
     }
