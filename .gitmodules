@@ -1,0 +1,3 @@
+[submodule "vendor/twitter-text"]
+	path = vendor/twitter-text
+	url = https://github.com/twitter/twitter-text.git

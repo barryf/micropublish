@@ -91,6 +91,10 @@ module Micropublish
     get '/about' do
       erb :about
     end
+    
+    get '/twitter-text.js' do
+      send_file File.join('vendor', 'twitter-text', 'js', 'twitter-text.js')
+    end
 
     def require_session
       redirect '/' unless logged_in?
