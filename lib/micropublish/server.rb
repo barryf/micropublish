@@ -93,7 +93,7 @@ module Micropublish
     end
     
     get '/twitter-text.js' do
-      send_file File.join('vendor', 'twitter-text', 'js', 'twitter-text.js')
+      send_file "#{File.dirname(__FILE__)}/../../vendor/twitter-text/js/twitter-text.js"
     end
 
     def require_session
