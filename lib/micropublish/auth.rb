@@ -35,7 +35,7 @@ module Micropublish
     def find_endpoints(me)
       response = HTTParty.get(me)
 
-      if response.code == 200
+      if (200...300).include? response.code
         endpoints = {}
 
         # check http header for endpoints
@@ -80,7 +80,7 @@ module Micropublish
           scope: 'post',
           redirect_uri: redirect_uri
         })
-      if response.code == 200
+      if (200...300).include? response.code
         puts "callback=#{response.body}"
         response_hash = CGI.parse(response.parsed_response)
         if response_hash['me'].first == me
@@ -103,7 +103,7 @@ module Micropublish
           state: state,
           scope: 'post'
         })
-      if response.code == 200
+      if (200...300).include? response.code
         response_hash = CGI.parse(response.parsed_response)
         puts "token response_hash=#{response_hash.inspect}"
         response_hash['access_token'].first
