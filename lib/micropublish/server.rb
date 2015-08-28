@@ -56,7 +56,7 @@ module Micropublish
                                           session[:state],
                                           "#{request.base_url}/auth/callback",
                                           client_id)
-      logout!("No endpoints were found at #{me}. Please check your site is Micropub-compliant.") if endpoints_and_token.nil?
+      logout!("No endpoints were found at #{params[:me]}. Please check your site is Micropub-compliant.") if endpoints_and_token.nil?
       # login and token grant was successful so store in session
       session.merge!(endpoints_and_token)
       redirect :new
