@@ -35,8 +35,10 @@ module Micropublish
       puts "syndicate-to response=#{response.inspect}"
       return unless response.code == 200
       response_hash = CGI.parse(response.parsed_response)
-      return unless response_hash.key?('syndicate-to')
-      response_hash['syndicate-to'].first.split(',')
+      if response_hash.key?('syndicate-to')
+        return response_hash['syndicate-to'].first.split(',')
+      end
+      response_hash['syndicate-to[]']
     end
 
     def syndication_label(syndication)
@@ -55,7 +57,7 @@ module Micropublish
         url.split('/')[3]
       end
     end
-    
+
     def post_types
       {
         note:     { label: 'Note', icon: 'comment', fields: %i(content) },
