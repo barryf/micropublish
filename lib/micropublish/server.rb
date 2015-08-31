@@ -6,7 +6,7 @@ module Micropublish
       
       # ensure ssl
       use Rack::SSL unless settings.development?
-
+      
       # use a cookie that lasts for 30 days
       secret = ENV['COOKIE_SECRET'] || Random.new_seed.to_s
       use Rack::Session::Cookie, secret: secret, expire_after: 2_592_000
@@ -44,7 +44,7 @@ module Micropublish
         client_id: client_id,
         state: session[:state],
         scope: 'post',
-        redirect_uri: "#{request.base_url}/auth/callback"
+        redirect_uri: "#{base_url}/auth/callback"
       }
       query = URI.encode_www_form(hash)
       redirect "#{endpoints[:authorization_endpoint]}?#{query}"
@@ -54,7 +54,7 @@ module Micropublish
       puts "params=#{params.inspect}"
       endpoints_and_token = Auth.callback(params[:me], params[:code],
                                           session[:state],
-                                          "#{request.base_url}/auth/callback",
+                                          "#{base_url}/auth/callback",
                                           client_id)
       logout!("No endpoints were found at #{params[:me]}. Please check your site is Micropub-compliant.") if endpoints_and_token.nil?
       # login and token grant was successful so store in session
@@ -119,8 +119,13 @@ module Micropublish
         session[:micropub_endpoint], session[:token])
     end
     
+    def base_url
+      # explicitly set base url from optional ENV var (needed in case we're proxying)
+      ENV['BASE_URL'] || request.base_url
+    end
+
     def client_id
-      @client_id ||= request.base_url
+      @client_id ||= base_url
     end
   end
 end

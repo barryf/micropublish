@@ -10,6 +10,7 @@ gem 'rack-ssl'
 gem 'rack-flash3', require: 'rack-flash'
 gem 'link_header'
 gem 'activesupport', '~> 4.2'
+gem 'foreman'
 
 group :development do
   gem 'shotgun'
