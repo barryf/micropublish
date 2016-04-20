@@ -34,11 +34,18 @@ module Micropublish
       response = HTTParty.get(url, query: query, headers: headers)
       puts "syndicate-to response=#{response.inspect}"
       return unless response.code == 200
-      response_hash = CGI.parse(response.parsed_response)
-      if response_hash.key?('syndicate-to')
-        return response_hash['syndicate-to'].first.split(',')
+      # allow for (preferred) JSON, old-style CSV string or array
+      begin
+        json = JSON.parse(response.body)
+        return json['syndicate-to']
+      rescue JSON::ParserError
+        response_hash = CGI.parse(response.parsed_response)
+        if response_hash.key?('syndicate-to')
+          return response_hash['syndicate-to'].first.split(',')
+        elsif response_hash.key?('syndicate-to[]')
+          return response_hash['syndicate-to[]']
+        end
       end
-      response_hash['syndicate-to[]']
     end
 
     def syndication_label(syndication)
