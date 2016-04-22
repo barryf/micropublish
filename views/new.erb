@@ -88,10 +88,12 @@
     <div class="form-group">
       <label>Syndications</label><br>
       <% syndicate_to.each do |syndication| %>
-        <label class="checkbox-inline">
-          <input type="checkbox" name="syndicate_to" value="<%= syndication %>">
-          <%= syndication_label(syndication) %>
-        </label>
+        <% unless syndication.is_a?(String) %>
+          <label class="checkbox-inline">
+            <input type="checkbox" name="syndicate_to" value="<%= syndication['uid'] %>">
+            <%= syndication['name'] %>
+          </label>
+        <% end %>
       <% end %>
     </div>
   <% end %>

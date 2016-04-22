@@ -39,11 +39,14 @@ module Micropublish
         json = JSON.parse(response.body)
         return json['syndicate-to']
       rescue JSON::ParserError
+        # this approach is deprecated and will be removed 
         response_hash = CGI.parse(response.parsed_response)
         if response_hash.key?('syndicate-to')
-          return response_hash['syndicate-to'].first.split(',')
+          syndications_array = response_hash['syndicate-to'].first.split(',')
+          return syndications_array.map { |s| { "uid" => s, "name" => Micropub.syndication_label(s)} }
         elsif response_hash.key?('syndicate-to[]')
-          return response_hash['syndicate-to[]']
+          syndications_array = response_hash['syndicate-top[]']
+          return syndications_array.map { |s| { "uid" => s, "name" => Micropub.syndication_label(s)} }
         end
       end
     end

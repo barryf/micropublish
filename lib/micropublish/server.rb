@@ -18,10 +18,6 @@ module Micropublish
       def h(text)
         Rack::Utils.escape_html(text)
       end
-
-      def syndication_label(syndication)
-        Micropub.syndication_label(syndication)
-      end
     end
 
     get '/' do
