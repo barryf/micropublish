@@ -29,7 +29,11 @@ module Micropublish
     end
 
     def syndicate_to(url, token)
-      headers = { 'Authorization' => "Bearer #{token}" }
+      headers = { 
+        'Authorization' => "Bearer #{token}", 
+        'Content-Type' => 'application/json',
+        'Accept' => 'application/json' 
+      }
       query = { q: 'syndicate-to' }
       response = HTTParty.get(url, query: query, headers: headers)
       puts "syndicate-to response=#{response.inspect}"
@@ -45,7 +49,7 @@ module Micropublish
           syndications_array = response_hash['syndicate-to'].first.split(',')
           return syndications_array.map { |s| { "uid" => s, "name" => Micropub.syndication_label(s)} }
         elsif response_hash.key?('syndicate-to[]')
-          syndications_array = response_hash['syndicate-top[]']
+          syndications_array = response_hash['syndicate-to[]']
           return syndications_array.map { |s| { "uid" => s, "name" => Micropub.syndication_label(s)} }
         end
       end
