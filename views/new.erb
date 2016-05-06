@@ -90,8 +90,8 @@
       <% syndicate_to.each do |syndication| %>
         <% unless syndication.is_a?(String) %>
           <label class="checkbox-inline">
-            <input type="checkbox" name="syndicate_to" value="<%= syndication['uid'] %>">
-            <%= syndication['name'] %>
+            <input type="checkbox" name="syndicate_to" value="<%= h syndication['uid'] %>">
+            <%= h syndication['name'] %>
           </label>
         <% end %>
       <% end %>
