@@ -49,11 +49,11 @@ module Micropublish
         # check html head for endpoints
         doc = Nokogiri::HTML(response.body)
         doc.css('link').each do |link|
-          if link[:rel].downcase == 'micropub' && !link[:href].empty?
+          if link[:rel].to_s.downcase == 'micropub' && !link[:href].empty?
             endpoints[:micropub_endpoint] ||= link[:href]
-          elsif link[:rel].downcase == 'token_endpoint' && !link[:href].empty?
+          elsif link[:rel].to_s.downcase == 'token_endpoint' && !link[:href].empty?
             endpoints[:token_endpoint] ||= link[:href]
-          elsif link[:rel].downcase == 'authorization_endpoint' &&
+          elsif link[:rel].to_s.downcase == 'authorization_endpoint' &&
                 !link[:href].empty?
             endpoints[:authorization_endpoint] ||= link[:href]
           end
