@@ -1,12 +1,12 @@
-<img align="right"
-src="https://barryf.s3-eu-west-1.amazonaws.com/micropublish-demo.gif"
-alt="Micropublish demo">
-
 # Micropublish
 
 Micropublish is a [Micropub][] client that you can use to create, update,
 delete and undelete content on your Micropub-enabled site.
 A live install of Micropublish is running at [https://micropublish.net][mp]
+
+<img align="right"
+src="https://barryf.s3-eu-west-1.amazonaws.com/micropublish-demo.gif"
+alt="Micropublish demo">
 
 ---
 
