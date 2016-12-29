@@ -8,6 +8,7 @@
     "name",
     "content",
     "content-html",
+		"summary",
     "published",
     "category",
     "mp-syndicate-to",
