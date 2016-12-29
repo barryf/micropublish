@@ -4,7 +4,7 @@ module Micropublish
     configure do
       helpers Helpers
 
-      #use Rack::SSL if settings.production?
+      use Rack::SSL if settings.production?
 
       root_path = "#{File.dirname(__FILE__)}/../../"
       set :public_folder, "#{root_path}public"
@@ -19,12 +19,12 @@ module Micropublish
       use Rack::Session::Cookie, secret: secret, expire_after: 2_592_000
     end
 
-    #before do
-    #  unless settings.production?
-    #    session[:me] = 'http://localhost:9394/'
-    #    session[:micropub] = 'http://localhost:9394/micropub'
-    #  end
-    #end
+    before do
+      unless settings.production?
+        session[:me] = 'http://localhost:9394/'
+        session[:micropub] = 'http://localhost:9394/micropub'
+      end
+    end
 
     get '/' do
       if logged_in?
