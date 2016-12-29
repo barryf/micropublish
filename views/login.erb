@@ -1,0 +1,22 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Sign in with your Micropub site URL</h3>
+  </div>
+  <div class="panel-body">
+
+    <form action="/auth" method="get">
+      <div class="form-group">
+        <input type="url" class="form-control" name="me" value="<%= @me %>"
+          placeholder="https://">
+      </div>
+      <div>
+        <button class="btn btn-primary" type="submit">Sign in</button>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+<div id="static">
+<%= @about %>
+</div>

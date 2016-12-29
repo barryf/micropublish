@@ -1,0 +1,63 @@
+body {
+	padding-bottom: 1em;
+}
+pre {
+  white-space: pre-wrap;
+}
+.input-array input {
+  margin-bottom: 3px;
+}
+.add-remove-buttons {
+  text-align: right;
+}
+.new-buttons {
+  padding-bottom: 5px;
+	padding-right: 10px;
+}
+.new-buttons a {
+  margin-bottom: 10px;
+	margin-right: 5px;
+	width: 90px;
+}
+.new-buttons span {
+	font-size: 180%;
+	line-height: 1.5em;
+}
+trix-editor {
+  min-height: 160px !important;
+}
+.logout {
+	float: right;
+}
+#helpable-toggle {
+	float: right;
+	font-weight: normal;
+}
+.helpable .help-block {
+	sdisplay: none;
+}
+.help-block code {
+	display: block;
+	background: none;
+	color: inherit;
+	padding: 2px 0;
+}
+#static .badge {
+	cursor: move !important;
+}
+#static img {
+	margin-left: 20px;
+}
+#preview-content .alert, #preview-content pre {
+	margin-bottom: 0;
+}
+.required {
+	color: red;
+}
+
+@media screen and (max-width: 700px) {
+  form.logout { float: none; }
+	#static img {
+		float: none !important;
+	}
+}

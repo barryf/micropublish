@@ -1,0 +1,2 @@
+describe Micropublish do
+end

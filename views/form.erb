@@ -1,0 +1,328 @@
+<form action="<%= @action_url %>" method="post" class="helpable" id="form">
+  <input type="hidden" name="_type" value="<%= @type %>">
+  <input type="hidden" name="_subtype" value="<%= @subtype %>">
+
+  <div class="panel panel-default">
+
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <% if @action_label == 'Create' %>
+          New <%= @subtype_label %>
+        <% else %>
+          Edit post
+        <% end %>
+        (<%= @type %>)
+      </h3>
+    </div>
+
+    <div class="panel-body">
+
+      <% if params.key?('url') || params.key?('_url') %>
+        <div class="form-group">
+          <label>URL</label>
+          <input class="form-control" type="url" name="_url" readonly
+            value="<%= h params[:url] || params[:_url] %>">
+        </div>
+      <% end %>
+
+      <% if @all || @properties.include?('in-reply-to') %>
+        <div class="form-group">
+          <label>
+            In Reply To
+            <% if @required.include?('in-reply-to') %><span class="required" title="required">*</span><% end %>
+          </label>
+          <textarea class="form-control" rows="1" name="in-reply-to[]" id="in-reply-to"
+            <% if @required.include?('in-reply-to') %>required<% end %>
+            ><%= h @post.properties['in-reply-to'].join("\n") if @post.properties.key?('in-reply-to') %></textarea>
+          <p class="help-block">
+            Enter the URL of the post to which you are replying.
+            You can enter multiple URLs separated by whitespace if your server supports this.
+            <code>in-reply-to[]</code>
+          </p>
+        </div>
+        <%= autogrow_script('in-reply-to') %>
+      <% end %>
+
+      <% if @all || @properties.include?('repost-of') %>
+        <div class="form-group">
+          <label>
+            Repost Of
+            <% if @required.include?('repost-of') %><span class="required" title="required">*</span><% end %>
+          </label>
+          <textarea class="form-control" rows="1" name="repost-of[]" id="repost-of"
+            <% if @required.include?('repost-of') %>required<% end %>
+            ><%= h @post.properties['repost-of'].join("\n") if @post.properties.key?('repost-of') %></textarea>
+          <p class="help-block">
+            Enter the URL of the post that you are reposting.
+            You can enter multiple URLs separated by whitespace if your server supports this.
+            <code>repost-of[]</code>
+          </p>
+        </div>
+        <%= autogrow_script('repost-of') %>
+      <% end %>
+
+      <% if @all || @properties.include?('like-of') %>
+        <div class="form-group">
+          <label>
+            Like Of
+            <% if @required.include?('like-of') %><span class="required" title="required">*</span><% end %>
+          </label>
+          <textarea class="form-control" rows="1" name="like-of[]" id="like-of"
+            <% if @required.include?('like-of') %>required<% end %>
+            ><%= h @post.properties['like-of'].join("\n") if @post.properties.key?('like-of') %></textarea>
+          <p class="help-block">
+            Enter the URL of the post that you like.
+            You can enter multiple URLs separated by whitespace if your server supports this.
+            <code>like-of[]</code>
+          </p>
+        </div>
+        <%= autogrow_script('like-of') %>
+      <% end %>
+
+      <% if @all || @properties.include?('bookmark-of') %>
+        <div class="form-group">
+          <label>
+            Bookmark Of
+            <% if @required.include?('bookmark-of') %><span class="required" title="required">*</span><% end %>
+          </label>
+          <textarea class="form-control" rows="1" name="bookmark-of[]" id="bookmark-of"
+            <% if @required.include?('bookmark-of') %>required<% end %>
+            ><%= h @post.properties['bookmark-of'].join("\n") if @post.properties.key?('bookmark-of') %></textarea>
+          <p class="help-block">
+            Enter the URL of the page you wish to bookmark.
+            You can enter multiple URLs separated by whitespace if your server supports this.
+            <code>bookmark-of[]</code>
+          </p>
+        </div>
+        <%= autogrow_script('bookmark-of') %>
+      <% end %>
+
+      <% if @all || @properties.include?('rsvp') %>
+        <% rsvp = @post.properties.key?('rsvp') ? @post.properties['rsvp'][0] : '' %>
+        <div class="form-group">
+          <label for="rsvp">
+            RSVP
+            <% if @required.include?('rsvp') %><span class="required" title="required">*</span><% end %>
+          </label>
+          <br>
+          <label class="radio-inline">
+            <input type="radio" name="rsvp" value="yes" <% if rsvp == 'yes' %>checked<% end %>> Yes
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="rsvp" value="no" <% if rsvp == 'no' %>checked<% end %>> No
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="rsvp" value="maybe" <% if rsvp == 'maybe' %>checked<% end %>> Maybe
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="rsvp" value="interested" <% if rsvp == 'interested' %>checked<% end %>> Interested
+          </label>
+          <p class="help-block">
+            Select your response to the event.
+            <code>rsvp</code>
+          </p>
+        </div>
+      <% end %>
+
+      <% if @all || @properties.include?('name') %>
+        <div class="form-group">
+          <label for="name">
+            Name
+            <% if @required.include?('name') %><span class="required" title="required">*</span><% end %>
+          </label>
+          <input type="text" class="form-control" id="name" name="name"
+            <% if @required.include?('nadme') %>required<% end %>
+            value="<%= h @post.properties['name'][0] if @post.properties.key?('name') %>">
+          <p class="help-block">
+            Enter a name/title for this post.
+            <code>name</code>
+          </p>
+        </div>
+      <% end %>
+
+      <% if (@all && @post.properties.key?('content') && !@post.properties['content'][0].is_a?(Hash)) || @properties.include?('content') %>
+        <div class="form-group">
+          <label for="content">
+            Content
+            <% if @required.include?('content') %><span class="required" title="required">*</span><% end %>
+          </label>
+          <div style="float: right;">
+            <span class="badge" id="content_count"></span>
+          </div>
+          <textarea class="form-control" rows="5" name="content" id="content"
+            <% if @required.include?('content') %>required<% end %>
+            ><%= h @post.properties['content'][0] if @post.properties.key?('content') %></textarea>
+          <p class="help-block">
+            Enter content for this post.
+            You should use plain text or markup if your server supports this.
+            <code>content</code>
+          </p>
+        </div>
+        <%= autogrow_script('content') %>
+      <% end %>
+
+      <% if (@all && @post.properties.key?('content') && @post.properties['content'][0].is_a?(Hash)) || @properties.include?('content-html') %>
+        <% content_html_value = @post.properties.key?('content') && @post.properties['content'][0].is_a?(Hash) && @post.properties['content'][0].key?('html') ? h(@post.properties['content'][0]['html']) : "" %>
+        <div class="form-group">
+          <label>
+            Content (HTML)
+            <% if @required.include?('content-html') %><span class="required" title="required">*</span><% end %>
+          </label>
+          <textarea id="content-html" class="form-control" rows="5" name="content[][html]"><%= content_html_value %></textarea>
+          <trix-editor input="content-html" style="display: none;"></trix-editor>
+          <p class="help-block">
+            Enter content for this post.
+            You may use rich content via the embedded
+            <a href="https://trix-editor.org">Trix</a> editor or, if your
+            browser does not have JavaScript enabled, you can directly enter
+            HTML.
+            <code>content[][html]</code>
+          </p>
+        </div>
+      <% end %>
+
+      <% if @all || @properties.include?('summary') %>
+        <div class="form-group">
+          <label>
+            Summary
+            <% if @required.include?('summary') %><span class="required" title="required">*</span><% end %>
+          </label>
+          <textarea class="form-control" rows="2" name="summary"
+            <% if @required.include?('summary') %>required<% end %>
+            ><%= h @post.properties['summary'][0] if @post.properties.key?('summary') %></textarea>
+          <p class="help-block">
+            Enter a text summary for this post.
+            <code>summary</code>
+          </p>
+        </div>
+        <%= autogrow_script('summary') %>
+      <% end %>
+
+      <% if @all || @properties.include?('published') %>
+        <div class="form-group">
+          <label for="published">
+            Published
+            <% if @required.include?('published') %><span class="required" title="required">*</span><% end %>
+          </label>
+          <input type="datetime" class="form-control" id="published" name="published"
+            <% if @required.include?('published') %>required<% end %>
+            value="<%= h @post.properties['published'][0] if @post.properties.key?('published') %>">
+          <p class="help-block">
+            Enter a datetime for when this post was (or will be) published.
+            The suggested format is YYYY-MM-DDTHH:MM:SSZ,
+            e.g. 2016-11-21T12:34:56Z for a post at 12:34:56 UTC on 21 November
+            2016.
+            <code>published</code>
+          </p>
+        </div>
+      <% end %>
+
+      <% if @all || @properties.include?('category') %>
+        <div class="form-group">
+          <label for="category">
+            Category
+            <% if @required.include?('category') %><span class="required" title="required">*</span><% end %>
+          </label>
+          <input type="text" class="form-control tagged" id="category" name="category"
+            <% if @required.include?('category') %>required<% end %>
+            value="<%= h @post.properties['category'].join(', ') if @post.properties.key?('category') %>">
+          <p class="help-block">
+            Enter categories/tags and separate with commas.
+            You may also enter URLs if your server supports them.
+            <code>category[]</code>
+          </p>
+          <%= tokenfield_script('category') %>
+        </div>
+      <% end %>
+
+      <% if @all || @properties.include?('mp-syndicate-to') %>
+        <div class="form-group">
+          <label>
+            Syndicate To
+            <% if @required.include?('mp-syndicate-to') %><span class="required" title="required">*</span><% end %>
+          </label>
+          <br>
+          <% syndicate_to.each do |syndication| %>
+            <label class="checkbox-inline">
+              <input type="checkbox" name="mp-syndicate-to[]"
+                value="<%= h syndication['uid'] %>"
+                <% if @post.properties.key?('mp-syndicate-to') && @post.properties['mp-syndicate-to'].include?(syndication['uid']) %>checked<% end %>
+              ><%= h syndication['name'] %>
+            </label>
+          <% end %>
+          <p class="help-block">
+            Choose a service to syndicate to from your endpoint's
+            <em>syndicate-to</em> list. If your services do not appear here then
+            please <a href="/about#configuration">read the docs</a> to ensure
+            you are using the correct format.
+            <code>mp-syndicate-to[]</code>
+          </p>
+        </div>
+      <% end %>
+
+      <% if @all || @properties.include?('syndication') %>
+        <div class="form-group">
+          <label>
+            Syndication
+            <% if @required.include?('syndication') %><span class="required" title="required">*</span><% end %>
+          </label>
+          <textarea class="form-control" rows="1" name="syndication[]" id="syndication"
+            <% if @required.include?('syndication') %>required<% end %>
+            ><%= h @post.properties['syndication'].join("\n") if @post.properties.key?('syndication') %></textarea>
+          <p class="help-block">
+            Enter URL(s) of alternative locations for this post separated by
+            whitespace.
+            <code>syndication[]</code>
+          </p>
+        </div>
+        <%= autogrow_script('syndication') %>
+      <% end %>
+
+      <% if @all || @properties.include?('slug') %>
+        <div class="form-group">
+          <label>
+            Slug
+            <% if @required.include?('slug') %><span class="required" title="required">*</span><% end %>
+          </label>
+          <input type="text" class="form-control" id="slug" name="slug"
+            <% if @required.include?('slug') %>required<% end %>
+            value="<%= h @post.properties['slug'][0] if @post.properties.key?('slug') %>">
+          <p class="help-block">
+            Enter a short slug you would like your server to use (if supported).
+            <code>slug</code>
+          </p>
+        </div>
+      <% end %>
+
+    </div>
+
+    <div class="panel-footer">
+      <button type="submit" class="btn btn-primary">
+        <%= @action_label %>
+      </button>
+      <button type="submit" name="_preview" class="btn btn-default"
+        id="preview">Preview</button>
+      <script>
+        document.write("<button type=\"button\" class=\"btn btn-default\" id=\"helpable-toggle\" data-toggle=\"button\" aria-pressed=\"false\" autocomplete=\"off\">Help</button>");
+      </script>
+    </div>
+
+  </div>
+</form>
+
+<div id="preview-modal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Preview</h4>
+      </div>
+      <div class="modal-body">
+        <div id="preview-content"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

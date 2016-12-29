@@ -1,0 +1,58 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Create new post (h-entry)</h3>
+  </div>
+  <div class="panel-body new-buttons">
+    <div>
+      <% @types.keys.each do |type| %>
+        <a class="btn btn-default" href="/new/h-entry/<%= type %>"
+            role="button">
+          <span class="fa fa-<%= @types[type]['icon'] %>"></span><br>
+          <%= @types[type]['name']%>
+        </a>
+      <% end %>
+    </div>
+  </div>
+  <div class="panel-footer">
+    <form action="/settings" method="post" id="settings-format-form">
+      <div style="text-align: right;">
+        <label class="radio-inline">
+          <input type="radio" name="format" value="form"
+            <% if default_format == :form %>checked<% end %>> Form-encoded
+        </label>
+        <label class="radio-inline">
+          <input type="radio" name="format" value="json"
+            <% if default_format == :json %>checked<% end %>> JSON
+        </label>
+        <noscript>
+          &nbsp;
+          <button type="submit" class="btn btn-default btn-sm">Set</button>
+        </noscript>
+      </div>
+    </form>
+  </div>
+</div>
+
+<form action="/edit" method="get">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Edit existing post</h3>
+    </div>
+    <div class="panel-body">
+      <label>URL</label>
+      <input type="url" class="form-control" name="url" required
+        value="http://localhost:9394/2016/12/test">
+      <p class="help-block">
+        Enter the URL of a post on your site that you wish to update.
+      </p>
+    </div>
+    <div class="panel-footer">
+      <button name="edit" class="btn btn-default">Edit</button>
+      &nbsp;
+      <div class="btn-group" role="group">
+        <button name="delete" class="btn btn-default">Delete</button>
+        <button name="undelete" class="btn btn-default">Undelete</button>
+      </div>
+    </div>
+  </div>
+</form>

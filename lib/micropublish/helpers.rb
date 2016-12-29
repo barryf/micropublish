@@ -1,0 +1,49 @@
+module Micropublish
+  module Helpers
+
+    def h(text)
+      Rack::Utils.escape_html(text)
+    end
+
+    def flash_message
+      if session.key?('flash') && !session[:flash].empty?
+        content = %Q{
+          <div class="alert alert-#{session[:flash][:type]}">
+            #{session[:flash][:message]}
+          </div>
+        }
+        session.delete('flash')
+        content
+      end
+    end
+
+    def default_format
+      if session.key?('format') && session[:format] == :json
+        :json
+      else
+        :form
+      end
+    end
+
+    def autogrow_script(id)
+      %Q{
+        <script>
+          $(function(){
+            $('##{id}').autogrow({vertical: true, horizontal: false});
+          });
+        </script>
+      }
+    end
+
+    def tokenfield_script(id)
+      %Q{
+        <script>
+          $(function(){
+            $('##{id}').tokenfield();
+          });
+        </script>
+      }
+    end
+
+  end
+end

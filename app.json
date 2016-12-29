@@ -1,0 +1,11 @@
+{
+  "name": "Micropublish",
+  "description": "A Micropub client that you can use to create, update, delete and undelete content on your Micropub-enabled site.",
+  "repository": "https://github.com/barryf/micropublish",
+  "env": {
+    "COOKIE_SECRET": {
+      "description": "A long, secure, (ideally) random string used to secure data stored in the user's cookie.",
+      "value": ""
+    }
+  }
+}

@@ -1,52 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-  <title>Micropublish</title>
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
-  <style>
-    body { padding-top: 1em; }
-    form.logout { float: right; }
-    @media screen and (max-width: 700px) {
-      .post-type-label { display: none; }
-      form.logout { float: none; }
-    }
-  </style>
-</head>
-<body>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Micropublish<% if @title %>: <%= @title %><% end %></title>
+    <link rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+      crossorigin="anonymous">
+    <!--
+    <link rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+      integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+      crossorigin="anonymous">
+    -->
+    <link rel="stylesheet"
+      href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/micropublish.css">
+    <link rel="stylesheet" href="/css/bootstrap-tokenfield.min.css">
+    <link rel="stylesheet" href="/css/trix.css">
+    <script src="/scripts/trix.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"></script>
+  </head>
+  <body>
 
-  <div class="container">
-    <div class="row">
-      <div class="col-md-12">
-        <%= yield %>
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header h-x-app">
+          <% if logged_in? %>
+            <a class="navbar-brand" href="/">
+              Micropublish
+            </a>
+          <% else %>
+            <div class="navbar-brand p-name">
+              Micropublish
+            </div
+          <% end %>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+<%= flash_message %>
+<%= yield %>
+        </div>
       </div>
     </div>
-  </div>
 
-  <hr>
-
-  <div class="container">
-    <div class="row">
-      <div class="col-md-12">
-        <% if logged_in? %>
-          <form action="/logout" method="post" class="form-inline logout">
-            <p>
-              <code><%= session[:micropub_endpoint] %></code>&nbsp;
-              <button class="btn btn-default btn-xs" type="submit">Log out</button>
-            </p>
-          </form>
-        <% end %>
-        <p class="h-x-app">
-          <a class="p-name" href="https://github.com/barryf/micropublish">Micropublish</a> &mdash;
-          <a href="/about">About</a>
-        </p>
+    <hr>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <% if logged_in? %>
+            <form action="/logout" method="post" class="form-inline logout">
+              <p>
+                <code><%= session[:me] %></code>&nbsp;
+                <button class="btn btn-default btn-xs" type="submit">
+                  Sign out
+                </button>
+              </p>
+            </form>
+          <% end %>
+          <a href="https://github.com/barryf/micropublish/releases/tag/v<%= Micropublish::VERSION %>">
+             <%= Micropublish::VERSION %>
+           </a>
+            <% if logged_in? %>
+              &middot;
+              <a href="/">Dashboard</a>
+              &middot;
+              <a href="/about">About</a>
+            <% end %>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <script src="/twitter-text.js"></script>
-</body>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+      integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+      crossorigin="anonymous"></script>
+    <script src="/scripts/twitter-text.js"></script>
+    <script src="/scripts/jquery.ns-autogrow.min.js"></script>
+    <script src="/scripts/bootstrap-tokenfield.min.js"></script>
+    <script src="/scripts/micropublish.js"></script>
+  </body>
 </html>
