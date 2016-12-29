@@ -19,12 +19,13 @@ module Micropublish
       use Rack::Session::Cookie, secret: secret, expire_after: 2_592_000
     end
 
-    before do
-      unless settings.production?
-        session[:me] = 'http://localhost:9394/'
-        session[:micropub] = 'http://localhost:9394/micropub'
-      end
-    end
+    #before do
+    #  unless settings.production?
+    #    session[:me] = 'http://localhost:9394/'
+    #    session[:micropub] = 'http://localhost:9394/micropub'
+    #    session[:scope] = 'create update delete undelete'
+    #  end
+    #end
 
     get '/' do
       if logged_in?
@@ -42,18 +43,26 @@ module Micropublish
       unless params.key?('me') && !params[:me].empty?
         redirect_flash('/', 'danger', "Please enter your site's URL.")
       end
+      unless params.key?('scope') && (params[:scope] == 'post' ||
+          params[:scope] == 'create update delete undelete')
+        redirect_flash('/', 'danger',
+          "Please select a scope: \"post\" or " +
+          "\"create update delete undelete\".")
+      end
       unless endpoints = EndpointsFinder.new(params[:me]).find_links
         redirect_flash('/', 'danger',
           "Could not find any endpoints at \"#{params[:me]}\".")
       end
       # define random state string
       session[:state] = Random.new_seed.to_s
+      # store scope - will be needed to limit functionality on dashboard
+      session[:scope] = params[:scope]
       # redirect to auth endpoint
       query = URI.encode_www_form({
         me: params[:me],
         client_id: request.base_url,
         state: session[:state],
-        scope: 'create update delete undelete',
+        scope: session[:scope],
         redirect_uri: "#{request.base_url}/auth/callback"
       })
       redirect "#{endpoints[:authorization_endpoint]}?#{query}"

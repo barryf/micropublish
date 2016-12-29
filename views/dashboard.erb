@@ -1,6 +1,6 @@
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title">Create new post (h-entry)</h3>
+    <h3 class="panel-title">Create a new post (h-entry)</h3>
   </div>
   <div class="panel-body new-buttons">
     <div>
@@ -33,13 +33,13 @@
   </div>
 </div>
 
-<form action="/edit" method="get">
+<form action="/edit" method="get"
+    <% if session[:scope] == 'post' %>hidden<% end %>>
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h3 class="panel-title">Edit existing post</h3>
+      <h3 class="panel-title">Update an existing post</h3>
     </div>
     <div class="panel-body">
-      <label>URL</label>
       <input type="url" class="form-control" name="url" required>
       <p class="help-block">
         Enter the URL of a post on your site that you wish to update.

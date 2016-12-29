@@ -9,6 +9,21 @@
         <input type="url" class="form-control" name="me" value="<%= @me %>"
           placeholder="https://">
       </div>
+      <div class="form-group">
+        <div class="radio">
+          <label>
+            <input type="radio" name="scope" value="post" checked>
+            <code>post</code>
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input type="radio" name="scope"
+              value="create update delete undelete">
+            <code>create update delete undelete</code>
+          </label>
+        </div>
+      </div>
       <div>
         <button class="btn btn-primary" type="submit">Sign in</button>
       </div>
