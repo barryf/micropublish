@@ -79,8 +79,8 @@ module Micropublish
       # login and token grant was successful so store in session
       session.merge!(endpoints_and_token)
       session[:me] = params[:me]
-      redirect_flash('/', 'success', %Q{You are now logged in successfully.
-          Create and update posts on your site via Micropub using the links
+      redirect_flash('/', 'success', %Q{You are now signed in successfully.
+          Submit content to your site via Micropub using the links
           below. Please
           <a href="/about" class="alert-link">read&nbsp;the&nbsp;docs</a> for
           more information and help.})
