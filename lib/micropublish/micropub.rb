@@ -32,13 +32,13 @@ module Micropublish
       unless Auth.valid_uri?(url)
         raise MicropubError.new("\"#{url}\" is not a valid URL.")
       end
-      micropub_uri = URI.parse(@micropub)
-      url_uri = URI.parse(url)
-      unless micropub_uri.host == url_uri.host
-        raise MicropubError.new(
-          "Post URL \"#{url}\" must be from the same host as your Micropub " +
-          "endpoint (\"#{@micropub}\").")
-      end
+      #micropub_uri = URI.parse(@micropub)
+      #url_uri = URI.parse(url)
+      #unless micropub_uri.host == url_uri.host
+      #  raise MicropubError.new(
+      #    "Post URL \"#{url}\" must be from the same host as your Micropub " +
+      #    "endpoint (\"#{@micropub}\").")
+      #end
     end
 
     def headers
