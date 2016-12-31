@@ -74,8 +74,12 @@ When you have succesfully signed in, Micropublish will attempt to
 authorize via OAuth 2.0 against your server's token endpoint to obtain an
 access token.
 
-Your site's Micropub endpoint must support the `create`, `update`, `delete` and
-`undelete` scopes. These scopes will be requested from your token endpoint.
+When signing in you must specify the scope Micropublish should request from
+your endpoint depending on what features you support. With the `post` scope 
+only the post creation action will be available.
+For the editing/deleting/undeleting functionality, 
+your site's Micropub endpoint must support `create`, `update`, `delete` and
+`undelete`. These scopes will be requested from your token endpoint.
 
 ### Configuration
 
