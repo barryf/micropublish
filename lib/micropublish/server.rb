@@ -224,6 +224,7 @@ module Micropublish
 
     get '/undelete' do
       require_session
+      require_url
       @title = "Undelete post at #{params[:url]}"
       erb :undelete
     end
