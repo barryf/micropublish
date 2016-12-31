@@ -1,7 +1,0 @@
-# rename this to .env
-
-# choose a random string to protect against cookie forgery
-COOKIE_SECRET=MY_RANDOM_STRING
-
-# optional URL used for authentication callback (needed if you're proxying with nginx)
-#BASE_URL=https://my-secure-domain.com

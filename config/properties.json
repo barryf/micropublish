@@ -1,0 +1,69 @@
+{
+	"known": [
+    "in-reply-to",
+    "repost-of",
+    "like-of",
+    "bookmark-of",
+    "rsvp",
+    "name",
+    "content",
+    "content-html",
+		"summary",
+    "published",
+    "category",
+    "mp-syndicate-to",
+    "syndication",
+    "slug"
+	],
+	"default": [
+		"category",
+		"mp-syndicate-to",
+		"slug"
+	],
+	"types": {
+		"h-entry": {
+			"note": {
+				"name": "Note",
+				"icon": "comment",
+				"properties": ["content", "location", "location-name"],
+				"required": ["content"]
+			},
+			"article": {
+				"name": "Article",
+				"icon": "file-text",
+				"properties": ["name", "content-html"],
+				"required": ["name", "content-html"]
+			},
+			"rsvp": {
+				"name": "RSVP",
+				"icon": "calendar-check-o",
+				"properties": ["in-reply-to", "rsvp", "content"],
+				"required": ["in-reply-to", "rsvp"]
+			},
+			"bookmark": {
+				"name": "Bookmark",
+				"icon": "bookmark",
+				"properties": ["bookmark-of", "name", "content"],
+				"required": ["bookmark-of", "name"]
+			},
+			"reply": {
+				"name": "Reply",
+				"icon": "reply",
+				"properties": ["in-reply-to", "content"],
+				"required": ["in-reply-to", "content"]
+			},
+			"repost": {
+				"name": "Repost",
+				"icon": "retweet",
+				"properties": ["repost-of", "content"],
+				"required": ["repost-of"]
+			},
+			"like": {
+				"name": "Like",
+				"icon": "heart",
+				"properties": ["like-of"],
+				"required": ["like-of"]
+			}
+		}
+	}
+}
