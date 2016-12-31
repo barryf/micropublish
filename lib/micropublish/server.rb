@@ -40,8 +40,11 @@ module Micropublish
     end
 
     get '/auth' do
-      unless params.key?('me') && !params[:me].empty?
-        redirect_flash('/', 'danger', "Please enter your site's URL.")
+      unless params.key?('me') && !params[:me].empty? &&
+          Auth.valid_uri?(params[:me])
+        redirect_flash('/', 'danger', 
+          "Please enter your site's URL. " +
+          "It must begin with `http://` or `https://`.")
       end
       unless params.key?('scope') && (params[:scope] == 'post' ||
           params[:scope] == 'create update delete undelete')
