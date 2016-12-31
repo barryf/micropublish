@@ -50,8 +50,10 @@ module Micropublish
           "\"create update delete undelete\".")
       end
       unless endpoints = EndpointsFinder.new(params[:me]).find_links
-        redirect_flash('/', 'danger',
-          "Could not find any endpoints at \"#{params[:me]}\".")
+        redirect_flash('/', 'danger', "Could not find any endpoints " +
+          "at \"#{params[:me]}\". Does this server support Micropub? " +
+          "Please <a href=\"/about#endpoint-discovery\" class=\"alert-" +
+          "link\">read&nbsp;the&nbsp;docs</a> for more information.")
       end
       # define random state string
       session[:state] = Random.new_seed.to_s
