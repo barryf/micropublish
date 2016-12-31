@@ -44,7 +44,8 @@ module Micropublish
           Auth.valid_uri?(params[:me])
         redirect_flash('/', 'danger', 
           "Please enter your site's URL. " +
-          "It must begin with `http://` or `https://`.")
+          "It must begin with <code>http://</code> or " +
+          "<code>https://</code>.")
       end
       unless params.key?('scope') && (params[:scope] == 'post' ||
           params[:scope] == 'create update delete undelete')
