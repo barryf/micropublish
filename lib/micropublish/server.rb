@@ -42,7 +42,7 @@ module Micropublish
     get '/auth' do
       unless params.key?('me') && !params[:me].empty? &&
           Auth.valid_uri?(params[:me])
-        redirect_flash('/', 'danger', 
+        redirect_flash('/', 'danger',
           "Please enter your site's URL. " +
           "It must begin with <code>http://</code> or " +
           "<code>https://</code>.")
@@ -250,9 +250,6 @@ module Micropublish
           message: "Format setting updated to \"#{format_label}\". New posts " +
             "will be sent using #{format_label} format."
         }
-      # TODO: make use of this reloader
-      elsif params.key?('reload-syndicate-to')
-        @syndicate_to = nil
       end
       redirect '/'
     end
@@ -270,7 +267,7 @@ module Micropublish
     helpers do
       def micropub
         require_session
-        @micropub ||= Micropub.new(session[:micropub], session[:token])
+        Micropub.new(session[:micropub], session[:token])
       end
 
       def set_flash(type, message)
@@ -284,7 +281,7 @@ module Micropublish
 
       def syndicate_to
         begin
-          @syndicate_to ||= micropub.syndicate_to
+          session[:syndicate_to] ||= micropub.syndicate_to
         rescue MicropublishError => e
           redirect_flash('/', 'danger', e.message)
         end
@@ -308,8 +305,6 @@ module Micropublish
 
       def logout!
         session.clear
-        @micropub = nil
-        @syndicate_to = nil
         redirect '/'
       end
 

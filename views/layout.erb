@@ -9,12 +9,6 @@
       href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
       integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
       crossorigin="anonymous">
-    <!--
-    <link rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
-      integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
-      crossorigin="anonymous">
-    -->
     <link rel="stylesheet"
       href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/micropublish.css">
@@ -30,15 +24,9 @@
     <nav class="navbar navbar-default">
       <div class="container">
         <div class="navbar-header h-x-app">
-          <% if logged_in? %>
-            <a class="navbar-brand" href="/">
-              Micropublish
-            </a>
-          <% else %>
-            <div class="navbar-brand p-name">
-              Micropublish
-            </div
-          <% end %>
+          <a class="navbar-brand p-name" href="/">
+            Micropublish
+          </a>
         </div>
       </div>
     </nav>
@@ -52,11 +40,11 @@
       </div>
     </div>
 
-    <hr>
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <% if logged_in? %>
+    <% if logged_in? %>
+      <hr>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
             <form action="/logout" method="post" class="form-inline logout">
               <p>
                 <code><%= session[:me] %></code>&nbsp;
@@ -65,20 +53,13 @@
                 </button>
               </p>
             </form>
-          <% end %>
-          <a href="https://github.com/barryf/micropublish/releases/tag/v<%= Micropublish::VERSION %>">
-             v<%= Micropublish::VERSION %>
-           </a>
-            <% if logged_in? %>
-              &middot;
-              <a href="/">Dashboard</a>
-              &middot;
-              <a href="/about">About</a>
-            <% end %>
+            <a href="/">Dashboard</a>
+            &middot;
+            <a href="/about">About</a>
           </div>
         </div>
       </div>
-    </div>
+    <% end %>
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
       integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
