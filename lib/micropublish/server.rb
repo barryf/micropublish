@@ -69,7 +69,8 @@ module Micropublish
         client_id: request.base_url,
         state: session[:state],
         scope: session[:scope],
-        redirect_uri: "#{request.base_url}/auth/callback"
+        redirect_uri: "#{request.base_url}/auth/callback",
+        response_type: "code"
       })
       redirect "#{endpoints[:authorization_endpoint]}?#{query}"
     end
