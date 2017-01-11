@@ -75,9 +75,9 @@ authorize via OAuth 2.0 against your server's token endpoint to obtain an
 access token.
 
 When signing in you must specify the scope Micropublish should request from
-your endpoint depending on what features you support. With the `post` scope 
+your endpoint depending on what features you support. With the `post` scope
 only the post creation action will be available.
-For the editing/deleting/undeleting functionality, 
+For the editing/deleting/undeleting functionality,
 your site's Micropub endpoint must support `create`, `update`, `delete` and
 `undelete`. These scopes will be requested from your token endpoint.
 
@@ -145,9 +145,12 @@ to help secure data stored in the user's cookie.
 Drag these links to your bookmarks bar and you can quickly perform each action
 on a page you are viewing, with the relevant properties already filled:
 
+- <a class="badge" href="javascript:window.location='https://micropublish.net/edit?url='+encodeURIComponent(location.href);">✏︎ Edit</a>
+- <a class="badge" href="javascript:window.location='https://micropublish.net/delete?url='+encodeURIComponent(location.href);">✖︎ Delete</a>
+- <a class="badge" href="javascript:window.location='https://micropublish.net/undelete?url='+encodeURIComponent(location.href);">✔︎ Undelete</a>
 - <a class="badge" href="javascript:window.location='https://micropublish.net/new/h-entry/reply?in-reply-to='+encodeURIComponent(location.href);">↩ Reply</a>
 - <a class="badge" href="javascript:window.location='https://micropublish.net/new/h-entry/repost?repost-of='+encodeURIComponent(location.href);">♺ Repost</a>
-- <a class="badge" href="javascript:window.location='https://micropublish.herokuapp.com/new/h-entry/like?like-of='+encodeURIComponent(location.href);">❤ Like</a>
+- <a class="badge" href="javascript:window.location='https://micropublish.net/new/h-entry/like?like-of='+encodeURIComponent(location.href);">❤ Like</a>
 - <a class="badge" href="javascript:window.location='https://micropublish.net/new/h-entry/rsvp?in-reply-to='+encodeURIComponent(location.href);">✔︎ RSVP</a>
 - <a class="badge" href="javascript:window.location='https://micropublish.net/new/h-entry/bookmark?bookmark-of='+encodeURIComponent(location.href)+'&name='+encodeURIComponent(document.title);">✂ Bookmark</a>
 
