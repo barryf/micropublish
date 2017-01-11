@@ -11,11 +11,7 @@ module Micropublish
       begin
         response = HTTParty.get(@micropub, query: query, headers: headers)
         JSON.parse(response.body)['syndicate-to']
-      rescue => e
-        raise MicropubError.new("Unable to retrieve configuration " +
-          "data from Micropub endpoint via <code>?q=config</code>. " +
-          "Error received: \"#{e.message}\""
-        )
+      rescue
       end
     end
 
