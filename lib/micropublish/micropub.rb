@@ -7,17 +7,16 @@ module Micropublish
     end
 
     def syndicate_to
-      query = { q: 'syndicate-to' }
+      query = { q: 'config' }
       begin
         response = HTTParty.get(@micropub, query: query, headers: headers)
+        JSON.parse(response.body)['syndicate-to']
       rescue => e
-        raise MicropubError.new("Unable to retrieve <em>syndicate-to</em> " +
-          "list from Micropub endpoint via <code>?q=syndicate-to</code>. " +
+        raise MicropubError.new("Unable to retrieve configuration " +
+          "data from Micropub endpoint via <code>?q=config</code>. " +
           "Error received: \"#{e.message}\""
         )
       end
-      return unless response.code.to_i == 200
-      JSON.parse(response.body)['syndicate-to']
     end
 
     def source(url)

@@ -281,7 +281,7 @@ module Micropublish
 
       def syndicate_to
         begin
-          session[:syndicate_to] ||= micropub.syndicate_to
+          session[:syndicate_to] ||= micropub.syndicate_to || []
         rescue MicropublishError => e
           redirect_flash('/', 'danger', e.message)
         end
