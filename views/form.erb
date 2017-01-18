@@ -278,18 +278,18 @@
         <%= autogrow_script('syndication') %>
       <% end %>
 
-      <% if @all || @properties.include?('slug') %>
+      <% if @all || @properties.include?('mp-slug') %>
         <div class="form-group">
           <label>
             Slug
-            <% if @required.include?('slug') %><span class="required" title="required">*</span><% end %>
+            <% if @required.include?('mp-slug') %><span class="required" title="required">*</span><% end %>
           </label>
-          <input type="text" class="form-control" id="slug" name="slug"
-            <% if @required.include?('slug') %>required<% end %>
-            value="<%= h @post.properties['slug'][0] if @post.properties.key?('slug') %>">
+          <input type="text" class="form-control" id="mp-slug" name="mp-slug"
+            <% if @required.include?('mp-slug') %>required<% end %>
+            value="<%= h @post.properties['mp-slug'][0] if @post.properties.key?('mp-slug') %>">
           <p class="help-block">
             Enter a short slug you would like your server to use (if supported).
-            <code>slug</code>
+            <code>mp-slug</code>
           </p>
         </div>
       <% end %>

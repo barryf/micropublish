@@ -13,12 +13,12 @@
     "category",
     "mp-syndicate-to",
     "syndication",
-    "slug"
+    "mp-slug"
 	],
 	"default": [
 		"category",
 		"mp-syndicate-to",
-		"slug"
+		"mp-slug"
 	],
 	"types": {
 		"h-entry": {

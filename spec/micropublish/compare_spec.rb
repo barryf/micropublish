@@ -23,7 +23,7 @@ describe Micropublish::Compare do
         "category",
         "mp-syndicate-to",
         "syndication",
-        "slug"
+        "mp-slug"
     	]
     )
   end
