@@ -1,17 +1,18 @@
 <form action="<%= @action_url %>" method="post" class="helpable" id="form">
   <input type="hidden" name="_type" value="<%= @type %>">
   <input type="hidden" name="_subtype" value="<%= @subtype %>">
+  <% if @all %><input type="hidden" name="_all" value=""><% end %>
 
   <div class="panel panel-default">
 
     <div class="panel-heading">
       <h3 class="panel-title">
-        <% if @action_label == 'Create' %>
-          New <%= @subtype_label %>
+        <% if @all %>
+          All fields
         <% else %>
-          Edit post
+          <span class="fa fa-<%= @subtype_icon %>"></span>
         <% end %>
-        (<%= @type %>)
+        <%= @subtype_label || "" %>
       </h3>
     </div>
 
@@ -140,7 +141,7 @@
         </div>
       <% end %>
 
-      <% if (@all && @post.properties.key?('content') && !@post.properties['content'][0].is_a?(Hash)) || @properties.include?('content') %>
+      <% if (@edit && @post.properties.key?('content') && !@post.properties['content'][0].is_a?(Hash)) || (@properties.include?('content') && @subtype != 'article') %>
         <div class="form-group">
           <label for="content">
             Content
@@ -159,14 +160,12 @@
           </p>
         </div>
         <%= autogrow_script('content') %>
-      <% end %>
-
-      <% if (@all && @post.properties.key?('content') && @post.properties['content'][0].is_a?(Hash)) || @properties.include?('content-html') %>
+      <% elsif (@edit && @post.properties.key?('content') && @post.properties['content'][0].is_a?(Hash)) || (@properties.include?('content') && @subtype == 'article') %>
         <% content_html_value = @post.properties.key?('content') && @post.properties['content'][0].is_a?(Hash) && @post.properties['content'][0].key?('html') ? h(@post.properties['content'][0]['html']) : "" %>
         <div class="form-group">
           <label>
             Content (HTML)
-            <% if @required.include?('content-html') %><span class="required" title="required">*</span><% end %>
+            <% if @required.include?('content') %><span class="required" title="required">*</span><% end %>
           </label>
           <textarea id="content-html" class="form-control" rows="5" name="content[][html]"><%= content_html_value %></textarea>
           <trix-editor input="content-html" style="display: none;"></trix-editor>
@@ -196,25 +195,6 @@
           </p>
         </div>
         <%= autogrow_script('summary') %>
-      <% end %>
-
-      <% if @all || @properties.include?('published') %>
-        <div class="form-group">
-          <label for="published">
-            Published
-            <% if @required.include?('published') %><span class="required" title="required">*</span><% end %>
-          </label>
-          <input type="datetime" class="form-control" id="published" name="published"
-            <% if @required.include?('published') %>required<% end %>
-            value="<%= h @post.properties['published'][0] if @post.properties.key?('published') %>">
-          <p class="help-block">
-            Enter a datetime for when this post was (or will be) published.
-            The suggested format is YYYY-MM-DDTHH:MM:SSZ,
-            e.g. 2016-11-21T12:34:56Z for a post at 12:34:56 UTC on 21 November
-            2016.
-            <code>published</code>
-          </p>
-        </div>
       <% end %>
 
       <% if @all || @properties.include?('category') %>
@@ -260,7 +240,25 @@
         </div>
       <% end %>
 
-      <% if @all || @properties.include?('syndication') %>
+      <% if !@edit && @properties.include?('mp-slug') %>
+        <div class="form-group">
+          <label>
+            Slug
+            <% if @required.include?('mp-slug') %><span class="required" title="required">*</span><% end %>
+          </label>
+          <input type="text" class="form-control" id="mp-slug" name="mp-slug"
+            <% if @required.include?('mp-slug') %>required<% end %>
+            value="<%= h @post.properties['mp-slug'][0] if @post.properties.key?('mp-slug') %>">
+          <p class="help-block">
+            Enter a short slug you would like your server to use (if supported).
+            <code>mp-slug</code>
+          </p>
+        </div>
+      <% end %>
+
+      <% if @edit %><hr><% end %>
+
+      <% if @all || @edit || @properties.include?('syndication') %>
         <div class="form-group">
           <label>
             Syndication
@@ -278,18 +276,21 @@
         <%= autogrow_script('syndication') %>
       <% end %>
 
-      <% if @properties.include?('mp-slug') %>
+      <% if @all || @edit || @properties.include?('published') %>
         <div class="form-group">
-          <label>
-            Slug
-            <% if @required.include?('mp-slug') %><span class="required" title="required">*</span><% end %>
+          <label for="published">
+            Published
+            <% if @required.include?('published') %><span class="required" title="required">*</span><% end %>
           </label>
-          <input type="text" class="form-control" id="mp-slug" name="mp-slug"
-            <% if @required.include?('mp-slug') %>required<% end %>
-            value="<%= h @post.properties['mp-slug'][0] if @post.properties.key?('mp-slug') %>">
+          <input type="datetime" class="form-control" id="published" name="published"
+            <% if @required.include?('published') %>required<% end %>
+            value="<%= h @post.properties['published'][0] if @post.properties.key?('published') %>">
           <p class="help-block">
-            Enter a short slug you would like your server to use (if supported).
-            <code>mp-slug</code>
+            Enter a datetime for when this post was (or will be) published.
+            The suggested format is YYYY-MM-DDTHH:MM:SSZ,
+            e.g. 2016-11-21T12:34:56Z for a post at 12:34:56 UTC on 21 November
+            2016.
+            <code>published</code>
           </p>
         </div>
       <% end %>

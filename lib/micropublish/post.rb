@@ -48,7 +48,6 @@ module Micropublish
       end
       # check all required properties have been provided
       required.each do |property|
-        next if property == 'content-html'
         unless @properties.key?(property)
           raise MicropublishError.new('post',
             "<code>#{property}</code> is required for the form to be " +
@@ -62,7 +61,6 @@ module Micropublish
     end
 
     def to_form_encoded
-      puts "props=#{@properties}"
       props = Hash[@properties.map { |k,v| v.size > 1 ? ["#{k}[]", v] : [k,v] }]
       query = { h: h_type }.merge(props)
       URI.encode_www_form(query)
@@ -112,6 +110,40 @@ module Micropublish
         end
       end
       diff.delete(:replace) if diff[:replace].empty?
+    end
+
+    def entry_type
+      if @properties.key?('rsvp') &&
+          %w(yes no maybe interested).include?(@properties['rsvp'][0])
+        'rsvp'
+      elsif @properties.key?('in-reply-to') &&
+          Auth.valid_uri?(@properties['in-reply-to'][0])
+        'reply'
+      elsif @properties.key?('repost-of') &&
+          Auth.valid_uri?(@properties['repost-of'][0])
+        'repost'
+      elsif @properties.key?('like-of') &&
+          Auth.valid_uri?(@properties['like-of'][0])
+        'like'
+      elsif @properties.key?('bookmark-of') &&
+          Auth.valid_uri?(@properties['bookmark-of'][0])
+        'bookmark'
+      elsif @properties.key?('name') && !@properties['name'].empty? &&
+          !content_start_with_name?
+        'article'
+      else
+        'note'
+      end
+    end
+
+    def content_start_with_name?
+      return unless @properties.key?('content') && @properties.key?('name')
+      content = @properties['content'][0].is_a?(Hash) &&
+        @properties['content'][0].key?('html') ?
+        @properties['content'][0]['html'] : @properties['content'][0]
+      content_tidy = content.strip.gsub(/\s+/, " ")
+      name_tidy = @properties['name'][0].strip.gsub(/\s+/, " ")
+      content_tidy.start_with?(name_tidy)
     end
 
   end

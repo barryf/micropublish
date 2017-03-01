@@ -7,8 +7,7 @@
     "rsvp",
     "name",
     "content",
-    "content-html",
-		"summary",
+    "summary",
     "published",
     "category",
     "mp-syndicate-to",
@@ -25,14 +24,14 @@
 			"note": {
 				"name": "Note",
 				"icon": "comment",
-				"properties": ["content", "location", "location-name"],
+				"properties": ["content"],
 				"required": ["content"]
 			},
 			"article": {
 				"name": "Article",
 				"icon": "file-text",
-				"properties": ["name", "content-html"],
-				"required": ["name", "content-html"]
+				"properties": ["name", "content"],
+				"required": ["name", "content"]
 			},
 			"rsvp": {
 				"name": "RSVP",

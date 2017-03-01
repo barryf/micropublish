@@ -109,7 +109,8 @@ module Micropublish
     def render_new(subtype)
       @type = 'h-entry'
       @subtype = subtype
-      @subtype_label = subtype == 'rsvp' ? 'RSVP' : subtype
+      @subtype_label = subtype == 'rsvp' ? 'RSVP' : subtype.capitalize
+      @subtype_icon = settings.properties['types']['h-entry'][subtype]['icon']
       @title = "New #{@subtype_label} (#{@type})"
       @post ||= Post.new(@type, Post.properties_from_params(params))
       @properties =
@@ -161,23 +162,15 @@ module Micropublish
       require_session
       redirect "/delete?url=#{params[:url]}" if params.key?('delete')
       redirect "/undelete?url=#{params[:url]}" if params.key?('undelete')
-      render_edit
+      redirect "/edit-all?url=#{params[:url]}" if params.key?('edit-all')
+
+      subtype = micropub.source_all(params[:url]).entry_type
+      render_edit(subtype)
     end
 
-    def render_edit
-      begin
-        @post ||= micropub.source(params[:url])
-      rescue MicropubError => e
-        redirect_flash('/', 'danger', e.message)
-      end
-      @title = "Edit post at #{params[:url] || params[:_url]}"
-      @type = 'h-entry'
-      @properties = []
-      @required = []
-      @all = true
-      @action_url = '/edit'
-      @action_label = 'Update'
-      erb :form
+    get '/edit-all' do
+      require_session
+      render_edit_all
     end
 
     post '/edit' do
@@ -186,9 +179,15 @@ module Micropublish
         submitted_properties = Post.properties_from_params(params)
         @post = Post.new([params[:_type]], submitted_properties)
         @post.validate_properties!
-        original = micropub.source(params[:_url])
+        original_properties = if params.key?('_all')
+          micropub.source_all(params[:_url]).properties
+        else
+          subtype = params[:_subtype]
+          micropub.source_properties(params[:_url],
+            subtype_edit_properties(subtype)).properties
+        end
         mp_commands = Micropub.find_commands(params)
-        diff = Compare.new(original.properties, submitted_properties,
+        diff = Compare.new(original_properties, submitted_properties,
           settings.properties['known']).diff_properties
         if params.key?('_preview')
           hash = {
@@ -211,7 +210,7 @@ module Micropublish
           e.message
         else
           set_flash('danger', e.message)
-          render_edit
+          params.key?('_all') ? render_edit_all : render_edit(params[:_subtype])
         end
       end
     end
@@ -317,6 +316,51 @@ module Micropublish
 
       def format_form_encoded(content)
         content.gsub(/&/,"\n&")
+      end
+
+      def subtype_edit_properties(subtype)
+        props = settings.properties['types']['h-entry'][subtype]['properties'] +
+          settings.properties['default'] + %w(syndication published)
+        # remove mp- commands
+        props.map { |p| p unless p.start_with?('mp-') }.compact
+      end
+
+      def render_edit(subtype)
+        begin
+          @post ||= micropub.source_properties(params[:url],
+            subtype_edit_properties(subtype))
+        rescue MicropubError => e
+          redirect_flash('/', 'danger', e.message)
+        end
+        @subtype = subtype
+        @subtype_label = subtype == 'rsvp' ? 'RSVP' : subtype.capitalize
+        @subtype_icon = settings.properties['types']['h-entry'][subtype]['icon']
+        @title = "Edit #{@subtype_label} at #{params[:url] || params[:_url]}"
+        @type = 'h-entry'
+        @properties = subtype_edit_properties(subtype)
+        @required =
+          settings.properties['types']['h-entry'][@subtype]['required']
+        @edit = true
+        @action_url = '/edit'
+        @action_label = "Update"
+        erb :form
+      end
+
+      def render_edit_all
+        begin
+          @post ||= micropub.source_all(params[:url])
+        rescue MicropubError => e
+          redirect_flash('/', 'danger', e.message)
+        end
+        @title = "Edit post at #{params[:url] || params[:_url]}"
+        @type = 'h-entry'
+        @properties = []
+        @required = []
+        @edit = true
+        @all = true
+        @action_url = '/edit'
+        @action_label = 'Update'
+        erb :form
       end
     end
 
