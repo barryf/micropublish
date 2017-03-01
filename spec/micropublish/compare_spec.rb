@@ -18,7 +18,6 @@ describe Micropublish::Compare do
         "rsvp",
         "name",
         "content",
-        "content-html",
         "published",
         "category",
         "mp-syndicate-to",

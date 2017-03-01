@@ -15,12 +15,23 @@ module Micropublish
       end
     end
 
-    def source(url)
+    def source_all(url)
+      body = get_source(url)
+      Post.new(body['type'], body['properties'])
+    end
+
+    def source_properties(url, properties)
+      body = get_source(url, properties)
+      # assume h-entry
+      Post.new(['h-entry'], body['properties'])
+    end
+
+    def get_source(url, properties=nil)
       validate_url!(url)
       query = { q: 'source', url: url }
+      query[:properties] = properties if properties
       response = HTTParty.get(@micropub, query: query, headers: headers)
-      body = JSON.parse(response.body)
-      Post.new(body['type'], body['properties'])
+      JSON.parse(response.body)
     end
 
     def validate_url!(url)
