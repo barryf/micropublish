@@ -319,10 +319,8 @@ module Micropublish
       end
 
       def subtype_edit_properties(subtype)
-        props = settings.properties['types']['h-entry'][subtype]['properties'] +
+        settings.properties['types']['h-entry'][subtype]['properties'] +
           settings.properties['default'] + %w(syndication published)
-        # remove mp- commands
-        props.map { |p| p unless p.start_with?('mp-') }.compact
       end
 
       def render_edit(subtype)
