@@ -11,7 +11,10 @@ module Micropublish
       body = if @is_json
           { type: post.type, properties: post.properties }
         else
-          { h: post.h_type }.merge(post.properties)
+          # flatten single value arrays
+          { h: post.h_type }.merge(
+            Hash[post.properties.map { |k,v| [k, v.size == 1 ? v[0] : v] }]
+          )
         end
       response = send(body)
       case response.code.to_i
