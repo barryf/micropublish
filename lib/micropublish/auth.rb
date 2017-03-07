@@ -1,10 +1,11 @@
 module Micropublish
   class Auth
 
-    def initialize(me, code, state, redirect_uri, client_id)
+    def initialize(me, code, state, scope, redirect_uri, client_id)
       @me = me
       @code = code
       @state = state
+      @scope = scope
       @redirect_uri = redirect_uri
       @client_id = client_id
     end
@@ -43,14 +44,24 @@ module Micropublish
         redirect_uri: @redirect_uri,
         client_id: @client_id,
         state: @state,
-        scope: 'create update delete undelete'
+        scope: @scope,
+        grant_type: 'authorization_code'
       })
       if (200...300).include?(response.code)
-        response_hash = CGI.parse(response.parsed_response)
-        if response_hash.nil? || !response_hash.key?('access_token')
+        if response.headers['content-type'] == 'application/json'
+          response_hash = JSON.parse(response.body)
+          access_token = response_hash.key?('access_token') ?
+            response_hash['access_token'] : nil
+        else
+          # assume form-encoded
+          response_hash = CGI.parse(response.parsed_response)
+          access_token = response_hash.key?('access_token') ?
+            response_hash['access_token'].first : nil
+        end
+        unless access_token
           raise AuthError.new("No access_token returned from token endpoint.")
         end
-        response_hash['access_token'].first
+        access_token
       else
         raise AuthError.new("#{response.code} received from token endpoint.")
       end

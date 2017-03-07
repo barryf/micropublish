@@ -77,7 +77,7 @@ module Micropublish
 
     get '/auth/callback' do
       auth = Auth.new(params[:me], params[:code], session[:state],
-        "#{request.base_url}/auth/callback", request.base_url)
+        session[:scope], "#{request.base_url}/auth/callback", request.base_url)
       begin
         endpoints_and_token = auth.callback
       rescue AuthError => e
