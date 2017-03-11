@@ -19,13 +19,17 @@ module Micropublish
       use Rack::Session::Cookie, secret: secret, expire_after: 2_592_000
     end
 
-    #before do
-    #  unless settings.production?
-    #    session[:me] = 'http://localhost:9394/'
-    #    session[:micropub] = 'http://localhost:9394/micropub'
-    #    session[:scope] = 'create update delete undelete'
-    #  end
-    #end
+    before do
+      unless settings.production?
+        session[:me] = 'http://localhost:9394/'
+        session[:micropub] = 'http://localhost:9394/micropub'
+        session[:scope] = 'create update delete undelete'
+        session[:syndicate_to] = [{
+          "uid" => "https://twitter.com/barryfdata",
+          "name" => "Twitter (barryfdata)"
+        }]
+      end
+    end
 
     get '/' do
       if logged_in?
@@ -165,6 +169,12 @@ module Micropublish
       redirect "/edit-all?url=#{params[:url]}" if params.key?('edit-all')
 
       subtype = micropub.source_all(params[:url]).entry_type
+      render_edit(subtype)
+    end
+
+    get %r{^/edit/h\-entry/(note|article|bookmark|reply|repost|like|rsvp)$} do
+        |subtype|
+      require_session
       render_edit(subtype)
     end
 
@@ -319,8 +329,12 @@ module Micropublish
       end
 
       def subtype_edit_properties(subtype)
-        settings.properties['types']['h-entry'][subtype]['properties'] +
+        # for micropub.rocks only return content and category
+        return %w(content category) if params.key?('rocks')
+
+        props = settings.properties['types']['h-entry'][subtype]['properties'] +
           settings.properties['default'] + %w(syndication published)
+        props.map { |p| p unless p.start_with?('mp-') }.compact
       end
 
       def render_edit(subtype)
