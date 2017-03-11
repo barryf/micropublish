@@ -3,12 +3,13 @@ describe Micropublish::Compare do
   before do
     @compare = Micropublish::Compare.new(
       {
-        'content' => 'Existing content.',
+        'content' => ['Existing content.'],
         'category' => ['indieweb','micropub']
       },
       {
-        'content' => 'New content.',
-        'name' => 'New name.'
+        'content' => ['New content.'],
+        'name' => ['New name.'],
+        'category' => ['indieweb','new']
       },
       [
         "in-reply-to",
@@ -18,6 +19,7 @@ describe Micropublish::Compare do
         "rsvp",
         "name",
         "content",
+        "summary",
         "published",
         "category",
         "mp-syndicate-to",
@@ -31,9 +33,9 @@ describe Micropublish::Compare do
 
     describe "#diff_removed!" do
       it "should show that properties have been removed." do
-        diff = { delete: [] }
+        diff = { replace: {}, add: {}, delete: {} }
         @compare.diff_removed!(diff)
-        expect(diff).to eql({ delete: ['category'] })
+        expect(diff[:delete]).to eql({ 'category' => ['micropub'] })
       end
     end
 
@@ -41,15 +43,18 @@ describe Micropublish::Compare do
       it "should show that properties have been added." do
         diff = { add: {} }
         @compare.diff_added!(diff)
-        expect(diff).to eql({ add: { 'name' => ['New name.'] } })
+        expect(diff[:add]).to eql({
+          'name' => ['New name.'],
+          'category' => ['new']
+        })
       end
     end
 
     describe "#diff_replaced!" do
       it "should show that properties have been replaced." do
-        diff = { replace: {} }
+        diff = { replace: {}, add: {}, delete: {} }
         @compare.diff_replaced!(diff)
-        expect(diff).to eql({ replace: { 'content' => ['New content.'] } })
+        expect(diff[:replace]).to eql({ 'content' => ['New content.'] })
       end
     end
 
@@ -57,8 +62,8 @@ describe Micropublish::Compare do
       it "should combine diffs from each of the three methods." do
         diff = @compare.diff_properties
         expect(diff).to eql({
-          delete: ['category'],
-          add: { 'name' => ['New name.'] },
+          delete: { 'category' => ['micropub'] },
+          add: { 'name' => ['New name.'], 'category' => ['new'] },
           replace: { 'content' => ['New content.'] }
         })
       end
