@@ -47,7 +47,6 @@ module Micropublish
           end
         end
       end
-      puts "@properties=#{@properties}"
       # check all required properties have been provided
       required.each do |property|
         if !@properties.key?(property) ||
