@@ -163,7 +163,7 @@ will need to update if you are hosting Micropublish yourself.
 
 If you would like any help with setting up your Micropub endpoint, your best
 option is to
-[join the `#indiewebcamp` channel][irc] on Freenode IRC.
+[join the `#indieweb` channel][irc] on Freenode IRC.
 
 For Micropublish specific help, [get in touch][bfcontact] and I'll be happy
 to help.
