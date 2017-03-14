@@ -12,7 +12,8 @@
     "category",
     "mp-syndicate-to",
     "syndication",
-    "mp-slug"
+    "mp-slug",
+    "location"
 	],
 	"default": [
 		"category",
@@ -62,6 +63,12 @@
 				"icon": "heart",
 				"properties": ["like-of"],
 				"required": ["like-of"]
+			},
+			"checkin": {
+				"name": "Check-in",
+				"icon": "map-marker",
+				"properties": ["location"],
+				"required": ["location"]
 			}
 		}
 	}

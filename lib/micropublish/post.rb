@@ -22,7 +22,8 @@ module Micropublish
         elsif param == 'content'
           props['content'] = Array(params[param])
         else
-          props[param] = if params[param].is_a?(Array)
+          props[param] = if params[param].is_a?(Array) &&
+                params[param][0].is_a?(String)
               params[param][0].split(/\s+/)
             else
               Array(params[param])
@@ -48,7 +49,11 @@ module Micropublish
       end
       # check all required properties have been provided
       required.each do |property|
-        unless @properties.key?(property)
+        if !@properties.key?(property) ||
+          (property == 'location' &&
+            (@properties['location'][0]['properties']['name'][0].empty? ||
+            @properties['location'][0]['properties']['latitude'][0].empty? ||
+            @properties['location'][0]['properties']['longitude'][0].empty?))
           raise MicropublishError.new('post',
             "<code>#{property}</code> is required for the form to be " +
             "submitted. Please enter a value for this property.")
@@ -131,6 +136,8 @@ module Micropublish
       elsif @properties.key?('name') && !@properties['name'].empty? &&
           !content_start_with_name?
         'article'
+      elsif @properties.key?('location') && !@properties.key?('content')
+        'checkin'
       else
         'note'
       end

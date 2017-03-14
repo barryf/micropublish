@@ -104,7 +104,7 @@ module Micropublish
       redirect '/new/h-entry/note'
     end
 
-    get %r{^/new/h\-entry/(note|article|bookmark|reply|repost|like|rsvp)$} do
+    get %r{^/new/h\-entry/(note|article|bookmark|reply|repost|like|rsvp|checkin)$} do
         |subtype|
       require_session
       render_new(subtype)
@@ -113,7 +113,7 @@ module Micropublish
     def render_new(subtype)
       @type = 'h-entry'
       @subtype = subtype
-      @subtype_label = subtype == 'rsvp' ? 'RSVP' : subtype.capitalize
+      @subtype_label = settings.properties['types']['h-entry'][subtype]['name']
       @subtype_icon = settings.properties['types']['h-entry'][subtype]['icon']
       @title = "New #{@subtype_label} (#{@type})"
       @post ||= Post.new(@type, Post.properties_from_params(params))
@@ -172,7 +172,7 @@ module Micropublish
       render_edit(subtype)
     end
 
-    get %r{^/edit/h\-entry/(note|article|bookmark|reply|repost|like|rsvp)$} do
+    get %r{^/edit/h\-entry/(note|article|bookmark|reply|repost|like|rsvp|checkin)$} do
         |subtype|
       require_session
       render_edit(subtype)
@@ -345,7 +345,7 @@ module Micropublish
           redirect_flash('/', 'danger', e.message)
         end
         @subtype = subtype
-        @subtype_label = subtype == 'rsvp' ? 'RSVP' : subtype.capitalize
+        @subtype_label = settings.properties['types']['h-entry'][subtype]['name']
         @subtype_icon = settings.properties['types']['h-entry'][subtype]['icon']
         @title = "Edit #{@subtype_label} at #{params[:url] || params[:_url]}"
         @type = 'h-entry'
