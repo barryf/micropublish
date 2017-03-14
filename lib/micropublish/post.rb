@@ -136,7 +136,7 @@ module Micropublish
       elsif @properties.key?('name') && !@properties['name'].empty? &&
           !content_start_with_name?
         'article'
-      elsif @properties.key?('location') && !@properties.key?('content')
+      elsif @properties.key?('location')
         'checkin'
       else
         'note'
