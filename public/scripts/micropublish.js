@@ -46,4 +46,24 @@ $(function() {
 	$('#content-html').css({ display: "none" });
 	$('trix-editor').css({ display: "block" });
 
+  $('#find_location').on('click', function() {
+    navigator.geolocation.getCurrentPosition(function(position) {
+
+      var latitude = (Math.round(position.coords.latitude * 100000) / 100000);
+      var longitude = (Math.round(position.coords.longitude * 100000) / 100000);
+      $("#latitude").val(latitude);
+      $("#longitude").val(longitude);
+
+    }, function(err){
+      if(err.code == 1) {
+        alert("The website was not able to get permission");
+      } else if(err.code == 2) {
+        alert("Location information was unavailable");
+      } else if(err.code == 3) {
+        alert("Timed out getting location");
+      }
+    });
+    return false
+  });
+
 });

@@ -6,6 +6,10 @@
     <div>
       <% @types.keys.each do |type| %>
         <a class="btn btn-default" href="/new/h-entry/<%= type %>"
+            <% if type == 'checkin' && default_format != :json %>
+              disabled
+              title="Check-ins are only supported using JSON format."
+            <% end %>
             role="button">
           <span class="fa fa-<%= @types[type]['icon'] %>"></span><br>
           <%= @types[type]['name']%>
@@ -49,7 +53,7 @@
       <button name="edit" class="btn btn-default">Edit</button>
       &nbsp;
       <button name="edit-all" class="btn btn-default"
-        title="&quot;The Kitchen Sink&quot; editor">Edit all fields</button>
+        title="&quot;The Kitchen Sink&quot; editor">Edit all</button>
       &nbsp;
       <div class="btn-group" role="group">
         <button name="delete" class="btn btn-default">Delete</button>

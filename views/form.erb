@@ -132,7 +132,7 @@
             <% if @required.include?('name') %><span class="required" title="required">*</span><% end %>
           </label>
           <input type="text" class="form-control" id="name" name="name"
-            <% if @required.include?('nadme') %>required<% end %>
+            <% if @required.include?('name') %>required<% end %>
             value="<%= h @post.properties['name'][0] if @post.properties.key?('name') %>">
           <p class="help-block">
             Enter a name/title for this post.
@@ -195,6 +195,51 @@
           </p>
         </div>
         <%= autogrow_script('summary') %>
+      <% end %>
+
+      <% if @all || @properties.include?('location') %>
+        <div class="form-group">
+          <label>
+            Location
+            <% if @required.include?('location') %><span class="required" title="required">*</span><% end %>
+          </label>
+          <input type="hidden" name="location[][type][]" value="h-geo">
+          <input type="text" class="form-control" name="location[][properties][name][]"
+            <% if @required.include?('location') %>required<% end %>
+            value="<%= h @post.properties['location'][0]['properties']['name'][0] if @post.properties.key?('location') %>">
+          <p class="help-block">
+            Enter the location's name in free text. The location is sent as a h-geo object.
+            <code>location[][properties][name]</code>
+          </p>
+        </div>
+        <div class="form-group">
+          <div class="form-inline">
+            <label>
+              Latitude
+              <% if @required.include?('location') %><span class="required" title="required">*</span><% end %>
+            </label>
+            <input type="text" class="form-control" name="location[][properties][latitude][]"
+              id="latitude" pattern="-?\d{1,3}\.\d+"
+              <% if @required.include?('location') %>required<% end %>
+              value="<%= h @post.properties['location'][0]['properties']['latitude'][0] if @post.properties.key?('location') && @post.properties['location'].is_a?(Array) %>">
+            &nbsp;
+            <label>
+              Longitude
+              <% if @required.include?('location') %><span class="required" title="required">*</span><% end %>
+            </label>
+            <input type="text" class="form-control" name="location[][properties][longitude][]"
+              id="longitude" pattern="-?\d{1,3}\.\d+"
+              <% if @required.include?('location') %>required<% end %>
+              value="<%= h @post.properties['location'][0]['properties']['longitude'][0] if @post.properties.key?('location') && @post.properties['location'].is_a?(Array) %>">
+            <script>
+              document.write("&nbsp; <button type=\"button\" class=\"btn btn-default\" id=\"find_location\" data-toggle=\"button\" aria-pressed=\"false\" autocomplete=\"off\">Find</button>");
+            </script>
+          </div>
+          <p class="help-block">
+            Enter the latitude and longitude coordinates for the location.
+            <code>location[][properties][latitude], location[][properties][longitude]</code>
+          </p>
+        </div>
       <% end %>
 
       <% if @all || @properties.include?('category') %>
