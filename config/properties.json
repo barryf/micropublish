@@ -67,7 +67,7 @@
 			"checkin": {
 				"name": "Check-in",
 				"icon": "map-marker",
-				"properties": ["location"],
+				"properties": ["location", "content"],
 				"required": ["location"]
 			}
 		}
