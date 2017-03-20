@@ -5,10 +5,13 @@
   <div class="panel-body new-buttons">
     <div>
       <% @types.keys.each do |type| %>
-        <a class="btn btn-default" href="/new/h-entry/<%= type %>"
+        <a class="btn btn-default"
             <% if type == 'checkin' && default_format != :json %>
               disabled
               title="Check-ins are only supported using JSON format."
+              href="#"
+            <% else %>
+              href="/new/h-entry/<%= type %>"
             <% end %>
             role="button">
           <span class="fa fa-<%= @types[type]['icon'] %>"></span><br>
