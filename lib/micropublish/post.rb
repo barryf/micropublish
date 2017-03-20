@@ -50,10 +50,10 @@ module Micropublish
       # check all required properties have been provided
       required.each do |property|
         if !@properties.key?(property) ||
-          (property == 'location' &&
-            (@properties['location'][0]['properties']['name'][0].empty? ||
-            @properties['location'][0]['properties']['latitude'][0].empty? ||
-            @properties['location'][0]['properties']['longitude'][0].empty?))
+          (property == 'checkin' &&
+            (@properties['checkin'][0]['properties']['name'][0].empty? ||
+            @properties['checkin'][0]['properties']['latitude'][0].empty? ||
+            @properties['checkin'][0]['properties']['longitude'][0].empty?))
           raise MicropublishError.new('post',
             "<code>#{property}</code> is required for the form to be " +
             "submitted. Please enter a value for this property.")
@@ -136,7 +136,7 @@ module Micropublish
       elsif @properties.key?('name') && !@properties['name'].empty? &&
           !content_start_with_name?
         'article'
-      elsif @properties.key?('location')
+      elsif @properties.key?('checkin')
         'checkin'
       else
         'note'

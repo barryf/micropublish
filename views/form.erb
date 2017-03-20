@@ -125,49 +125,49 @@
         </div>
       <% end %>
 
-      <% if @all || @properties.include?('location') %>
-        <input type="hidden" name="location[][type][]" value="h-card">
+      <% if @all || @properties.include?('checkin') %>
+        <input type="hidden" name="checkin[][type][]" value="h-card">
         <div class="form-group">
           <label>
             Location
-            <% if @required.include?('location') %><span class="required" title="required">*</span><% end %>
+            <% if @required.include?('checkin') %><span class="required" title="required">*</span><% end %>
           </label>
-          <input type="text" class="form-control" name="location[][properties][name][]"
-            <% if @required.include?('location') %>required<% end %>
-            value="<%= h @post.properties['location'][0]['properties']['name'][0] if @post.properties.key?('location') %>">
+          <input type="text" class="form-control" name="checkin[][properties][name][]"
+            <% if @required.include?('checkin') %>required<% end %>
+            value="<%= h @post.properties['checkin'][0]['properties']['name'][0] if @post.properties.key?('checkin') %>">
           <p class="help-block">
-            Enter the location's name in free text.
-            Locations are defined as <a href="http://microformats.org/wiki/h-card">h-card</a> objects.
-            <code>location{name}</code>
+            Enter the check-in location's name in free text.
+            Check-ins are defined as <a href="http://microformats.org/wiki/h-card">h-card</a> objects.
+            <code>checkin{name}</code>
           </p>
         </div>
         <div class="form-group">
           <div class="form-inline">
             <label>
               Latitude
-              <% if @required.include?('location') %><span class="required" title="required">*</span><% end %>
+              <% if @required.include?('checkin') %><span class="required" title="required">*</span><% end %>
             </label>
-            <input type="text" class="form-control" name="location[][properties][latitude][]"
+            <input type="text" class="form-control" name="checkin[][properties][latitude][]"
               id="latitude" pattern="-?\d{1,3}\.\d+"
-              <% if @required.include?('location') %>required<% end %>
-              value="<%= h @post.properties['location'][0]['properties']['latitude'][0] if @post.properties.key?('location') && @post.properties['location'].is_a?(Array) %>">
+              <% if @required.include?('checkin') %>required<% end %>
+              value="<%= h @post.properties['checkin'][0]['properties']['latitude'][0] if @post.properties.key?('checkin') && @post.properties['checkin'].is_a?(Array) %>">
             &nbsp;
             <label>
               Longitude
-              <% if @required.include?('location') %><span class="required" title="required">*</span><% end %>
+              <% if @required.include?('checkin') %><span class="required" title="required">*</span><% end %>
             </label>
-            <input type="text" class="form-control" name="location[][properties][longitude][]"
+            <input type="text" class="form-control" name="checkin[][properties][longitude][]"
               id="longitude" pattern="-?\d{1,3}\.\d+"
-              <% if @required.include?('location') %>required<% end %>
-              value="<%= h @post.properties['location'][0]['properties']['longitude'][0] if @post.properties.key?('location') && @post.properties['location'].is_a?(Array) %>">
+              <% if @required.include?('checkin') %>required<% end %>
+              value="<%= h @post.properties['checkin'][0]['properties']['longitude'][0] if @post.properties.key?('checkin') && @post.properties['checkin'].is_a?(Array) %>">
             <script>
               document.write("&nbsp; <button type=\"button\" class=\"btn btn-default\" id=\"find_location\" data-toggle=\"button\" aria-pressed=\"false\" autocomplete=\"off\">Find</button>");
             </script>
           </div>
           <p class="help-block">
-            Enter the latitude and longitude coordinates for the location.
-            <code>location{latitude}</code>
-            <code>location{longitude}</code>
+            Enter the latitude and longitude coordinates for the check-in.
+            <code>checkin{latitude}</code>
+            <code>checkin{longitude}</code>
           </p>
         </div>
       <% end %>

@@ -13,7 +13,7 @@
     "mp-syndicate-to",
     "syndication",
     "mp-slug",
-    "location"
+    "checkin"
 	],
 	"default": [
 		"category",
@@ -67,8 +67,8 @@
 			"checkin": {
 				"name": "Check-in",
 				"icon": "map-marker",
-				"properties": ["location", "content"],
-				"required": ["location"]
+				"properties": ["checkin", "content"],
+				"required": ["checkin"]
 			}
 		}
 	}
