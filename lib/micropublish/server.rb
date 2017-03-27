@@ -274,6 +274,23 @@ module Micropublish
       erb :static
     end
 
+    get '/redirect' do
+      require_session
+      require_url
+      # HTTP request to see if post exists yet
+      response = HTTParty.get(params[:url])
+      case response.code.to_i
+      when 200
+        redirect params[:url]
+      when 404
+        erb :redirect
+      else
+        redirect_flash('/', 'danger', "There was an error redirecting to your" +
+          " new post's URL (#{params[:url]}). Status code #{h(response.code)}."
+        )
+      end
+    end
+
     helpers do
       def micropub
         require_session

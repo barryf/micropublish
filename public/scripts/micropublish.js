@@ -67,3 +67,19 @@ $(function() {
   });
 
 });
+
+$.fn.countdown = function(duration) {
+  var container = $(this[0]);
+  var countdown = setInterval(function() {
+    if (--duration) {
+      container.html(
+        "Redirecting in " + duration + " second" + (duration != 1 ? "s" : "")
+      );
+    } else {
+      container.html("Redirecting&hellip;");
+      clearInterval(countdown);
+      document.location = document.location;
+    }
+  }, 1000);
+}
+

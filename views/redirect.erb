@@ -1,0 +1,29 @@
+<div class="alert alert-success">
+  <strong>202 Accepted</strong> received from your endpoint to indicate that
+  your new post was created successfully but may not be available immediately.
+</div>
+<div class="alert alert-warning">
+  <strong>404 Not Found</strong> received from your server. Micropublish will
+  try again to redirect.
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-body">
+    <div style="text-align: center">
+      <h1 style="font-size: 500%;">
+        <span class="fa fa-spinner fa-spin"></span>
+      </h1>
+      <h3 id="countdown">Redirecting in 3 seconds</h3>
+      <br>
+      <p>
+        <a href="<%= params[:url] %>"><%= params[:url] %></a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(function() {
+    $('#countdown').countdown(3);
+  });
+</script>
