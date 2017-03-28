@@ -110,23 +110,6 @@ module Micropublish
       render_new(subtype)
     end
 
-    def render_new(subtype)
-      @type = 'h-entry'
-      @subtype = subtype
-      @subtype_label = settings.properties['types']['h-entry'][subtype]['name']
-      @subtype_icon = settings.properties['types']['h-entry'][subtype]['icon']
-      @title = "New #{@subtype_label} (#{@type})"
-      @post ||= Post.new(@type, Post.properties_from_params(params))
-      @properties =
-        settings.properties['types']['h-entry'][subtype]['properties'] +
-        settings.properties['default']
-      @required =
-        settings.properties['types']['h-entry'][subtype]['required']
-      @action_url = '/new'
-      @action_label = "Create"
-      erb :form
-    end
-
     post '/new' do
       require_session
       begin
@@ -347,13 +330,29 @@ module Micropublish
         content.gsub(/&/,"\n&")
       end
 
+      def render_new(subtype)
+        @type = 'h-entry'
+        @subtype = subtype
+        @subtype_label = settings.properties['types']['h-entry'][subtype]['name']
+        @subtype_icon = settings.properties['types']['h-entry'][subtype]['icon']
+        @title = "New #{@subtype_label} (#{@type})"
+        @post ||= Post.new(@type, Post.properties_from_params(params))
+        @properties =
+          settings.properties['types']['h-entry'][subtype]['properties'] +
+          settings.properties['default']
+        @required =
+          settings.properties['types']['h-entry'][subtype]['required']
+        @action_url = '/new'
+        @action_label = "Create"
+        erb :form
+      end
+
       def subtype_edit_properties(subtype)
         # for micropub.rocks only return content and category
         return %w(content category) if params.key?('rocks')
 
-        props = settings.properties['types']['h-entry'][subtype]['properties'] +
+        settings.properties['types']['h-entry'][subtype]['properties'] +
           settings.properties['default'] + %w(syndication published)
-        props.map { |p| p unless p.start_with?('mp-') }.compact
       end
 
       def render_edit(subtype)
