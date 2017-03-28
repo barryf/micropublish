@@ -1,10 +1,7 @@
-<div class="alert alert-success">
-  <strong>202 Accepted</strong> received from your endpoint to indicate that
-  your new post was created successfully but may not be available immediately.
-</div>
 <div class="alert alert-warning">
-  <strong>404 Not Found</strong> received from your server. Micropublish will
-  try again to redirect.
+  <strong>404 Not Found</strong> was received from your server.
+  This may be because your server has not finished creating the post yet.
+  Micropublish will try to redirect again shortly.
 </div>
 
 <div class="panel panel-default">
@@ -16,7 +13,7 @@
       <h3 id="countdown">Redirecting in 3 seconds</h3>
       <br>
       <p>
-        <a href="<%= params[:url] %>"><%= params[:url] %></a>
+        <a href="<%= @url %>"><%= @url %></a>
       </p>
     </div>
   </div>

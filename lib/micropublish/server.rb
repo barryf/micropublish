@@ -149,7 +149,7 @@ module Micropublish
           end
         else
           url = new_request.create(@post)
-          redirect url
+          redirect_post(url)
         end
       rescue MicropublishError => e
         if request.xhr?
@@ -212,7 +212,7 @@ module Micropublish
           end
         else
           url = new_request.update(params[:_url], diff, mp_commands)
-          redirect url
+          redirect_post(url)
         end
       rescue MicropublishError => e
         if request.xhr?
@@ -276,17 +276,19 @@ module Micropublish
 
     get '/redirect' do
       require_session
-      require_url
+      redirect '/' unless session.key?(:redirect)
+      @url = session[:redirect]
       # HTTP request to see if post exists yet
-      response = HTTParty.get(params[:url])
+      response = HTTParty.get(@url)
       case response.code.to_i
       when 200
-        redirect params[:url]
+        session.delete(:redirect)
+        redirect @url
       when 404
         erb :redirect
       else
         redirect_flash('/', 'danger', "There was an error redirecting to your" +
-          " new post's URL (#{params[:url]}). Status code #{h(response.code)}."
+          " new post's URL (#{@url}). Status code #{h(response.code)}."
         )
       end
     end
@@ -390,6 +392,11 @@ module Micropublish
         @action_url = '/edit'
         @action_label = 'Update'
         erb :form
+      end
+
+      def redirect_post(url)
+        session[:redirect] = url
+        redirect "/redirect"
       end
     end
 
