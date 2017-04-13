@@ -344,6 +344,12 @@ module Micropublish
           settings.properties['types']['h-entry'][subtype]['required']
         @action_url = '/new'
         @action_label = "Create"
+        # insert @username at start of content if replying to a tweet
+        if @subtype == 'reply' && params.key?('in-reply-to') &&
+            !@post.properties.key?('content')
+          @post.properties['content'] =
+            [tweet_reply_prefix(params['in-reply-to'])]
+        end
         erb :form
       end
 

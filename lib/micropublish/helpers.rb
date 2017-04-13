@@ -45,5 +45,10 @@ module Micropublish
       }
     end
 
+    def tweet_reply_prefix(tweet_url)
+      tweet_match = tweet_url.to_s.match(/twitter\.com\/([A-Za-z0-9_]+)\//)
+      tweet_match.nil? ? "" : "@#{tweet_match[1]} "
+    end
+
   end
 end
