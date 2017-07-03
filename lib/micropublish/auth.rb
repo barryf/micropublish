@@ -61,6 +61,10 @@ module Micropublish
         unless access_token
           raise AuthError.new("No access_token returned from token endpoint.")
         end
+        unless @me == response_hash['me']
+          raise AuthError.new("The 'me' you entered does not match the 'me' " +
+            "received from your token endpoint.")
+        end
         access_token
       else
         raise AuthError.new("#{response.code} received from token endpoint.")

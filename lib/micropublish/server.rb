@@ -67,9 +67,11 @@ module Micropublish
       session[:state] = Random.new_seed.to_s
       # store scope - will be needed to limit functionality on dashboard
       session[:scope] = params[:scope]
+      # store me - we don't want to trust this in callback
+      session[:me] = params[:me]
       # redirect to auth endpoint
       query = URI.encode_www_form({
-        me: params[:me],
+        me: session[:me],
         client_id: request.base_url,
         state: session[:state],
         scope: session[:scope],
@@ -80,7 +82,10 @@ module Micropublish
     end
 
     get '/auth/callback' do
-      auth = Auth.new(params[:me], params[:code], session[:state],
+      unless session.key?(:me) && session.key?(:state) && session.key?(:scope)
+        redirect_flash('/', 'info', "Session has timed out. Please try again.")
+      end
+      auth = Auth.new(session[:me], params[:code], session[:state],
         session[:scope], "#{request.base_url}/auth/callback", request.base_url)
       begin
         endpoints_and_token = auth.callback
@@ -89,7 +94,6 @@ module Micropublish
       end
       # login and token grant was successful so store in session
       session.merge!(endpoints_and_token)
-      session[:me] = params[:me]
       redirect_flash('/', 'success', %Q{You are now signed in successfully.
           Submit content to your site via Micropub using the links
           below. Please
