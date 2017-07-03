@@ -47,28 +47,33 @@ module Micropublish
         scope: @scope,
         grant_type: 'authorization_code'
       })
-      if (200...300).include?(response.code)
-        if response.headers['content-type'] == 'application/json'
-          response_hash = JSON.parse(response.body)
-          access_token = response_hash.key?('access_token') ?
-            response_hash['access_token'] : nil
-        else
-          # assume form-encoded
-          response_hash = CGI.parse(response.parsed_response)
-          access_token = response_hash.key?('access_token') ?
-            response_hash['access_token'].first : nil
-        end
-        unless access_token
-          raise AuthError.new("No access_token returned from token endpoint.")
-        end
-        unless @me == response_hash['me']
-          raise AuthError.new("The 'me' you entered does not match the 'me' " +
-            "received from your token endpoint.")
-        end
-        access_token
-      else
+      unless (200...300).include?(response.code)
         raise AuthError.new("#{response.code} received from token endpoint.")
       end
+      # try json first
+      begin
+        response_hash = JSON.parse(response.body)
+        access_token = response_hash.key?('access_token') ?
+          response_hash['access_token'] : nil
+        me = response_hash.key?('me') ? response_hash['me'] : nil
+      rescue JSON::ParserError => e
+        # assume form-encoded
+        response_hash = CGI.parse(response.parsed_response)
+        access_token = response_hash.key?('access_token') ?
+          response_hash['access_token'].first : nil
+        me = response_hash.key?('me') ? response_hash['me'].first : nil
+      end
+      unless access_token
+        raise AuthError.new("No 'access_token' returned from token endpoint.")
+      end
+      unless me
+        raise AuthError.new("No 'me' param returned from token endpoint.")
+      end
+      unless @me == me
+        raise AuthError.new("The 'me' you entered does not match the 'me' " +
+          "received from your token endpoint.")
+      end
+      access_token
     end
 
     def self.valid_uri?(u)
