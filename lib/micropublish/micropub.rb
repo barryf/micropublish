@@ -31,7 +31,13 @@ module Micropublish
       query = { q: 'source', url: url }
       query[:properties] = properties if properties
       response = HTTParty.get(@micropub, query: query, headers: headers)
-      JSON.parse(response.body)
+      begin
+        JSON.parse(response.body)
+      rescue JSON::ParserError
+        raise MicropubError.new("There was an error retrieving the source " +
+          "for \"#{url}\" from your endpoint. Please ensure you enter the " +
+          "URL for a valid MF2 post.")
+      end
     end
 
     def validate_url!(url)

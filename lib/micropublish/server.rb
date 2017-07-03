@@ -151,7 +151,11 @@ module Micropublish
       redirect "/undelete?url=#{params[:url]}" if params.key?('undelete')
       redirect "/edit-all?url=#{params[:url]}" if params.key?('edit-all')
 
-      subtype = micropub.source_all(params[:url]).entry_type
+      begin
+        subtype = micropub.source_all(params[:url]).entry_type
+      rescue MicropubError => e
+        redirect_flash('/', 'danger', e.message)
+      end
       render_edit(subtype)
     end
 
