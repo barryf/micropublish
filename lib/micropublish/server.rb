@@ -88,13 +88,14 @@ module Micropublish
       auth = Auth.new(session[:me], params[:code], session[:state],
         session[:scope], "#{request.base_url}/auth/callback", request.base_url)
       begin
-        endpoints_and_token = auth.callback
+        endpoints_and_token_and_me = auth.callback
       rescue AuthError => e
         redirect_flash('/', 'danger', e.message)
       end
-      # login and token grant was successful so store in session
-      session.merge!(endpoints_and_token)
-      redirect_flash('/', 'success', %Q{You are now signed in successfully.
+      # login and token grant was successful so store in session with me
+      session.merge!(endpoints_and_token_and_me)
+      redirect_flash('/', 'success', %Q{You are now signed in successfully
+          as "#{endpoints_and_token_and_me[:me]}".
           Submit content to your site via Micropub using the links
           below. Please
           <a href="/about" class="alert-link">read&nbsp;the&nbsp;docs</a> for

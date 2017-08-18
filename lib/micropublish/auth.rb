@@ -27,17 +27,14 @@ module Micropublish
       # check we've found all the endpoints we want
       endpoints_finder.validate!
 
-      # find out if we're allowed a token to post
-      token = get_token(endpoints[:token_endpoint])
-      if token.nil? || token.empty?
-        raise AuthError.new("No token was returned from the token endpoint.")
-      end
+      # find out if we're allowed a token to post and what "me" to use
+      token, me = get_token_and_me(endpoints[:token_endpoint])
 
-      # return hash of endpoints and the token
-      endpoints.merge(token: token)
+      # return hash of endpoints and the token with the "me"
+      endpoints.merge(token: token, me: me)
     end
 
-    def get_token(token_endpoint)
+    def get_token_and_me(token_endpoint)
       response = HTTParty.post(token_endpoint, body: {
         me: @me,
         code: @code,
@@ -69,11 +66,7 @@ module Micropublish
       unless me
         raise AuthError.new("No 'me' param returned from token endpoint.")
       end
-      unless @me == me
-        raise AuthError.new("The 'me' you entered does not match the 'me' " +
-          "received from your token endpoint.")
-      end
-      access_token
+      [access_token, me]
     end
 
     def self.valid_uri?(u)
