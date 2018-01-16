@@ -125,7 +125,7 @@
         </div>
       <% end %>
 
-      <% if @all || @properties.include?('checkin') %>
+      <% if @properties.include?('checkin') %>
         <input type="hidden" name="checkin[][type][]" value="h-card">
         <div class="form-group">
           <label>
