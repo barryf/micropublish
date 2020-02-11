@@ -22,7 +22,7 @@ GEM
     nokogiri (1.10.1)
       mini_portile2 (~> 2.4.0)
     puma (3.12.2)
-    rack (2.0.6)
+    rack (2.2.2)
     rack-contrib (2.1.0)
       rack (~> 2.0)
     rack-protection (2.0.5)
