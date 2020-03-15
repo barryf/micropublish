@@ -11,6 +11,7 @@ module Micropublish
       set :properties,
         JSON.parse(File.read("#{root_path}config/properties.json"))
       set :readme, File.read("#{root_path}README.md")
+      set :help, File.read("#{public_folder}/help.md")
 
       set :server, :puma
 
@@ -46,22 +47,14 @@ module Micropublish
     get '/auth' do
       unless params.key?('me') && !params[:me].empty? &&
           Auth.valid_uri?(params[:me])
-        redirect_flash('/', 'danger',
-          "Please enter your site's URL. " +
-          "It must begin with <code>http://</code> or " +
-          "<code>https://</code>.")
+        raise "Missing or invalid value for \"me\": \"#{h params[:me]}\"."
       end
       unless params.key?('scope') && (params[:scope] == 'post' ||
           params[:scope] == 'create update delete undelete')
-        redirect_flash('/', 'danger',
-          "Please select a scope: \"post\" or " +
-          "\"create update delete undelete\".")
+        raise "You must specify a valid scope."
       end
       unless endpoints = EndpointsFinder.new(params[:me]).find_links
-        redirect_flash('/', 'danger', "Could not find any endpoints " +
-          "at \"#{params[:me]}\". Does this server support Micropub? " +
-          "Please <a href=\"/about#endpoint-discovery\" class=\"alert-" +
-          "link\">read&nbsp;the&nbsp;docs</a> for more information.")
+        raise "Client could not find expected endpoints at \"#{h params[:me]}\"."
       end
       # define random state string
       session[:state] = Random.new_seed.to_s
@@ -87,11 +80,7 @@ module Micropublish
       end
       auth = Auth.new(session[:me], params[:code], session[:state],
         session[:scope], "#{request.base_url}/auth/callback", request.base_url)
-      begin
-        endpoints_and_token_and_me = auth.callback
-      rescue AuthError => e
-        redirect_flash('/', 'danger', e.message)
-      end
+      endpoints_and_token_and_me = auth.callback
       # login and token grant was successful so store in session with me
       session.merge!(endpoints_and_token_and_me)
       redirect_flash('/', 'success', %Q{You are now signed in successfully
@@ -156,11 +145,7 @@ module Micropublish
       redirect "/undelete?url=#{params[:url]}" if params.key?('undelete')
       redirect "/edit-all?url=#{params[:url]}" if params.key?('edit-all')
 
-      begin
-        subtype = micropub.source_all(params[:url]).entry_type
-      rescue MicropubError => e
-        redirect_flash('/', 'danger', e.message)
-      end
+      subtype = micropub.source_all(params[:url]).entry_type
       render_edit(subtype)
     end
 
@@ -412,6 +397,19 @@ module Micropublish
         session[:redirect] = url
         redirect "/redirect"
       end
+    end
+
+    error do
+      @error = env['sinatra.error']
+      header = %Q{
+        <p><a href="javascript:history.back()">&larr;&nbsp;Back</a></p>
+        <h1>Something went wrong</h1><br>
+        <div class="alert alert-danger">
+          #{@error.message}
+        </div>
+      }
+      @content = header + markdown(settings.help)
+      erb :static
     end
 
   end

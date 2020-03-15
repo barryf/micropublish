@@ -11,7 +11,11 @@ module Micropublish
     end
 
     def get_url
-      response = HTTParty.get(@url)
+      begin
+        response = HTTParty.get(@url)
+      rescue SocketError => e
+        raise AuthError.new("Client could not connect to \"#{@url}\".")
+      end
       unless (200...300).include?(response.code)
         raise AuthError.new("#{response.code} status returned from \"#{@url}\".")
       end
@@ -51,7 +55,7 @@ module Micropublish
       RELS.each do |link|
         unless @links.key?(link.to_sym)
           raise AuthError.new(
-            "Could not find \"#{link}\" in body or header from \"#{@url}\".")
+            "Client could not find \"#{link}\" in body or header from \"#{@url}\".")
         end
       end
     end

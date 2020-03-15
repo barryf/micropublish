@@ -32,25 +32,26 @@ module Micropublish
       query[:properties] = properties if properties
       response = HTTParty.get(@micropub, query: query, headers: headers)
       begin
-        JSON.parse(response.body)
+        body = JSON.parse(response.body)
+        if body.key?('error') && body.key?('error_description')
+          raise MicropubError.new("Micropub server returned an error: " +
+            "\"#{body['error_description']}\".")
+        else
+          raise MicropubError.new("Micropub server returned an unspecified " +
+            " error. Please check your server's logs for details.")
+        end
       rescue JSON::ParserError
         raise MicropubError.new("There was an error retrieving the source " +
           "for \"#{url}\" from your endpoint. Please ensure you enter the " +
           "URL for a valid MF2 post.")
       end
+      body
     end
 
     def validate_url!(url)
       unless Auth.valid_uri?(url)
         raise MicropubError.new("\"#{url}\" is not a valid URL.")
       end
-      #micropub_uri = URI.parse(@micropub)
-      #url_uri = URI.parse(url)
-      #unless micropub_uri.host == url_uri.host
-      #  raise MicropubError.new(
-      #    "Post URL \"#{url}\" must be from the same host as your Micropub " +
-      #    "endpoint (\"#{@micropub}\").")
-      #end
     end
 
     def headers

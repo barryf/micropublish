@@ -14,7 +14,7 @@ module Micropublish
       # validate the parameters
       unless Auth.valid_uri?(@me)
         raise AuthError.new(
-          "The \"me\" parameter must be a valid URL: \"#{@me}\".")
+          "Missing or invalid value for \"me\": \"#{@me}\".")
       end
       if @code.nil? || @code.empty?
         raise AuthError.new("The \"code\" parameter must not be blank.")
