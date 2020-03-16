@@ -80,7 +80,7 @@ module Micropublish
     def handle_error(response_body)
       raise MicropublishError.new('request',
         "There was an error making a request to your Micropub endpoint. " +
-        "The error received was: #{h response_body}")
+        "The error received was: #{response_body}")
     end
 
   end
