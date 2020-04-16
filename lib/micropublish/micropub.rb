@@ -29,8 +29,10 @@ module Micropublish
     def get_source(url, properties=nil)
       validate_url!(url)
       query = { q: 'source', url: url }
-      query[:properties] = properties if properties
-      response = HTTParty.get(@micropub, query: query, headers: headers)
+      query['properties[]'] = properties if properties
+      uri = URI(@micropub)
+      uri.query = (uri.query.nil? ? "" : uri.query + "&") + URI.encode_www_form(query)
+      response = HTTParty.get(uri.to_s, headers: headers)
       begin
         body = JSON.parse(response.body)
       rescue JSON::ParserError
