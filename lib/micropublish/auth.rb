@@ -1,3 +1,5 @@
+require 'cgi'
+
 module Micropublish
   class Auth
 

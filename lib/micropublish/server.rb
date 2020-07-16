@@ -49,8 +49,8 @@ module Micropublish
           Auth.valid_uri?(params[:me])
         raise "Missing or invalid value for \"me\": \"#{h params[:me]}\"."
       end
-      unless params.key?('scope') && (params[:scope] == 'post' ||
-          params[:scope] == 'create update delete undelete')
+      unless params.key?('scope') && (params[:scope].include?('create') ||
+          params[:scope].include?('post'))
         raise "You must specify a valid scope."
       end
       unless endpoints = EndpointsFinder.new(params[:me]).find_links
@@ -59,7 +59,7 @@ module Micropublish
       # define random state string
       session[:state] = Random.new_seed.to_s
       # store scope - will be needed to limit functionality on dashboard
-      session[:scope] = params[:scope]
+      session[:scope] = params[:scope].join(' ')
       # store me - we don't want to trust this in callback
       session[:me] = params[:me]
       # redirect to auth endpoint
