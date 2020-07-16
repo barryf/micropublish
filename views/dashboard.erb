@@ -40,28 +40,35 @@
   </div>
 </div>
 
-<form action="/edit" method="get"
-    <% if session[:scope] == 'post' %>hidden<% end %>>
+<% if session[:scope].split(' ').any? { |s| ['update', 'delete', 'undelete'].include?(s) } %>
+<form action="/edit" method="get">
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h3 class="panel-title">Update an existing post</h3>
+      <h3 class="panel-title">Modify an existing post</h3>
     </div>
     <div class="panel-body">
       <input type="url" class="form-control" name="url" required>
       <p class="help-block">
-        Enter the URL of a post on your site that you wish to update.
+        Enter the absolute URL of a post on your site.
       </p>
     </div>
     <div class="panel-footer">
-      <button name="edit" class="btn btn-default">Edit</button>
-      &nbsp;
-      <button name="edit-all" class="btn btn-default"
-        title="&quot;The Kitchen Sink&quot; editor">Edit all</button>
-      &nbsp;
+      <% if session[:scope].split(' ').include?('update') %>
+        <button name="edit" class="btn btn-default">Edit</button>
+        &nbsp;
+        <button name="edit-all" class="btn btn-default"
+          title="&quot;The Kitchen Sink&quot; editor">Edit all</button>
+        &nbsp;
+      <% end %>
       <div class="btn-group" role="group">
-        <button name="delete" class="btn btn-default">Delete</button>
-        <button name="undelete" class="btn btn-default">Undelete</button>
+        <% if session[:scope].split(' ').include?('delete') %>
+          <button name="delete" class="btn btn-default">Delete</button>
+        <% end %>
+        <% if session[:scope].split(' ').include?('undelete') %>
+          <button name="undelete" class="btn btn-default">Undelete</button>
+        <% end %>
       </div>
     </div>
   </div>
 </form>
+<% end %>
