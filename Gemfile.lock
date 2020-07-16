@@ -21,7 +21,7 @@ GEM
     mustermann (1.0.3)
     nokogiri (1.10.8)
       mini_portile2 (~> 2.4.0)
-    puma (3.12.4)
+    puma (3.12.6)
     rack (2.2.3)
     rack-contrib (2.1.0)
       rack (~> 2.0)
