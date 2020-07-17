@@ -14,11 +14,13 @@
     "syndication",
     "mp-slug",
     "checkin",
-    "post-status"
+    "post-status",
+    "visibility"
   ],
   "default": [
     "category",
     "post-status",
+    "visibility",
     "mp-syndicate-to",
     "mp-slug"
   ],
