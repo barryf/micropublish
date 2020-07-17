@@ -353,7 +353,6 @@
             <option></option>
             <option<% if @post.properties.key?('post-status') && @post.properties['post-status'][0] == 'published' %> selected<% end %>>published</option>
             <option<% if @post.properties.key?('post-status') && @post.properties['post-status'][0] == 'draft' %> selected<% end %>>draft</option>
-            <option<% if @post.properties.key?('post-status') && @post.properties['post-status'][0] == 'deleted' %> selected<% end %>>deleted</option>
           </select>
         </div>
       <% end %>
