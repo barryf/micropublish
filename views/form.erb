@@ -342,18 +342,52 @@
         </div>
       <% end %>
 
-      <% if @all || @properties.include?('post-status') %>
+      <% if @all || @properties.include?('post-status') || @properties.include?('visibility') %>
         <div class="form-inline">
-          <label for="post-status">
-            Status&nbsp;
-            <% if @required.include?('post-status') %><span class="required" title="required">*</span><% end %>
-          </label>
-          <select class="form-control" id="post-status" name="post-status"
-              <% if @required.include?('post-status') %>required<% end %>>
-            <option></option>
-            <option<% if @post.properties.key?('post-status') && @post.properties['post-status'][0] == 'published' %> selected<% end %>>published</option>
-            <option<% if @post.properties.key?('post-status') && @post.properties['post-status'][0] == 'draft' %> selected<% end %>>draft</option>
-          </select>
+
+          <% if @all || @properties.include?('post-status') %>
+            <label for="post-status">
+              Status&nbsp;
+              <% if @required.include?('post-status') %><span class="required" title="required">*</span><% end %>
+            </label>
+            <select class="form-control" id="post-status" name="post-status" style="margin-right: 20px;"
+                <% if @required.include?('post-status') %>required<% end %>>
+              <option></option>
+              <option<% if @post.properties.key?('post-status') && @post.properties['post-status'][0] == 'published' %> selected<% end %>>published</option>
+              <option<% if @post.properties.key?('post-status') && @post.properties['post-status'][0] == 'draft' %> selected<% end %>>draft</option>
+            </select>
+          <% end %>
+
+          <% if @all || @properties.include?('visibility') %>
+            <label for="visibility">
+              Visibility&nbsp;
+              <% if @required.include?('visibility') %><span class="required" title="required">*</span><% end %>
+            </label>
+            <select class="form-control" id="post-status" name="visibility"
+                <% if @required.include?('visibility') %>required<% end %>>
+              <option></option>
+              <option<% if @post.properties.key?('visibility') && @post.properties['visibility'][0] == 'public' %> selected<% end %>>public</option>
+              <option<% if @post.properties.key?('visibility') && @post.properties['visibility'][0] == 'unlisted' %> selected<% end %>>unlisted</option>
+              <option<% if @post.properties.key?('visibility') && @post.properties['visibility'][0] == 'private' %> selected<% end %>>private</option>
+            </select>
+            &nbsp;
+          <% end %>
+
+          <p class="help-block">
+            <% if @all || @properties.include?('post-status') %>
+              Choose whether your post should be published or made a draft.
+              <code>post-status</code>
+            <% end %>
+            <% if @all || @properties.include?('visibility') %>
+              Select a visibility setting to indicate to your server whether
+              this post should be made public, excluded from lists or be hidden
+              as a private post.
+              <code>visibility</code>
+            <% end %>
+            NB: Please check whether your server supports these values, or leave
+            blank (default).
+          </p>
+
         </div>
       <% end %>
 
