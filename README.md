@@ -23,6 +23,8 @@ alt="Micropublish demo">
 - JavaScript is not required and you can happily use Micropublish without it.
   The user interface is progressively enhanced when JavaScript is enabled.
 - Full errors and feedback displayed from your endpoints.
+- Supports the `post-status` property
+  [proposed as a Micropub extension][post-status].
 
 ---
 
@@ -184,3 +186,4 @@ a pull request through GitHub.
 [bf]: https://barryfrost.com
 [bfcontact]: https://barryfrost.com/contact
 [mp]: https://micropublish.net
+[post-status]: https://indieweb.org/Micropub-extensions#Post_Status

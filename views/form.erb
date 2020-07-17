@@ -342,6 +342,21 @@
         </div>
       <% end %>
 
+      <% if @all || @properties.include?('post-status') %>
+        <div class="form-inline">
+          <label for="post-status">
+            Status&nbsp;
+            <% if @required.include?('post-status') %><span class="required" title="required">*</span><% end %>
+          </label>
+          <select class="form-control" id="post-status" name="post-status"
+              <% if @required.include?('post-status') %>required<% end %>>
+            <option></option>
+            <option<% if @post.properties.key?('post-status') && @post.properties['post-status'][0] == 'published' %> selected<% end %>>published</option>
+            <option<% if @post.properties.key?('post-status') && @post.properties['post-status'][0] == 'draft' %> selected<% end %>>draft</option>
+          </select>
+        </div>
+      <% end %>
+
     </div>
 
     <div class="panel-footer">
