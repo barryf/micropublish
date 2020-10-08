@@ -188,7 +188,7 @@
         </div>
       <% end %>
 
-      <% if @properties.include?('content') %>
+      <% if @all || @properties.include?('content') %>
         <div class="form-group">
           <label for="content">
             Content
