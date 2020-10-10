@@ -6,8 +6,9 @@ module Micropublish
       @token = token
     end
 
-    def syndicate_to
-      query = { q: 'config' }
+    def syndicate_to(subtype = nil)
+      query = { q: 'syndicate-to' }
+      query['post-type'] = subtype if subtype
       begin
         response = HTTParty.get(@micropub, query: query, headers: headers)
         JSON.parse(response.body)['syndicate-to']

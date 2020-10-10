@@ -25,10 +25,6 @@ module Micropublish
         session[:me] = 'http://localhost:4444/'
         session[:micropub] = 'http://localhost:3333/micropub'
         session[:scope] = 'create update delete undelete'
-        session[:syndicate_to] = [{
-          "uid" => "https://twitter.com/barryfdata",
-          "name" => "Twitter (barryfdata)"
-        }]
       end
     end
 
@@ -285,12 +281,8 @@ module Micropublish
         redirect url
       end
 
-      def syndicate_to
-        begin
-          session[:syndicate_to] ||= micropub.syndicate_to || []
-        rescue MicropublishError => e
-          redirect_flash('/', 'danger', e.message)
-        end
+      def syndicate_to(subtype = nil)
+        micropub.syndicate_to(subtype) || []
       end
 
       def logged_in?

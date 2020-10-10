@@ -268,11 +268,13 @@
             <% if @required.include?('mp-syndicate-to') %><span class="required" title="required">*</span><% end %>
           </label>
           <br>
-          <% syndicate_to.each do |syndication| %>
+          <% syndicate_to(@subtype).each do |syndication| %>
             <label class="checkbox-inline">
-              <input type="checkbox" name="mp-syndicate-to[]"
-                value="<%= h syndication['uid'] %>"
-                <% if @post.properties.key?('mp-syndicate-to') && @post.properties['mp-syndicate-to'].include?(syndication['uid']) %>checked<% end %>
+              <input type="checkbox" name="mp-syndicate-to[]" value="<%= h syndication['uid'] %>"
+                <% if (syndication.key?('checked') && syndication['checked']) ||
+                  (@post.properties.key?('mp-syndicate-to') && @post.properties['mp-syndicate-to'].include?(syndication['uid'])) %>
+                  checked
+                <% end %>
               ><%= h syndication['name'] %>
             </label>
           <% end %>
