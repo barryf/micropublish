@@ -49,6 +49,7 @@
             <form action="/logout" method="post" class="form-inline logout">
               <p>
                 <code><%= session[:me] %></code>&nbsp;
+                <code title="scope"><%= session[:scope] %></code>&nbsp;
                 <button class="btn btn-default btn-xs" type="submit">
                   Sign out
                 </button>
