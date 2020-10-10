@@ -41,16 +41,23 @@ module Micropublish
     end
 
     get '/auth' do
-      unless params.key?('me') && !params[:me].empty? &&
-          Auth.valid_uri?(params[:me])
-        raise "Missing or invalid value for \"me\": \"#{h params[:me]}\"."
-      end
-      unless params.key?('scope') && (params[:scope].include?('create') ||
-          params[:scope].include?('post'))
-        raise "You must specify a valid scope."
-      end
-      unless endpoints = EndpointsFinder.new(params[:me]).find_links
-        raise "Client could not find expected endpoints at \"#{h params[:me]}\"."
+      begin
+        unless params.key?('me') && !params[:me].empty? &&
+            Auth.valid_uri?(params[:me])
+          raise "Missing or invalid value for \"me\": \"#{h params[:me]}\"."
+        end
+        unless params.key?('scope') && (
+            params[:scope].include?('create') ||
+            params[:scope].include?('post') ||
+            params[:scope].include?('draft'))
+          raise "You must specify a valid scope, including at least one of " +
+            "\"create\", \"post\" or \"draft\"."
+        end
+        unless endpoints = EndpointsFinder.new(params[:me]).find_links
+          raise "Client could not find expected endpoints at \"#{h params[:me]}\"."
+        end
+      rescue => e
+        redirect_flash('/', 'danger', e.message)
       end
       # define random state string
       session[:state] = Random.new_seed.to_s

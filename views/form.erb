@@ -345,7 +345,15 @@
 
       <% if @all || @properties.include?('post-status') || @properties.include?('visibility') %>
         <div class="form-inline">
-          <% if @all || @properties.include?('post-status') %>
+          <% scopes_array = session[:scope].split(' ') %>
+          <% if !scopes_array.include?('create') || scopes_array == ['draft'] %>
+            <div class="form-group">
+              <label for="post-status">Status&nbsp;</label>
+              <select class="form-control" id="post-status" name="post-status" style="margin-right: 20px;">
+                <option>draft</option>
+              </select>
+            </div>
+          <% elsif @all || @properties.include?('post-status') %>
             <div class="form-group">
               <label for="post-status">
                 Status&nbsp;
