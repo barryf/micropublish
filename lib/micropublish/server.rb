@@ -22,8 +22,8 @@ module Micropublish
 
     before do
       unless settings.production?
-        session[:me] = 'http://localhost:9394/'
-        session[:micropub] = 'http://localhost:9394/micropub'
+        session[:me] = 'http://localhost:4444/'
+        session[:micropub] = 'http://localhost:3333/micropub'
         session[:scope] = 'create update delete undelete'
         session[:syndicate_to] = [{
           "uid" => "https://twitter.com/barryfdata",
