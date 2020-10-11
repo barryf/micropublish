@@ -271,7 +271,7 @@
           <% syndicate_to(@subtype).each do |syndication| %>
             <label class="checkbox-inline">
               <input type="checkbox" name="mp-syndicate-to[]" value="<%= h syndication['uid'] %>"
-                <% if (syndication.key?('checked') && syndication['checked']) ||
+                <% if (!@edit && request.get? && syndication.key?('checked') && syndication['checked']) ||
                   (@post.properties.key?('mp-syndicate-to') && @post.properties['mp-syndicate-to'].include?(syndication['uid'])) %>
                   checked
                 <% end %>
