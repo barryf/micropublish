@@ -18,10 +18,10 @@ module Micropublish
     end
 
     def default_format
-      if session.key?('format') && session[:format] == :json
-        :json
-      else
+      if session.key?('format') && session[:format] == :form
         :form
+      else
+        :json
       end
     end
 

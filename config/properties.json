@@ -1,5 +1,5 @@
 {
-	"known": [
+  "known": [
     "in-reply-to",
     "repost-of",
     "like-of",
@@ -13,63 +13,111 @@
     "mp-syndicate-to",
     "syndication",
     "mp-slug",
-    "checkin"
-	],
-	"default": [
-		"category",
-		"mp-syndicate-to",
-		"mp-slug"
-	],
-	"types": {
-		"h-entry": {
-			"note": {
-				"name": "Note",
-				"icon": "comment",
-				"properties": ["content"],
-				"required": ["content"]
-			},
-			"article": {
-				"name": "Article",
-				"icon": "file-text",
-				"properties": ["name", "content"],
-				"required": ["name", "content"]
-			},
-			"rsvp": {
-				"name": "RSVP",
-				"icon": "calendar-check-o",
-				"properties": ["in-reply-to", "rsvp", "content"],
-				"required": ["in-reply-to", "rsvp"]
-			},
-			"bookmark": {
-				"name": "Bookmark",
-				"icon": "bookmark",
-				"properties": ["bookmark-of", "name", "content"],
-				"required": ["bookmark-of", "name"]
-			},
-			"reply": {
-				"name": "Reply",
-				"icon": "reply",
-				"properties": ["in-reply-to", "content"],
-				"required": ["in-reply-to", "content"]
-			},
-			"repost": {
-				"name": "Repost",
-				"icon": "retweet",
-				"properties": ["repost-of", "content"],
-				"required": ["repost-of"]
-			},
-			"like": {
-				"name": "Like",
-				"icon": "heart",
-				"properties": ["like-of"],
-				"required": ["like-of"]
-			},
-			"checkin": {
-				"name": "Check-in",
-				"icon": "map-marker",
-				"properties": ["checkin", "content"],
-				"required": ["checkin"]
-			}
-		}
-	}
+    "checkin",
+    "post-status",
+    "visibility"
+  ],
+  "default": [
+    "category",
+    "post-status",
+    "visibility",
+    "mp-syndicate-to",
+    "mp-slug"
+  ],
+  "types": {
+    "h-entry": {
+      "note": {
+        "name": "Note",
+        "icon": "comment",
+        "properties": [
+          "content"
+        ],
+        "required": [
+          "content"
+        ]
+      },
+      "article": {
+        "name": "Article",
+        "icon": "file-text",
+        "properties": [
+          "name",
+          "content"
+        ],
+        "required": [
+          "name",
+          "content"
+        ]
+      },
+      "rsvp": {
+        "name": "RSVP",
+        "icon": "calendar-check-o",
+        "properties": [
+          "in-reply-to",
+          "rsvp",
+          "content"
+        ],
+        "required": [
+          "in-reply-to",
+          "rsvp"
+        ]
+      },
+      "bookmark": {
+        "name": "Bookmark",
+        "icon": "bookmark",
+        "properties": [
+          "bookmark-of",
+          "name",
+          "content"
+        ],
+        "required": [
+          "bookmark-of",
+          "name"
+        ]
+      },
+      "reply": {
+        "name": "Reply",
+        "icon": "reply",
+        "properties": [
+          "in-reply-to",
+          "content"
+        ],
+        "required": [
+          "in-reply-to",
+          "content"
+        ]
+      },
+      "repost": {
+        "name": "Repost",
+        "icon": "retweet",
+        "properties": [
+          "repost-of",
+          "content"
+        ],
+        "required": [
+          "repost-of"
+        ]
+      },
+      "like": {
+        "name": "Like",
+        "icon": "heart",
+        "properties": [
+          "like-of"
+        ],
+        "required": [
+          "like-of"
+        ]
+      },
+      "checkin": {
+        "name": "Check-in",
+        "icon": "map-marker",
+        "properties": [
+          "checkin",
+          "content"
+        ],
+        "required": [
+          "checkin"
+        ]
+      }
+    }
+  }
 }

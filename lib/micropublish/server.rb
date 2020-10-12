@@ -11,6 +11,7 @@ module Micropublish
       set :properties,
         JSON.parse(File.read("#{root_path}config/properties.json"))
       set :readme, File.read("#{root_path}README.md")
+      set :changelog, File.read("#{root_path}/changelog.md")
       set :help, File.read("#{public_folder}/help.md")
 
       set :server, :puma
@@ -22,13 +23,9 @@ module Micropublish
 
     before do
       unless settings.production?
-        session[:me] = 'http://localhost:9394/'
-        session[:micropub] = 'http://localhost:9394/micropub'
+        session[:me] = 'http://localhost:4444/'
+        session[:micropub] = 'http://localhost:3333/micropub'
         session[:scope] = 'create update delete undelete'
-        session[:syndicate_to] = [{
-          "uid" => "https://twitter.com/barryfdata",
-          "name" => "Twitter (barryfdata)"
-        }]
       end
     end
 
@@ -45,21 +42,28 @@ module Micropublish
     end
 
     get '/auth' do
-      unless params.key?('me') && !params[:me].empty? &&
-          Auth.valid_uri?(params[:me])
-        raise "Missing or invalid value for \"me\": \"#{h params[:me]}\"."
-      end
-      unless params.key?('scope') && (params[:scope] == 'post' ||
-          params[:scope] == 'create update delete undelete')
-        raise "You must specify a valid scope."
-      end
-      unless endpoints = EndpointsFinder.new(params[:me]).find_links
-        raise "Client could not find expected endpoints at \"#{h params[:me]}\"."
+      begin
+        unless params.key?('me') && !params[:me].empty? &&
+            Auth.valid_uri?(params[:me])
+          raise "Missing or invalid value for \"me\": \"#{h params[:me]}\"."
+        end
+        unless params.key?('scope') && (
+            params[:scope].include?('create') ||
+            params[:scope].include?('post') ||
+            params[:scope].include?('draft'))
+          raise "You must specify a valid scope, including at least one of " +
+            "\"create\", \"post\" or \"draft\"."
+        end
+        unless endpoints = EndpointsFinder.new(params[:me]).find_links
+          raise "Client could not find expected endpoints at \"#{h params[:me]}\"."
+        end
+      rescue => e
+        redirect_flash('/', 'danger', e.message)
       end
       # define random state string
       session[:state] = Random.new_seed.to_s
       # store scope - will be needed to limit functionality on dashboard
-      session[:scope] = params[:scope]
+      session[:scope] = params[:scope].join(' ')
       # store me - we don't want to trust this in callback
       session[:me] = params[:me]
       # redirect to auth endpoint
@@ -247,7 +251,16 @@ module Micropublish
 
     get '/about' do
       @content = markdown(settings.readme)
+      # use a better heading for the about page
+      @content.sub!('<h1 id="micropublish">Micropublish</h1>',
+        '<h1>About</h1>')
       @title = "About"
+      erb :static
+    end
+
+    get '/changelog' do
+      @content = markdown(settings.changelog)
+      @title = "Changelog"
       erb :static
     end
 
@@ -285,12 +298,8 @@ module Micropublish
         redirect url
       end
 
-      def syndicate_to
-        begin
-          session[:syndicate_to] ||= micropub.syndicate_to || []
-        rescue MicropublishError => e
-          redirect_flash('/', 'danger', e.message)
-        end
+      def syndicate_to(subtype = nil)
+        micropub.syndicate_to(subtype) || []
       end
 
       def logged_in?

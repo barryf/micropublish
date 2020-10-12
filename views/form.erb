@@ -188,42 +188,41 @@
         </div>
       <% end %>
 
-      <% if (@edit && @post.properties.key?('content') && !@post.properties['content'][0].is_a?(Hash)) || (@properties.include?('content') && @subtype != 'article') %>
+      <% if @all || @properties.include?('content') %>
         <div class="form-group">
           <label for="content">
             Content
             <% if @required.include?('content') %><span class="required" title="required">*</span><% end %>
           </label>
-          <div style="float: right;">
-            <span class="badge" id="content_count"></span>
-          </div>
-          <textarea class="form-control" rows="5" name="content" id="content"
-            <% if @required.include?('content') %>required<% end %>
-            ><%= h @post.properties['content'][0] if @post.properties.key?('content') %></textarea>
-          <p class="help-block">
-            Enter content for this post.
-            You should use plain text or markup if your server supports this.
-            <code>content</code>
-          </p>
-        </div>
-        <%= autogrow_script('content') %>
-      <% elsif (@edit && @post.properties.key?('content') && @post.properties['content'][0].is_a?(Hash)) || (@properties.include?('content') && @subtype == 'article') %>
-        <% content_html_value = @post.properties.key?('content') && @post.properties['content'][0].is_a?(Hash) && @post.properties['content'][0].key?('html') ? h(@post.properties['content'][0]['html']) : "" %>
-        <div class="form-group">
-          <label>
-            Content (HTML)
-            <% if @required.include?('content') %><span class="required" title="required">*</span><% end %>
-          </label>
-          <textarea id="content-html" class="form-control" rows="5" name="content[][html]"><%= content_html_value %></textarea>
-          <trix-editor input="content-html" style="display: none;"></trix-editor>
-          <p class="help-block">
-            Enter content for this post.
-            You may use rich content via the embedded
-            <a href="https://trix-editor.org">Trix</a> editor or, if your
-            browser does not have JavaScript enabled, you can directly enter
-            HTML.
-            <code>content[][html]</code>
-          </p>
+          &nbsp;
+          <% if (@edit && @post.properties.key?('content') && !@post.properties['content'][0].is_a?(Hash)) || (@properties.include?('content') && @subtype != 'article') || (@properties.include?('content') && params.key?('text')) %>
+            <% if @subtype == 'article' %><a href="<%= request.url.sub(/\?text$/, '') %>">Switch to HTML</a><% end %>
+            <div style="float: right;">
+              <span class="badge" id="content_count"></span>
+            </div>
+            <textarea class="form-control" rows="5" name="content" id="content"
+              <% if @required.include?('content') %>required<% end %>
+              ><%= h @post.properties['content'][0] if @post.properties.key?('content') %></textarea>
+            <p class="help-block">
+              Enter content for this post.
+              You should use plain text or markup if your server supports this.
+              <code>content</code>
+            </p>
+            <%= autogrow_script('content') %>
+          <% elsif (@edit && @post.properties.key?('content') && @post.properties['content'][0].is_a?(Hash)) || (@properties.include?('content') && @subtype == 'article') %>
+            <% content_html_value = @post.properties.key?('content') && @post.properties['content'][0].is_a?(Hash) && @post.properties['content'][0].key?('html') ? h(@post.properties['content'][0]['html']) : "" %>
+            <a href="<%= request.url + "?text" %>">Switch to text</a>
+            <textarea id="content-html" class="form-control" rows="5" name="content[][html]"><%= content_html_value %></textarea>
+            <trix-editor input="content-html" style="display: none;"></trix-editor>
+            <p class="help-block">
+              Enter content for this post.
+              You may use rich content via the embedded
+              <a href="https://trix-editor.org">Trix</a> editor or, if your
+              browser does not have JavaScript enabled, you can directly enter
+              HTML.
+              <code>content[][html]</code>
+            </p>
+          <% end %>
         </div>
       <% end %>
 
@@ -269,11 +268,13 @@
             <% if @required.include?('mp-syndicate-to') %><span class="required" title="required">*</span><% end %>
           </label>
           <br>
-          <% syndicate_to.each do |syndication| %>
+          <% syndicate_to(@subtype).each do |syndication| %>
             <label class="checkbox-inline">
-              <input type="checkbox" name="mp-syndicate-to[]"
-                value="<%= h syndication['uid'] %>"
-                <% if @post.properties.key?('mp-syndicate-to') && @post.properties['mp-syndicate-to'].include?(syndication['uid']) %>checked<% end %>
+              <input type="checkbox" name="mp-syndicate-to[]" value="<%= h syndication['uid'] %>"
+                <% if (!@edit && request.get? && syndication.key?('checked') && syndication['checked']) ||
+                  (@post.properties.key?('mp-syndicate-to') && @post.properties['mp-syndicate-to'].include?(syndication['uid'])) %>
+                  checked
+                <% end %>
               ><%= h syndication['name'] %>
             </label>
           <% end %>
@@ -340,6 +341,62 @@
             <code>published</code>
           </p>
         </div>
+      <% end %>
+
+      <% if @all || @properties.include?('post-status') || @properties.include?('visibility') %>
+        <div class="form-inline">
+          <% scopes_array = session[:scope].split(' ') %>
+          <% if !scopes_array.include?('create') || scopes_array == ['draft'] %>
+            <div class="form-group">
+              <label for="post-status">Status&nbsp;</label>
+              <select class="form-control" id="post-status" name="post-status" style="margin-right: 20px;">
+                <option>draft</option>
+              </select>
+            </div>
+          <% elsif @all || @properties.include?('post-status') %>
+            <div class="form-group">
+              <label for="post-status">
+                Status&nbsp;
+                <% if @required.include?('post-status') %><span class="required" title="required">*</span><% end %>
+              </label>
+              <select class="form-control" id="post-status" name="post-status" style="margin-right: 20px;"
+                  <% if @required.include?('post-status') %>required<% end %>>
+                <option></option>
+                <option<% if @post.properties.key?('post-status') && @post.properties['post-status'][0] == 'published' %> selected<% end %>>published</option>
+                <option<% if @post.properties.key?('post-status') && @post.properties['post-status'][0] == 'draft' %> selected<% end %>>draft</option>
+              </select>
+            </div>
+          <% end %>
+          <% if @all || @properties.include?('visibility') %>
+            <div class="form-group">
+              <label for="visibility">
+                Visibility&nbsp;
+                <% if @required.include?('visibility') %><span class="required" title="required">*</span><% end %>
+              </label>
+              <select class="form-control" id="post-status" name="visibility"
+                  <% if @required.include?('visibility') %>required<% end %>>
+                <option></option>
+                <option<% if @post.properties.key?('visibility') && @post.properties['visibility'][0] == 'public' %> selected<% end %>>public</option>
+                <option<% if @post.properties.key?('visibility') && @post.properties['visibility'][0] == 'unlisted' %> selected<% end %>>unlisted</option>
+                <option<% if @post.properties.key?('visibility') && @post.properties['visibility'][0] == 'private' %> selected<% end %>>private</option>
+              </select>
+            </div>
+          <% end %>
+        </div>
+        <p class="help-block">
+          <% if @all || @properties.include?('post-status') %>
+            Choose whether your post should be published or made a draft.
+            <code>post-status</code>
+          <% end %>
+          <% if @all || @properties.include?('visibility') %>
+            Select a visibility setting to indicate to your server whether
+            this post should be made public, excluded from lists or be hidden
+            as a private post.
+            <code>visibility</code>
+          <% end %>
+          NB: Please check whether your server supports these values, or leave
+          blank (default).
+        </p>
       <% end %>
 
     </div>

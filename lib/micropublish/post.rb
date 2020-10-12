@@ -11,7 +11,8 @@ module Micropublish
     def self.properties_from_params(params)
       props = {}
       params.keys.each do |param|
-        next if params[param].empty? || params[param] == [""]
+        next if params[param].nil? || params[param].empty? ||
+          params[param] == [""]
         if param.start_with?('_')
           next
         elsif param == 'mp-syndicate-to'
