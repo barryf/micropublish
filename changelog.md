@@ -13,13 +13,13 @@ and this project adheres to
 
 - [Filter syndication targets by post-type, specify checked as appropriate](https://github.com/barryf/micropublish/issues/45)
 - [Raw content instead of HTML for Articles](https://github.com/barryf/micropublish/issues/42)
-- [Make JSON the default post creation method](https://github.com/barryf/micropublish/issues/41)
 - [Support `visibility` property](https://github.com/barryf/micropublish/issues/36)
 - [Support `post-status` property](https://github.com/barryf/micropublish/issues/35)
 - [Add granular scopes to login/auth](https://github.com/barryf/micropublish/issues/33)
 
 ### Changed
 
+- [Make JSON the default post creation method](https://github.com/barryf/micropublish/issues/41)
 - Only show edit, delete or undelete controls if scope allows
 - Added `draft` scope to login form
 - Force `post-status` to `draft` when using (only) draft scope

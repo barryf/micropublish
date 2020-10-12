@@ -11,6 +11,7 @@ module Micropublish
       set :properties,
         JSON.parse(File.read("#{root_path}config/properties.json"))
       set :readme, File.read("#{root_path}README.md")
+      set :changelog, File.read("#{root_path}/changelog.md")
       set :help, File.read("#{public_folder}/help.md")
 
       set :server, :puma
@@ -250,7 +251,16 @@ module Micropublish
 
     get '/about' do
       @content = markdown(settings.readme)
+      # use a better heading for the about page
+      @content.sub!('<h1 id="micropublish">Micropublish</h1>',
+        '<h1>About</h1>')
       @title = "About"
+      erb :static
+    end
+
+    get '/changelog' do
+      @content = markdown(settings.changelog)
+      @title = "Changelog"
       erb :static
     end
 
