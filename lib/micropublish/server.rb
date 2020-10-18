@@ -410,12 +410,15 @@ module Micropublish
     end
 
     def post_types
+      setting_types = settings.properties['types']['h-entry']
       session[:post_types] ||=
         if config.is_a?(Hash) && config.key?('post-types') &&
             config['post-types'].is_a?(Array)
           h_entry = {}
           config['post-types'].each do |type|
-            default_type = settings.properties['types']['h-entry'][type['type']]
+            # skip if we don't support type
+            next unless setting_types.key?(type['type'])
+            default_type = setting_types[type['type']]
             h_entry[type['type']] = {
               'name' => type['name'],
               'icon' => default_type['icon']
@@ -436,7 +439,7 @@ module Micropublish
           end
           h_entry
         else
-          settings.properties['types']['h-entry']
+          setting_types
         end
     end
 
