@@ -6,6 +6,15 @@ module Micropublish
       @token = token
     end
 
+    def config
+      query = { q: 'config' }
+      begin
+        response = HTTParty.get(@micropub, query: query, headers: headers)
+        JSON.parse(response.body)
+      rescue
+      end
+    end
+
     def try_syndicate_to(query)
       begin
         response = HTTParty.get(@micropub, query: query, headers: headers)
