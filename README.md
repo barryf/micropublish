@@ -150,11 +150,11 @@ on a page you are viewing, with the relevant properties already filled:
 - <a class="badge" href="javascript:window.location='https://micropublish.net/edit?url='+encodeURIComponent(location.href);">✏︎ Edit</a>
 - <a class="badge" href="javascript:window.location='https://micropublish.net/delete?url='+encodeURIComponent(location.href);">✖︎ Delete</a>
 - <a class="badge" href="javascript:window.location='https://micropublish.net/undelete?url='+encodeURIComponent(location.href);">✔︎ Undelete</a>
-- <a class="badge" href="javascript:window.location='https://micropublish.net/new/h-entry/reply?in-reply-to='+encodeURIComponent(location.href);">↩ Reply</a>
+- <a class="badge" href="javascript:window.location='https://micropublish.net/new/h-entry/reply?in-reply-to='+encodeURIComponent(location.href)+'&content='+encodeURIComponent(window.getSelection());">↩ Reply</a>
 - <a class="badge" href="javascript:window.location='https://micropublish.net/new/h-entry/repost?repost-of='+encodeURIComponent(location.href);">♺ Repost</a>
 - <a class="badge" href="javascript:window.location='https://micropublish.net/new/h-entry/like?like-of='+encodeURIComponent(location.href);">❤ Like</a>
 - <a class="badge" href="javascript:window.location='https://micropublish.net/new/h-entry/rsvp?in-reply-to='+encodeURIComponent(location.href);">✔︎ RSVP</a>
-- <a class="badge" href="javascript:window.location='https://micropublish.net/new/h-entry/bookmark?bookmark-of='+encodeURIComponent(location.href)+'&name='+encodeURIComponent(document.title);">✂ Bookmark</a>
+- <a class="badge" href="javascript:window.location='https://micropublish.net/new/h-entry/bookmark?bookmark-of='+encodeURIComponent(location.href)+'&name='+encodeURIComponent(document.title)+'&content='+encodeURIComponent(window.getSelection());">✂ Bookmark</a>
 
 The URLs are hard-coded to the [https://micropublish.net][mp] install so you
 will need to update if you are hosting Micropublish yourself.
