@@ -3,13 +3,12 @@ require 'cgi'
 module Micropublish
   class Auth
 
-    def initialize(me, code, state, scope, redirect_uri, client_id)
+    def initialize(me, code, redirect_uri, client_id, code_verifier)
       @me = me
       @code = code
-      @state = state
-      @scope = scope
       @redirect_uri = redirect_uri
       @client_id = client_id
+      @code_verifier = code_verifier
     end
 
     def callback
@@ -38,13 +37,11 @@ module Micropublish
 
     def get_token_and_me(token_endpoint)
       response = HTTParty.post(token_endpoint, body: {
-        me: @me,
         code: @code,
         redirect_uri: @redirect_uri,
         client_id: @client_id,
-        state: @state,
-        scope: @scope,
-        grant_type: 'authorization_code'
+        grant_type: 'authorization_code',
+        code_verifier: @code_verifier
       })
       unless (200...300).include?(response.code)
         raise AuthError.new("#{response.code} received from token endpoint.")

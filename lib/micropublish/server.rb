@@ -1,3 +1,6 @@
+require 'securerandom'
+require 'digest'
+
 module Micropublish
   class Server < Sinatra::Application
 
@@ -66,6 +69,9 @@ module Micropublish
       session[:scope] = params[:scope].join(' ')
       # store me - we don't want to trust this in callback
       session[:me] = params[:me]
+      # code challenge from code verified
+      session[:code_verifier] = SecureRandom.alphanumeric(100)
+      session[:code_challenge] = Digest::SHA256.base64digest(session[:code_verifier])
       # redirect to auth endpoint
       query = URI.encode_www_form({
         me: session[:me],
@@ -73,7 +79,9 @@ module Micropublish
         state: session[:state],
         scope: session[:scope],
         redirect_uri: "#{request.base_url}/auth/callback",
-        response_type: "code"
+        response_type: "code",
+        code_challenge: session[:code_challenge],
+        code_challenge_method: "S256"
       })
       redirect "#{endpoints[:authorization_endpoint]}?#{query}"
     end
@@ -82,8 +90,22 @@ module Micropublish
       unless session.key?(:me) && session.key?(:state) && session.key?(:scope)
         redirect_flash('/', 'info', "Session has timed out. Please try again.")
       end
-      auth = Auth.new(session[:me], params[:code], session[:state],
-        session[:scope], "#{request.base_url}/auth/callback", request.base_url)
+      unless params.key?(:code)
+        redirect_flash('/', 'info', "Callback is missing 'code' parameter.")
+      end
+      unless params.key?(:state)
+        redirect_flash('/', 'info', "Callback is missing 'state' parameter.")
+      end
+      unless params[:state] == session[:state]
+        redirect_flash('/', 'info', "Callback 'state' parameter does not match.")
+      end
+      auth = Auth.new(
+        session[:me],
+        params[:code],
+        "#{request.base_url}/auth/callback",
+        request.base_url,
+        session[:code_verifier]
+      )
       endpoints_and_token_and_me = auth.callback
       # login and token grant was successful so store in session with me
       session.merge!(endpoints_and_token_and_me)
