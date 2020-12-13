@@ -47,7 +47,7 @@ module Micropublish
         code_verifier: @code_verifier
       })
       unless (200...300).include?(response.code)
-        raise AuthError.new("#{response.code} received from token endpoint.")
+        raise AuthError.new("#{response.code} received from token endpoint. Body: #{response.body}")
       end
       # try json first
       begin
