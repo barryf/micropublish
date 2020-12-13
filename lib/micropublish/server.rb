@@ -32,7 +32,7 @@ module Micropublish
     get '/' do
       if logged_in?
         @title = "Dashboard"
-        @types = settings.properties['types']['h-entry']
+        @types = post_types
         erb :dashboard
       else
         @title = "Sign in"
@@ -112,8 +112,7 @@ module Micropublish
       require_session
       begin
         @post = Post.new([params[:_type]], Post.properties_from_params(params))
-        required_properties =
-          settings.properties['types'][params[:_type]][params[:_subtype]]['required']
+        required_properties = post_types[params[:_subtype]]['required']
         @post.validate_properties!(required_properties)
         # articles must be sent as json because content is an object
         format = params[:_subtype] == 'article' ? :json : default_format
@@ -167,19 +166,22 @@ module Micropublish
     post '/edit' do
       require_session
       begin
+        subtype = params[:_subtype]
         submitted_properties = Post.properties_from_params(params)
         @post = Post.new([params[:_type]], submitted_properties)
         @post.validate_properties!
         original_properties = if params.key?('_all')
-          micropub.source_all(params[:_url]).properties
-        else
-          subtype = params[:_subtype]
-          micropub.source_properties(params[:_url],
-            subtype_edit_properties(subtype)).properties
-        end
+            micropub.source_all(params[:_url]).properties
+          else
+            micropub.source_properties(params[:_url],
+              subtype_edit_properties(subtype)).properties
+          end
         mp_commands = Micropub.find_commands(params)
+        known_properties = (subtype == '' ?
+          settings.properties['known'] :
+          post_types[subtype]['properties']) + %w(syndication published)
         diff = Compare.new(original_properties, submitted_properties,
-          settings.properties['known']).diff_properties
+          known_properties).diff_properties
         if params.key?('_preview')
           hash = {
             action: 'update',
@@ -336,15 +338,12 @@ module Micropublish
       def render_new(subtype)
         @type = 'h-entry'
         @subtype = subtype
-        @subtype_label = settings.properties['types']['h-entry'][subtype]['name']
-        @subtype_icon = settings.properties['types']['h-entry'][subtype]['icon']
+        @subtype_label = post_types[subtype]['name']
+        @subtype_icon = post_types[subtype]['icon']
         @title = "New #{@subtype_label} (#{@type})"
         @post ||= Post.new(@type, Post.properties_from_params(params))
-        @properties =
-          settings.properties['types']['h-entry'][subtype]['properties'] +
-          settings.properties['default']
-        @required =
-          settings.properties['types']['h-entry'][subtype]['required']
+        @properties = post_types[subtype]['properties']
+        @required = post_types[subtype]['required']
         @action_url = '/new'
         @action_label = "Create"
         # insert @username at start of content if replying to a tweet
@@ -360,8 +359,7 @@ module Micropublish
         # for micropub.rocks only return content and category
         return %w(content category) if params.key?('rocks')
 
-        settings.properties['types']['h-entry'][subtype]['properties'] +
-          settings.properties['default'] + %w(syndication published)
+        post_types[subtype]['properties'] + %w(syndication published)
       end
 
       def render_edit(subtype)
@@ -372,13 +370,12 @@ module Micropublish
           redirect_flash('/', 'danger', e.message)
         end
         @subtype = subtype
-        @subtype_label = settings.properties['types']['h-entry'][subtype]['name']
-        @subtype_icon = settings.properties['types']['h-entry'][subtype]['icon']
+        @subtype_label = post_types[subtype]['name']
+        @subtype_icon = post_types[subtype]['icon']
         @title = "Edit #{@subtype_label} at #{params[:url] || params[:_url]}"
         @type = 'h-entry'
         @properties = subtype_edit_properties(subtype)
-        @required =
-          settings.properties['types']['h-entry'][@subtype]['required']
+        @required = post_types[subtype]['required']
         @edit = true
         @action_url = '/edit'
         @action_label = "Update"
@@ -406,6 +403,44 @@ module Micropublish
         session[:redirect] = url
         redirect "/redirect"
       end
+    end
+
+    def config
+      session[:config] ||= micropub.config
+    end
+
+    def post_types
+      setting_types = settings.properties['types']['h-entry']
+      session[:post_types] ||=
+        if config.is_a?(Hash) && config.key?('post-types') &&
+            config['post-types'].is_a?(Array)
+          h_entry = {}
+          config['post-types'].each do |type|
+            # skip if we don't support type
+            next unless setting_types.key?(type['type'])
+            default_type = setting_types[type['type']]
+            h_entry[type['type']] = {
+              'name' => type['name'],
+              'icon' => default_type['icon']
+            }
+            h_entry[type['type']]['properties'] =
+              if type.key?('properties') && type['properties'].is_a?(Array)
+                type['properties']
+              else
+                default_type['properties']
+              end
+            h_entry[type['type']]['required'] =
+              if type.key?('required-properties') &&
+                  type['required-properties'].is_a?(Array)
+                type['required-properties']
+              else
+                default_type['required']
+              end
+          end
+          h_entry
+        else
+          setting_types
+        end
     end
 
     error do
