@@ -1,3 +1,7 @@
+require 'securerandom'
+require 'base64'
+require 'digest'
+
 module Micropublish
   class Server < Sinatra::Application
 
@@ -32,7 +36,7 @@ module Micropublish
     get '/' do
       if logged_in?
         @title = "Dashboard"
-        @types = settings.properties['types']['h-entry']
+        @types = post_types
         erb :dashboard
       else
         @title = "Sign in"
@@ -61,11 +65,16 @@ module Micropublish
         redirect_flash('/', 'danger', e.message)
       end
       # define random state string
-      session[:state] = Random.new_seed.to_s
+      session[:state] = SecureRandom.alphanumeric(20)
       # store scope - will be needed to limit functionality on dashboard
       session[:scope] = params[:scope].join(' ')
       # store me - we don't want to trust this in callback
       session[:me] = params[:me]
+      # code challenge from code verified
+      session[:code_verifier] = SecureRandom.alphanumeric(100)
+      code_challenge = Base64.urlsafe_encode64(
+        Digest::SHA256.hexdigest(session[:code_verifier])
+      )
       # redirect to auth endpoint
       query = URI.encode_www_form({
         me: session[:me],
@@ -73,7 +82,9 @@ module Micropublish
         state: session[:state],
         scope: session[:scope],
         redirect_uri: "#{request.base_url}/auth/callback",
-        response_type: "code"
+        response_type: "code",
+        code_challenge: code_challenge,
+        code_challenge_method: "S256"
       })
       redirect "#{endpoints[:authorization_endpoint]}?#{query}"
     end
@@ -82,8 +93,17 @@ module Micropublish
       unless session.key?(:me) && session.key?(:state) && session.key?(:scope)
         redirect_flash('/', 'info', "Session has timed out. Please try again.")
       end
-      auth = Auth.new(session[:me], params[:code], session[:state],
-        session[:scope], "#{request.base_url}/auth/callback", request.base_url)
+      unless params.key?(:state) && params[:state] == session[:state]
+        session.clear
+        redirect_flash('/', 'info', "Callback \"state\" parameter is missing or does not match.")
+      end
+      auth = Auth.new(
+        session[:me],
+        params[:code],
+        "#{request.base_url}/auth/callback",
+        request.base_url,
+        session[:code_verifier]
+      )
       endpoints_and_token_and_me = auth.callback
       # login and token grant was successful so store in session with me
       session.merge!(endpoints_and_token_and_me)
@@ -112,8 +132,7 @@ module Micropublish
       require_session
       begin
         @post = Post.new([params[:_type]], Post.properties_from_params(params))
-        required_properties =
-          settings.properties['types'][params[:_type]][params[:_subtype]]['required']
+        required_properties = post_types[params[:_subtype]]['required']
         @post.validate_properties!(required_properties)
         # articles must be sent as json because content is an object
         format = params[:_subtype] == 'article' ? :json : default_format
@@ -167,19 +186,22 @@ module Micropublish
     post '/edit' do
       require_session
       begin
+        subtype = params[:_subtype]
         submitted_properties = Post.properties_from_params(params)
         @post = Post.new([params[:_type]], submitted_properties)
         @post.validate_properties!
         original_properties = if params.key?('_all')
-          micropub.source_all(params[:_url]).properties
-        else
-          subtype = params[:_subtype]
-          micropub.source_properties(params[:_url],
-            subtype_edit_properties(subtype)).properties
-        end
+            micropub.source_all(params[:_url]).properties
+          else
+            micropub.source_properties(params[:_url],
+              subtype_edit_properties(subtype)).properties
+          end
         mp_commands = Micropub.find_commands(params)
+        known_properties = (subtype == '' ?
+          settings.properties['known'] :
+          post_types[subtype]['properties']) + %w(syndication published)
         diff = Compare.new(original_properties, submitted_properties,
-          settings.properties['known']).diff_properties
+          known_properties).diff_properties
         if params.key?('_preview')
           hash = {
             action: 'update',
@@ -336,15 +358,12 @@ module Micropublish
       def render_new(subtype)
         @type = 'h-entry'
         @subtype = subtype
-        @subtype_label = settings.properties['types']['h-entry'][subtype]['name']
-        @subtype_icon = settings.properties['types']['h-entry'][subtype]['icon']
+        @subtype_label = post_types[subtype]['name']
+        @subtype_icon = post_types[subtype]['icon']
         @title = "New #{@subtype_label} (#{@type})"
         @post ||= Post.new(@type, Post.properties_from_params(params))
-        @properties =
-          settings.properties['types']['h-entry'][subtype]['properties'] +
-          settings.properties['default']
-        @required =
-          settings.properties['types']['h-entry'][subtype]['required']
+        @properties = post_types[subtype]['properties']
+        @required = post_types[subtype]['required']
         @action_url = '/new'
         @action_label = "Create"
         # insert @username at start of content if replying to a tweet
@@ -360,8 +379,7 @@ module Micropublish
         # for micropub.rocks only return content and category
         return %w(content category) if params.key?('rocks')
 
-        settings.properties['types']['h-entry'][subtype]['properties'] +
-          settings.properties['default'] + %w(syndication published)
+        post_types[subtype]['properties'] + %w(syndication published)
       end
 
       def render_edit(subtype)
@@ -372,13 +390,12 @@ module Micropublish
           redirect_flash('/', 'danger', e.message)
         end
         @subtype = subtype
-        @subtype_label = settings.properties['types']['h-entry'][subtype]['name']
-        @subtype_icon = settings.properties['types']['h-entry'][subtype]['icon']
+        @subtype_label = post_types[subtype]['name']
+        @subtype_icon = post_types[subtype]['icon']
         @title = "Edit #{@subtype_label} at #{params[:url] || params[:_url]}"
         @type = 'h-entry'
         @properties = subtype_edit_properties(subtype)
-        @required =
-          settings.properties['types']['h-entry'][@subtype]['required']
+        @required = post_types[subtype]['required']
         @edit = true
         @action_url = '/edit'
         @action_label = "Update"
@@ -406,6 +423,44 @@ module Micropublish
         session[:redirect] = url
         redirect "/redirect"
       end
+    end
+
+    def config
+      session[:config] ||= micropub.config
+    end
+
+    def post_types
+      setting_types = settings.properties['types']['h-entry']
+      session[:post_types] ||=
+        if config.is_a?(Hash) && config.key?('post-types') &&
+            config['post-types'].is_a?(Array)
+          h_entry = {}
+          config['post-types'].each do |type|
+            # skip if we don't support type
+            next unless setting_types.key?(type['type'])
+            default_type = setting_types[type['type']]
+            h_entry[type['type']] = {
+              'name' => type['name'],
+              'icon' => default_type['icon']
+            }
+            h_entry[type['type']]['properties'] =
+              if type.key?('properties') && type['properties'].is_a?(Array)
+                type['properties']
+              else
+                default_type['properties']
+              end
+            h_entry[type['type']]['required'] =
+              if type.key?('required-properties') &&
+                  type['required-properties'].is_a?(Array)
+                type['required-properties']
+              else
+                default_type['required']
+              end
+          end
+          h_entry
+        else
+          setting_types
+        end
     end
 
     error do

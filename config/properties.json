@@ -17,20 +17,16 @@
     "post-status",
     "visibility"
   ],
-  "default": [
-    "category",
-    "post-status",
-    "visibility",
-    "mp-syndicate-to",
-    "mp-slug"
-  ],
   "types": {
     "h-entry": {
       "note": {
         "name": "Note",
         "icon": "comment",
         "properties": [
-          "content"
+          "content",
+          "category",
+          "post-status",
+          "visibility"
         ],
         "required": [
           "content"
@@ -41,7 +37,10 @@
         "icon": "file-text",
         "properties": [
           "name",
-          "content"
+          "content",
+          "category",
+          "post-status",
+          "visibility"
         ],
         "required": [
           "name",
@@ -54,7 +53,10 @@
         "properties": [
           "in-reply-to",
           "rsvp",
-          "content"
+          "content",
+          "category",
+          "post-status",
+          "visibility"
         ],
         "required": [
           "in-reply-to",
@@ -67,7 +69,10 @@
         "properties": [
           "bookmark-of",
           "name",
-          "content"
+          "content",
+          "category",
+          "post-status",
+          "visibility"
         ],
         "required": [
           "bookmark-of",
@@ -79,7 +84,10 @@
         "icon": "reply",
         "properties": [
           "in-reply-to",
-          "content"
+          "content",
+          "category",
+          "post-status",
+          "visibility"
         ],
         "required": [
           "in-reply-to",
@@ -91,7 +99,10 @@
         "icon": "retweet",
         "properties": [
           "repost-of",
-          "content"
+          "content",
+          "category",
+          "post-status",
+          "visibility"
         ],
         "required": [
           "repost-of"
@@ -101,7 +112,10 @@
         "name": "Like",
         "icon": "heart",
         "properties": [
-          "like-of"
+          "like-of",
+          "category",
+          "post-status",
+          "visibility"
         ],
         "required": [
           "like-of"
@@ -112,7 +126,10 @@
         "icon": "map-marker",
         "properties": [
           "checkin",
-          "content"
+          "content",
+          "category",
+          "post-status",
+          "visibility"
         ],
         "required": [
           "checkin"
