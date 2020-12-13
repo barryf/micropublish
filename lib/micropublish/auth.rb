@@ -31,6 +31,9 @@ module Micropublish
       # find out if we're allowed a token to post and what "me" to use
       token, me = get_token_and_me(endpoints[:token_endpoint])
 
+      # if me does not match original me, check authorization endpoints match
+      confirm_auth_server(me, endpoints[:authorization_endpoint])
+
       # return hash of endpoints and the token with the "me"
       endpoints.merge(token: token, me: me)
     end
@@ -66,6 +69,21 @@ module Micropublish
         raise AuthError.new("No 'me' param returned from token endpoint.")
       end
       [access_token, me]
+    end
+
+    # https://indieauth.spec.indieweb.org/#authorization-server-confirmation
+    def confirm_auth_server(me, authorization_endpoint)
+      # we can continue if original me matches me from token endpoint
+      return if @me == me
+      # otherwise we need to check me's auth endpoint matches
+      endpoints_finder = EndpointsFinder.new(me)
+      endpoints = endpoints_finder.find_links
+      if !endpoints.key?(:authorization_endpoint) ||
+        endpoints[:authorization_endpoint] != authorization_endpoint
+        raise AuthError.new(
+          "Authorizarion server for profile URL (me) returned from token " +
+          "endpoint does not match original profile's authorization server.")
+      end
     end
 
     def self.valid_uri?(u)
