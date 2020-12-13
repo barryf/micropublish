@@ -54,7 +54,9 @@
           "in-reply-to",
           "rsvp",
           "content",
-          "category"
+          "category",
+          "post-status",
+          "visibility"
         ],
         "required": [
           "in-reply-to",
@@ -68,7 +70,9 @@
           "bookmark-of",
           "name",
           "content",
-          "category"
+          "category",
+          "post-status",
+          "visibility"
         ],
         "required": [
           "bookmark-of",
@@ -81,7 +85,9 @@
         "properties": [
           "in-reply-to",
           "content",
-          "category"
+          "category",
+          "post-status",
+          "visibility"
         ],
         "required": [
           "in-reply-to",
@@ -94,7 +100,9 @@
         "properties": [
           "repost-of",
           "content",
-          "category"
+          "category",
+          "post-status",
+          "visibility"
         ],
         "required": [
           "repost-of"
@@ -105,7 +113,9 @@
         "icon": "heart",
         "properties": [
           "like-of",
-          "category"
+          "category",
+          "post-status",
+          "visibility"
         ],
         "required": [
           "like-of"
@@ -117,7 +127,9 @@
         "properties": [
           "checkin",
           "content",
-          "category"
+          "category",
+          "post-status",
+          "visibility"
         ],
         "required": [
           "checkin"
