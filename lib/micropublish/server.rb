@@ -72,9 +72,7 @@ module Micropublish
       session[:me] = params[:me]
       # code challenge from code verified
       session[:code_verifier] = SecureRandom.alphanumeric(100)
-      code_challenge = Base64.urlsafe_encode64(
-        Digest::SHA256.hexdigest(session[:code_verifier])
-      ).gsub(/=/, '') # removes `=`s from base64 string
+      code_challenge = Auth.generate_code_challenge(session[:code_verifier])
       # redirect to auth endpoint
       query = URI.encode_www_form({
         me: session[:me],

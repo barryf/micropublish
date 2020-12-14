@@ -86,6 +86,12 @@ module Micropublish
       end
     end
 
+    def self.generate_code_challenge(code_verifier)
+      Base64.urlsafe_encode64(
+        Digest::SHA256.digest(code_verifier)
+      ).gsub(/=/, '')
+    end
+
     def self.valid_uri?(u)
       begin
         uri = URI.parse(u)
