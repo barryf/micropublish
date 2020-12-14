@@ -7,6 +7,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.1] - 2020-12-14
+
+### Changed
+
+- [Fix code challenge generator](https://github.com/barryf/micropublish/commit/c42324a2a61523942f484b51d3d7e3b87f5fbef7)
+  - The previous version did not adhere to [RFC 7636](https://tools.ietf.org/html/rfc7636#appendix-A) for the code challenge.
+
 ## [2.4.0] - 2020-12-13
 
 ### Added
