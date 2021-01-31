@@ -6,26 +6,28 @@ module Micropublish
       @token = token
     end
 
-    def config
-      query = { q: 'config' }
+    def query(params)
       begin
-        response = HTTParty.get(@micropub, query: query, headers: headers)
+        response = HTTParty.get(@micropub, query: params, headers: headers)
         JSON.parse(response.body)
       rescue
       end
     end
 
-    def try_syndicate_to(query)
-      begin
-        response = HTTParty.get(@micropub, query: query, headers: headers)
-        JSON.parse(response.body)['syndicate-to']
-      rescue
-      end
+    def config
+      query({ q: 'config' })
+    end
+
+    def channels
+      c = query({ q: 'channel' }) || config
+      c['channels'] if c.key?('channels')
     end
 
     def syndicate_to(subtype = nil)
-      try_syndicate_to({ q: 'syndicate-to', 'post-type': subtype }) ||
-        try_syndicate_to({ q: 'config' })
+      params = { q: 'syndicate-to' }
+      params['post-type'] = subtype if subtype
+      s = query(params) || config
+      s['syndicate-to'] if s.key?('syndicate-to')
     end
 
     def source_all(url)
