@@ -15,7 +15,8 @@
     "mp-slug",
     "checkin",
     "post-status",
-    "visibility"
+    "visibility",
+    "mp-channel"
   ],
   "types": {
     "h-entry": {

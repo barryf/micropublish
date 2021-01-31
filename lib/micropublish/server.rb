@@ -322,6 +322,10 @@ module Micropublish
         micropub.syndicate_to(subtype) || []
       end
 
+      def channels
+        session[:channels] ||= micropub.channels
+      end
+
       def logged_in?
         session.key?(:micropub)
       end
