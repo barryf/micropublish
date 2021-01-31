@@ -399,6 +399,34 @@
         </div>
       <% end %>
 
+      <% if channels && channels.is_a?(Array) %>
+        <div class="form-group">
+          <label>
+            Channel
+            <% if @required.include?('mp-channel') %><span class="required" title="required">*</span><% end %>
+          </label>
+          <br>
+          <% channels.each do |channel| %>
+            <% if channel.is_a?(Hash) %>
+              <% uid = channel['uid']; name = channel['name'] %>
+            <% else %>
+              <% uid = channel; name = channel %>
+            <% end %>
+            <label class="checkbox-inline">
+              <input type="checkbox" name="mp-channel[]" value="<%= h uid %>"
+                <% if @post.properties.key?('mp-channel') && @post.properties['mp-channel'].include?(uid) %>
+                  checked
+                <% end %>
+              ><%= h name %>
+            </label>
+          <% end %>
+          <p class="help-block">
+            Choose optional channels from your server's list of channels.
+            <code>mp-channel[]</code>
+          </p>
+        </div>
+      <% end %>
+
     </div>
 
     <div class="panel-footer">
