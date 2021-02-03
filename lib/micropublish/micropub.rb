@@ -20,14 +20,14 @@ module Micropublish
 
     def channels
       c = query({ q: 'channel' }) || config
-      c['channels'] if c.key?('channels')
+      c['channels'] if c.is_a?(Hash) && c.key?('channels')
     end
 
     def syndicate_to(subtype = nil)
       params = { q: 'syndicate-to' }
       params['post-type'] = subtype if subtype
       s = query(params) || config
-      s['syndicate-to'] if s.key?('syndicate-to')
+      s['syndicate-to'] if s.is_a?(Hash) && s.key?('syndicate-to')
     end
 
     def source_all(url)
