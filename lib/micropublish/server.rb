@@ -374,6 +374,10 @@ module Micropublish
           @post.properties['content'] =
             [tweet_reply_prefix(params['in-reply-to'])]
         end
+        # default to current timestamp if using a published field
+        if @properties.include?('published')
+          @post.properties['published'] = [Time.now.utc.iso8601]
+        end
         erb :form
       end
 
