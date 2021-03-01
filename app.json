@@ -7,5 +7,6 @@
       "description": "A long, secure, (ideally) random string used to secure data stored in the user's cookie.",
       "value": ""
     }
-  }
+  },
+  "stack": "heroku-20"
 }
