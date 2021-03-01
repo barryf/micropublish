@@ -28,17 +28,17 @@ module Micropublish
       # check we've found all the endpoints we want
       endpoints_finder.validate!
 
-      # find out if we're allowed a token to post and what "me" to use
-      token, me = get_token_and_me(endpoints[:token_endpoint])
+      # find out if we're allowed a token to post, the scopes for that token and what "me" to use
+      token, scope, me = get_token_and_scopes_and_me(endpoints[:token_endpoint])
 
       # if me does not match original me, check authorization endpoints match
       confirm_auth_server(me, endpoints[:authorization_endpoint])
 
       # return hash of endpoints and the token with the "me"
-      endpoints.merge(token: token, me: me)
+      endpoints.merge(token: token, scope: scope, me: me)
     end
 
-    def get_token_and_me(token_endpoint)
+    def get_token_and_scopes_and_me(token_endpoint)
       response = HTTParty.post(token_endpoint, body: {
         code: @code,
         redirect_uri: @redirect_uri,
@@ -54,21 +54,26 @@ module Micropublish
         response_hash = JSON.parse(response.body)
         access_token = response_hash.key?('access_token') ?
           response_hash['access_token'] : nil
+        scope = response_hash.key?('scope') ? response_hash['scope'] : nil
         me = response_hash.key?('me') ? response_hash['me'] : nil
       rescue JSON::ParserError => e
         # assume form-encoded
         response_hash = CGI.parse(response.parsed_response)
         access_token = response_hash.key?('access_token') ?
           response_hash['access_token'].first : nil
+        scope = response_hash.key?('scope') ? response_hash['scope'].first : nil
         me = response_hash.key?('me') ? response_hash['me'].first : nil
       end
       unless access_token
         raise AuthError.new("No 'access_token' returned from token endpoint.")
       end
+      unless scope
+        raise AuthError.new("No 'scope' param returned from token endpoint.")
+      end
       unless me
         raise AuthError.new("No 'me' param returned from token endpoint.")
       end
-      [access_token, me]
+      [access_token, scope, me]
     end
 
     # https://indieauth.spec.indieweb.org/#authorization-server-confirmation

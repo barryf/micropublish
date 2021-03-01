@@ -102,11 +102,11 @@ module Micropublish
         request.base_url,
         session[:code_verifier]
       )
-      endpoints_and_token_and_me = auth.callback
-      # login and token grant was successful so store in session with me
-      session.merge!(endpoints_and_token_and_me)
+      endpoints_and_token_and_scope_and_me = auth.callback
+      # login and token grant was successful so store in session with the scope for the token and the me
+      session.merge!(endpoints_and_token_and_scope_and_me)
       redirect_flash('/', 'success', %Q{You are now signed in successfully
-          as "#{endpoints_and_token_and_me[:me]}".
+          as "#{endpoints_and_token_and_scope_and_me[:me]}".
           Submit content to your site via Micropub using the links
           below. Please
           <a href="/about" class="alert-link">read&nbsp;the&nbsp;docs</a> for
