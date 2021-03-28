@@ -232,7 +232,10 @@
             Summary
             <% if @required.include?('summary') %><span class="required" title="required">*</span><% end %>
           </label>
-          <textarea class="form-control" rows="2" name="summary"
+          <div style="float: right;">
+            <span class="badge" id="summary_count"></span>
+          </div>
+          <textarea class="form-control" rows="2" name="summary" id="summary"
             <% if @required.include?('summary') %>required<% end %>
             ><%= h @post.properties['summary'][0] if @post.properties.key?('summary') %></textarea>
           <p class="help-block">

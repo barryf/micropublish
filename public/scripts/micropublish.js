@@ -20,18 +20,22 @@ $(function() {
 		return false
 	});
 
-	function count_content() {
-     $('#content_count').html(
+	function count_chars(id) {
+     $('#' + id + '_count').html(
 			 "<span class=\"fa fa-twitter\"></span> " +
 			 twttr.txt.getTweetLength(
-				 $('#content').val()
+				 $('#' + id).val()
 			 )
 		 );
 	}
 	if ($('#content_count').length) {
-		$('#content').on('change keyup', count_content);
-		count_content();
+		$('#content').on('change keyup', function() { count_chars('content'); });
+		count_chars('content');
 	}
+  if ($('#summary_count').length) {
+    $('#summary').on('change keyup', function() { count_chars('summary'); });
+    count_chars('summary');
+  }
 
 	$('#helpable-toggle').on('click', function() {
 		$('.helpable .help-block').slideToggle();
