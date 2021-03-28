@@ -195,8 +195,12 @@
             <% if @required.include?('content') %><span class="required" title="required">*</span><% end %>
           </label>
           &nbsp;
-          <% if (@edit && @post.properties.key?('content') && !@post.properties['content'][0].is_a?(Hash)) || (@properties.include?('content') && @subtype != 'article') || (@properties.include?('content') && params.key?('text')) %>
-            <% if @subtype == 'article' %><a href="<%= request.url.sub(/\?text$/, '') %>">Switch to HTML</a><% end %>
+          <% if (@edit && @post.properties.key?('content') && !@post.properties['content'][0].is_a?(Hash)) || (@properties.include?('content') && @subtype != 'article') || (@properties.include?('content') && params.key?('format') && params['format'] == 'text') %>
+            <% if @subtype == 'article' && !@edit %>
+              <a href="?<%= URI.encode_www_form(params.merge({format:'editor'})) %>">Editor</a> |
+              <a href="?<%= URI.encode_www_form(params.merge({format:'html'})) %>">HTML</a> |
+              <strong>Text</strong>
+            <% end %>
             <div style="float: right;">
               <span class="badge" id="content_count"></span>
             </div>
@@ -210,10 +214,27 @@
             </p>
             <%= autogrow_script('content') %>
           <% elsif (@edit && @post.properties.key?('content') && @post.properties['content'][0].is_a?(Hash)) || (@properties.include?('content') && @subtype == 'article') %>
+            <% if !params.key?('format') || params['format'] == 'editor' %>
+              <strong>Editor</strong>
+            <% else %>
+              <a href="?<%= URI.encode_www_form(params.merge({format:'editor'})) %>">Editor</a>
+            <% end %> |
+            <% if params.key?('format') && params['format'] == 'html' %>
+              <strong>HTML</strong>
+            <% else %>
+              <a href="?<%= URI.encode_www_form(params.merge({format:'html'})) %>">HTML</a>
+            <% end %>
+            <% unless @edit %>
+              | <a href="?<%= URI.encode_www_form(params.merge({format:'text'})) %>">Text</a>
+            <% end %>
             <% content_html_value = @post.properties.key?('content') && @post.properties['content'][0].is_a?(Hash) && @post.properties['content'][0].key?('html') ? h(@post.properties['content'][0]['html']) : "" %>
-            <a href="<%= request.url + "?text" %>">Switch to text</a>
-            <textarea id="content-html" class="form-control" rows="5" name="content[][html]"><%= content_html_value %></textarea>
-            <trix-editor input="content-html" style="display: none;"></trix-editor>
+            <% if params.key?('format') && params['format'] == 'html' %>
+              <textarea id="content" class="form-control" rows="5" name="content[][html]"><%= content_html_value %></textarea>
+              <%= autogrow_script('content') %>
+            <% else %>
+              <textarea id="content-html" class="form-control" rows="5" name="content[][html]"><%= content_html_value %></textarea>
+              <trix-editor input="content-html" style="display: none;"></trix-editor>
+            <% end %>
             <p class="help-block">
               Enter content for this post.
               You may use rich content via the embedded
