@@ -7,6 +7,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] - 2021-03-28
+
+### Changed
+
+- Character counter now works for fields other than `content`. If a `summary`
+  field is available this will now include a counter.
+- Support changing article content field type: (Trix) Editor, HTML or Text.
+  The options available depends on whether you're creating or updating an
+  article -- you cannot switch to Text if you're editing an HTML article.
+- When redirecting after creating/updating a post, the URL parameter is now
+  passed in the query-string, instead of in the session. This is intended as
+  a short-term fix for large sessions, as discussed in Issue #62.
+
 ## [2.4.5] - 2021-03-01
 
 ### Changed

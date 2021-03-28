@@ -286,13 +286,12 @@ module Micropublish
 
     get '/redirect' do
       require_session
-      redirect '/' unless session.key?(:redirect)
-      @url = session[:redirect]
+      redirect '/' unless params.key?('url')
+      @url = params['url']
       # HTTP request to see if post exists yet
       response = HTTParty.get(@url)
       case response.code.to_i
       when 200
-        session.delete(:redirect)
         redirect @url
       when 404
         erb :redirect
@@ -426,8 +425,8 @@ module Micropublish
       end
 
       def redirect_post(url)
-        session[:redirect] = url
-        redirect "/redirect"
+        encoded_url = CGI.escape(url)
+        redirect "/redirect?url=#{encoded_url}"
       end
     end
 
