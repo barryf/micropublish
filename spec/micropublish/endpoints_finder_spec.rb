@@ -2,12 +2,21 @@ describe Micropublish::EndpointsFinder do
 
   URL = 'https://barryfrost.com'
   LINKS = {
-    micropub: 'https://barryfrost.com/micropub',
+    micropub: 'https://api.barryfrost.com/micropub',
     authorization_endpoint: 'https://indieauth.com/auth',
     token_endpoint: 'https://tokens.indieauth.com/token'
   }
 
   before do
+    stub_request(:get, 'https://barryfrost.com/').to_return(status: 200,
+      body: '
+        <link rel="micropub" href="https://api.barryfrost.com/micropub">
+        <link rel="authorization_endpoint" href="https://indieauth.com/auth">
+        <link rel="token_endpoint" href="https://tokens.indieauth.com/token">',
+      headers: {
+        "Link" => '<https://api.barryfrost.com/micropub>; rel="micropub", <https://indieauth.com/auth>; rel="authorization_endpoint", <https://tokens.indieauth.com/token>; rel="token_endpoint"'
+      }
+    )
     @endpoints_finder = Micropublish::EndpointsFinder.new(URL)
     @response = @endpoints_finder.get_url
   end
