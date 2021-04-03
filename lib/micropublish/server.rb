@@ -167,7 +167,11 @@ module Micropublish
       redirect "/edit-all?url=#{params[:url]}" if params.key?('edit-all')
 
       subtype = micropub.source_all(params[:url]).entry_type
-      render_edit(subtype)
+      if post_types.key?(subtype)
+        render_edit(subtype)
+      else
+        render_edit_all
+      end
     end
 
     get %r{/edit/h\-entry/(note|article|bookmark|reply|repost|like|rsvp|checkin)} do
@@ -195,9 +199,9 @@ module Micropublish
               subtype_edit_properties(subtype)).properties
           end
         mp_commands = Micropub.find_commands(params)
-        known_properties = (subtype == '' ?
-          settings.properties['known'] :
-          post_types[subtype]['properties']) + %w(syndication published)
+        known_properties = post_types.key?(subtype) ?
+          settings.properties['known'].select{ |p| (post_types[subtype]['properties'] + %w(syndication published)).any?(p) } :
+          settings.properties['known']
         diff = Compare.new(original_properties, submitted_properties,
           known_properties).diff_properties
         if params.key?('_preview')
