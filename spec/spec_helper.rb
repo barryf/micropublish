@@ -8,6 +8,7 @@ Bundler.require(:default, :test)
 
 require 'rack/test'
 require 'rspec'
+require 'webmock/rspec'
 require 'micropublish'
 
 module RSpecMixin
@@ -17,4 +18,9 @@ module RSpecMixin
   end
 end
 
-RSpec.configure { |c| c.include RSpecMixin }
+RSpec.configure do |c|
+  c.include RSpecMixin
+  c.mock_with :rspec do |mocks|
+    mocks.verify_doubled_constant_names = true
+  end
+end

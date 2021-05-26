@@ -120,7 +120,7 @@ module Micropublish
       redirect '/new/h-entry/note'
     end
 
-    get %r{/new/h\-entry/(note|article|bookmark|reply|repost|like|rsvp|checkin)} do
+    get %r{/new/h\-entry/(note|article|bookmark|reply|repost|like|rsvp|checkin|photo)} do
         |subtype|
       require_session
       render_new(subtype)
@@ -174,7 +174,7 @@ module Micropublish
       end
     end
 
-    get %r{/edit/h\-entry/(note|article|bookmark|reply|repost|like|rsvp|checkin)} do
+    get %r{/edit/h\-entry/(note|article|bookmark|reply|repost|like|rsvp|checkin|photo)} do
         |subtype|
       require_session
       render_edit(subtype)
