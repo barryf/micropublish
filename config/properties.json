@@ -16,7 +16,8 @@
     "checkin",
     "post-status",
     "visibility",
-    "mp-channel"
+    "mp-channel",
+    "photo"
   ],
   "types": {
     "h-entry": {
@@ -134,6 +135,20 @@
         ],
         "required": [
           "checkin"
+        ]
+      },
+      "photo": {
+        "name": "Photo",
+        "icon": "photo",
+        "properties": [
+          "photo",
+          "content",
+          "category",
+          "post-status",
+          "visibility"
+        ],
+        "required": [
+          "photo"
         ]
       }
     }

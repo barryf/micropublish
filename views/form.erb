@@ -98,6 +98,24 @@
         <%= autogrow_script('bookmark-of') %>
       <% end %>
 
+      <% if @all || @properties.include?('photo') %>
+        <div class="form-group">
+          <label>
+            Photo
+            <% if @required.include?('photo') %><span class="required" title="required">*</span><% end %>
+          </label>
+          <textarea class="form-control" rows="1" name="photo[]" id="photo"
+            <% if @required.include?('photo') %>required<% end %>
+            ><%= h @post.properties['photo'].join("\n") if @post.properties.key?('photo') %></textarea>
+          <p class="help-block">
+            Enter the URL of the photo.
+            You can enter multiple URLs separated by whitespace if your server supports this.
+            <code>bookmark-of[]</code>
+          </p>
+        </div>
+        <%= autogrow_script('photo') %>
+      <% end %>
+
       <% if @all || @properties.include?('rsvp') %>
         <% rsvp = @post.properties.key?('rsvp') ? @post.properties['rsvp'][0] : '' %>
         <div class="form-group">
