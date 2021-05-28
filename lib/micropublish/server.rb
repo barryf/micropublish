@@ -11,6 +11,7 @@ module Micropublish
       use Rack::SSL if settings.production?
 
       root_path = "#{File.dirname(__FILE__)}/../../"
+      set :views, "#{root_path}views"
       set :public_folder, "#{root_path}public"
       set :properties,
         JSON.parse(File.read("#{root_path}config/properties.json"))
@@ -435,41 +436,40 @@ module Micropublish
     end
 
     def config
-      session[:config] ||= micropub.config
+      micropub.config
     end
 
     def post_types
       setting_types = settings.properties['types']['h-entry']
-      session[:post_types] ||=
-        if config.is_a?(Hash) && config.key?('post-types') &&
-            config['post-types'].is_a?(Array)
-          h_entry = {}
-          config['post-types'].each do |type|
-            # skip if we don't support type
-            next unless setting_types.key?(type['type'])
-            default_type = setting_types[type['type']]
-            h_entry[type['type']] = {
-              'name' => type['name'],
-              'icon' => default_type['icon']
-            }
-            h_entry[type['type']]['properties'] =
-              if type.key?('properties') && type['properties'].is_a?(Array)
-                type['properties']
-              else
-                default_type['properties']
-              end
-            h_entry[type['type']]['required'] =
-              if type.key?('required-properties') &&
-                  type['required-properties'].is_a?(Array)
-                type['required-properties']
-              else
-                default_type['required']
-              end
-          end
-          h_entry
-        else
-          setting_types
+      if config.is_a?(Hash) && config.key?('post-types') &&
+          config['post-types'].is_a?(Array)
+        h_entry = {}
+        config['post-types'].each do |type|
+          # skip if we don't support type
+          next unless setting_types.key?(type['type'])
+          default_type = setting_types[type['type']]
+          h_entry[type['type']] = {
+            'name' => type['name'],
+            'icon' => default_type['icon']
+          }
+          h_entry[type['type']]['properties'] =
+            if type.key?('properties') && type['properties'].is_a?(Array)
+              type['properties']
+            else
+              default_type['properties']
+            end
+          h_entry[type['type']]['required'] =
+            if type.key?('required-properties') &&
+                type['required-properties'].is_a?(Array)
+              type['required-properties']
+            else
+              default_type['required']
+            end
         end
+        h_entry
+      else
+        setting_types
+      end
     end
 
     error do
