@@ -7,6 +7,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.3] - 2021-05-28
+
+### Changed
+
+- [Don't cache Micropub config in session](https://github.com/barryf/micropublish/issues/76).
+  Some servers' Micropub config responses are larger than 4K which is too big
+  for cookie storage.
+
 ## [2.5.2] - 2021-05-26
 
 ### Added
