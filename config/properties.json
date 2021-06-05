@@ -150,6 +150,20 @@
         "required": [
           "photo"
         ]
+      },
+      "listen": {
+        "name": "Listen",
+        "icon": "headphones",
+        "properties": [
+          "listen-of",
+          "content",
+          "category",
+          "post-status",
+          "visibility"
+        ],
+        "required": [
+          "listen-of"
+        ]
       }
     }
   }
