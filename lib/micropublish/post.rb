@@ -36,7 +36,7 @@ module Micropublish
 
     def validate_properties!(required=[])
       # ensure url arrays only contain urls
-      %w( in-reply-to repost-of like-of bookmark-of syndication ).each do
+      %w( in-reply-to repost-of like-of bookmark-of listen-of syndication ).each do
           |url_property|
         if @properties.key?(url_property)
           @properties[url_property].each do |url|

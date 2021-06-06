@@ -17,7 +17,8 @@
     "post-status",
     "visibility",
     "mp-channel",
-    "photo"
+    "photo",
+    "listen-of"
   ],
   "types": {
     "h-entry": {
