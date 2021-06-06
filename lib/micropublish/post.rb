@@ -134,6 +134,9 @@ module Micropublish
       elsif @properties.key?('bookmark-of') &&
           Auth.valid_uri?(@properties['bookmark-of'][0])
         'bookmark'
+      elsif @properties.key?('listen-of') &&
+          Auth.valid_uri?(@properties['listen-of'][0])
+        'listen'
       elsif @properties.key?('name') && !@properties['name'].empty? &&
           !content_start_with_name?
         'article'
