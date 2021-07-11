@@ -74,7 +74,7 @@ module Micropublish
     def headers
       {
         'Authorization' => "Bearer #{@token}",
-        'Content-Type' => 'application/json',
+        'Content-Type' => 'application/json; charset=utf-8',
         'Accept' => 'application/json'
       }
     end

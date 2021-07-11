@@ -68,7 +68,7 @@ module Micropublish
       headers = { 'Authorization' => "Bearer #{@token}" }
       if is_json
         body = body.to_json
-        headers['Content-Type'] = 'application/json'
+        headers['Content-Type'] = 'application/json; charset=utf-8'
       end
       HTTParty.post(
         @micropub,
