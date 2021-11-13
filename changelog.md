@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.0] - 2021-11-13
+
+### Added
+
+- [Use Redis to cache servers' config data](https://github.com/barryf/micropublish/issues/86). If there is a `REDIS_URL` environment variable defined Micropublish will use Redis as a cache to avoid repeated lookups for config from a server. This is optional: if there is no instance defined Micropublish will fetch config on each request.
+
+### Changed
+
+- Updates Puma to non-vulnerable version 5.5.2
+
 ## [2.5.4.1] - 2021-06-06
 
 ### Fixed
