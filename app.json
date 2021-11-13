@@ -8,5 +8,8 @@
       "value": ""
     }
   },
+  "addons": [
+    "heroku-redis:hobby-dev"
+  ],
   "stack": "heroku-20"
 }

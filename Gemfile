@@ -11,6 +11,7 @@ gem 'httparty'
 gem 'nokogiri'
 gem 'foreman'
 gem 'kramdown'
+gem 'redis'
 
 group :development do
   gem 'shotgun'

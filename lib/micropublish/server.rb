@@ -347,6 +347,7 @@ module Micropublish
       end
 
       def logout!
+        micropub.cache_clear
         session.clear
         redirect '/'
       end

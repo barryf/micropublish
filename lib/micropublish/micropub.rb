@@ -15,19 +15,32 @@ module Micropublish
     end
 
     def config
-      query({ q: 'config' })
+      data = cache_get('config')
+      unless data
+        data = query({ q: 'config' })
+        cache_set('config', data)
+      end
+      data
     end
 
     def channels
-      c = query({ q: 'channel' }) || config
-      c['channels'] if c.is_a?(Hash) && c.key?('channels')
+      data = cache_get('channel')
+      unless data
+        data = query({ q: 'channel' }) || config
+        cache_set('channel', data)
+      end
+      data['channels'] if data.is_a?(Hash) && data.key?('channels')
     end
 
     def syndicate_to(subtype = nil)
       params = { q: 'syndicate-to' }
       params['post-type'] = subtype if subtype
-      s = query(params) || config
-      s['syndicate-to'] if s.is_a?(Hash) && s.key?('syndicate-to')
+      data = cache_get(params.to_s)
+      unless data
+        data = query(params) || config
+        cache_set(params.to_s, data)
+      end
+      data['syndicate-to'] if data.is_a?(Hash) && data.key?('syndicate-to')
     end
 
     def source_all(url)
@@ -77,6 +90,30 @@ module Micropublish
         'Content-Type' => 'application/json; charset=utf-8',
         'Accept' => 'application/json'
       }
+    end
+
+    def key(k)
+      @micropub + '_' + k
+    end
+
+    def cache_get(k)
+      return unless $redis
+      data = $redis.get(key(k))
+      return unless data
+      JSON.parse(data)
+    end
+
+    def cache_set(k, v)
+      return unless $redis
+      json = v.to_json
+      expiry_seconds = 60 * 60 * 24 # 1 day
+      $redis.set(key(k), json, ex: expiry_seconds)
+    end
+
+    def cache_clear
+      return unless $redis
+      keys = $redis.keys("#{@micropub}*")
+      $redis.del(*keys) unless keys.empty?
     end
 
     def self.find_commands(params)

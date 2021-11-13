@@ -17,6 +17,16 @@ if env == :production && ENV.key?('SENTRY_DSN')
   use Raven::Rack
 end
 
+# optionally use redis to cache server config
+if ENV.key?('REDIS_URL')
+  $redis = Redis.new(
+    url: ENV['REDIS_URL'],
+    ssl_params: {
+      verify_mode: OpenSSL::SSL::VERIFY_NONE
+    }
+  )
+end
+
 # automatically parse json in the body
 use Rack::PostBodyContentTypeParser
 
