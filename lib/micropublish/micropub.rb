@@ -6,40 +6,19 @@ module Micropublish
       @token = token
     end
 
-    def query(params)
-      begin
-        response = HTTParty.get(@micropub, query: params, headers: headers)
-        JSON.parse(response.body)
-      rescue
-      end
-    end
-
     def config
-      data = cache_get('config')
-      unless data
-        data = query({ q: 'config' })
-        cache_set('config', data)
-      end
-      data
+      query('config', { q: 'config' })
     end
 
     def channels
-      data = cache_get('channel')
-      unless data
-        data = query({ q: 'channel' }) || config
-        cache_set('channel', data)
-      end
+      data = query('channel', { q: 'channel' }) || config
       data['channels'] if data.is_a?(Hash) && data.key?('channels')
     end
 
     def syndicate_to(subtype = nil)
       params = { q: 'syndicate-to' }
       params['post-type'] = subtype if subtype
-      data = cache_get(params.to_s)
-      unless data
-        data = query(params) || config
-        cache_set(params.to_s, data)
-      end
+      data = query(params.to_s, params) || config
       data['syndicate-to'] if data.is_a?(Hash) && data.key?('syndicate-to')
     end
 
@@ -92,22 +71,36 @@ module Micropublish
       }
     end
 
-    def key(k)
-      @micropub + '_' + k
+    def query(suffix, params)
+      key = @micropub + '_' + suffix
+      data = cache_get(key)
+      unless data
+        data = begin
+                 response = HTTParty.get(
+                   @micropub,
+                   query: params,
+                   headers: headers
+                 )
+                 JSON.parse(response.body)
+               rescue
+               end
+        cache_set(key, data)
+      end
+      data
     end
 
-    def cache_get(k)
+    def cache_get(key)
       return unless $redis
-      data = $redis.get(key(k))
+      data = $redis.get(key)
       return unless data
       JSON.parse(data)
     end
 
-    def cache_set(k, v)
+    def cache_set(key, value)
       return unless $redis
-      json = v.to_json
+      json = value.to_json
       expiry_seconds = 60 * 60 * 24 # 1 day
-      $redis.set(key(k), json, ex: expiry_seconds)
+      $redis.set(key, json, ex: expiry_seconds)
     end
 
     def cache_clear
