@@ -77,7 +77,7 @@ module Micropublish
       # redirect to auth endpoint
       query = URI.encode_www_form({
         me: session[:me],
-        client_id: request.base_url,
+        client_id: request.base_url + "/",
         state: session[:state],
         scope: session[:scope],
         redirect_uri: "#{request.base_url}/auth/callback",
