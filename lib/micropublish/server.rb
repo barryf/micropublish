@@ -100,7 +100,7 @@ module Micropublish
         session[:me],
         params[:code],
         "#{request.base_url}/auth/callback",
-        request.base_url,
+        request.base_url + "/",
         session[:code_verifier]
       )
       endpoints_and_token_and_scope_and_me = auth.callback
