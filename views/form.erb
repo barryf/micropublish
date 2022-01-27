@@ -116,6 +116,44 @@
         <%= autogrow_script('listen-of') %>
       <% end %>
 
+      <% if @properties.include?('ate') %>
+        <input type="hidden" name="ate[][type][]" value="h-food">
+        <div class="form-group">
+          <label>
+            Ate
+            <% if @required.include?('ate') %><span class="required" title="required">*</span><% end %>
+          </label>
+
+          <input type="text" class="form-control" name="ate[][properties][name][]"
+            <% if @required.include?('ate') %>required<% end %>
+            value="<%= h @post.properties['ate'][0]['properties']['name'][0] if @post.properties.key?('ate') %>">
+
+          <p class="help-block">
+            Enter the name of the food you ate.
+            <code>ate[]</code>
+          </p>
+        </div>
+      <% end %>
+
+      <% if @properties.include?('drank') %>
+        <input type="hidden" name="drank[][type][]" value="h-food">
+        <div class="form-group">
+          <label>
+            Drank
+            <% if @required.include?('drank') %><span class="required" title="required">*</span><% end %>
+          </label>
+
+          <input type="text" class="form-control" name="drank[][properties][name][]"
+            <% if @required.include?('drank') %>required<% end %>
+            value="<%= h @post.properties['drank'][0]['properties']['name'][0] if @post.properties.key?('drank') %>">
+
+          <p class="help-block">
+            Enter the name of the food you drank.
+            <code>drank[]</code>
+          </p>
+        </div>
+      <% end %>
+
       <% if @all || @properties.include?('photo') %>
         <div class="form-group">
           <label for="photo">
