@@ -62,6 +62,23 @@ module Micropublish
       end
     end
 
+    def upload(file)
+      response = HTTParty.post(
+        @micropub,
+        body: {
+          file: file
+        },
+        headers: { 'Authorization' => "Bearer #{@token}" }
+      )
+
+      case response.code.to_i
+      when 201
+        response.headers['location']
+      else
+        handle_error(response.body)
+      end
+    end
+
     private
 
     def send(body, is_json=@is_json)
