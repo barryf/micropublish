@@ -18,7 +18,9 @@
     "visibility",
     "mp-channel",
     "photo",
-    "listen-of"
+    "listen-of",
+    "ate",
+    "drank"
   ],
   "types": {
     "h-entry": {
@@ -164,6 +166,36 @@
         ],
         "required": [
           "listen-of"
+        ]
+      },
+      "ate": {
+        "name": "Ate",
+        "icon": "cutlery",
+        "properties": [
+          "ate",
+          "photo",
+          "content",
+          "category",
+          "post-status",
+          "visibility"
+        ],
+        "required": [
+          "ate"
+        ]
+      },
+      "drank": {
+        "name": "Drank",
+        "icon": "beer",
+        "properties": [
+          "drank",
+          "photo",
+          "content",
+          "category",
+          "post-status",
+          "visibility"
+        ],
+        "required": [
+          "drank"
         ]
       }
     }

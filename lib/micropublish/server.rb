@@ -121,7 +121,7 @@ module Micropublish
       redirect '/new/h-entry/note'
     end
 
-    get %r{/new/h\-entry/(note|article|bookmark|reply|repost|like|rsvp|checkin|photo|listen)} do
+    get %r{/new/h\-entry/(note|article|bookmark|reply|repost|like|rsvp|checkin|photo|listen|ate|drank)} do
         |subtype|
       require_session
       render_new(subtype)
