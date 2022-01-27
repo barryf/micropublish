@@ -22,6 +22,10 @@ module Micropublish
       data['syndicate-to'] if data.is_a?(Hash) && data.key?('syndicate-to')
     end
 
+    def media_endpoint
+      config['media-endpoint']
+    end
+
     def source_all(url)
       body = get_source(url)
       Post.new(body['type'], body['properties'])
