@@ -3,14 +3,14 @@ $(function() {
 	$('#preview').on('click', function() {
 		$('#preview-modal').modal();
 		$('#preview-content').html("");
-    $.ajax({
+		$.ajax({
 			data: $('#form').serialize(),
 			type: 'post',
 			url: $('#form').attr('action') + "?_preview=1",
 			success: function(data) {
 				var content = "<pre>" + data + "</pre>";
 				$('#preview-content').html(content);
-      },
+			},
 			error: function(xhr, desc, error) {
 				var content = "<div class=\"alert alert-danger\">" + xhr.responseText +
 					"</div>"
@@ -21,7 +21,7 @@ $(function() {
 	});
 
 	function count_chars(id) {
-     $('#' + id + '_count').html(
+		 $('#' + id + '_count').html(
 			 "<span class=\"fa fa-twitter\"></span> " +
 			 twttr.txt.getTweetLength(
 				 $('#' + id).val()
@@ -32,10 +32,10 @@ $(function() {
 		$('#content').on('change keyup', function() { count_chars('content'); });
 		count_chars('content');
 	}
-  if ($('#summary_count').length) {
-    $('#summary').on('change keyup', function() { count_chars('summary'); });
-    count_chars('summary');
-  }
+	if ($('#summary_count').length) {
+		$('#summary').on('change keyup', function() { count_chars('summary'); });
+		count_chars('summary');
+	}
 
 	$('#helpable-toggle').on('click', function() {
 		$('.helpable .help-block').slideToggle();
@@ -50,40 +50,71 @@ $(function() {
 	$('#content-html').css({ display: "none" });
 	$('trix-editor').css({ display: "block" });
 
-  $('#find_location').on('click', function() {
-    navigator.geolocation.getCurrentPosition(function(position) {
+	function getLocation(callback) {
+		navigator.geolocation.getCurrentPosition(function(position) {
+			var latitude = (Math.round(position.coords.latitude * 100000) / 100000);
+			var longitude = (Math.round(position.coords.longitude * 100000) / 100000);
+			var accuracy = (Math.round(position.coords.accuracy * 100000) / 100000);
 
-      var latitude = (Math.round(position.coords.latitude * 100000) / 100000);
-      var longitude = (Math.round(position.coords.longitude * 100000) / 100000);
-      $("#latitude").val(latitude);
-      $("#longitude").val(longitude);
+			callback(latitude, longitude, accuracy)
 
-    }, function(err){
-      if(err.code == 1) {
-        alert("The website was not able to get permission");
-      } else if(err.code == 2) {
-        alert("Location information was unavailable");
-      } else if(err.code == 3) {
-        alert("Timed out getting location");
-      }
-    });
-    return false
-  });
+		}, function(err){
+			if(err.code == 1) {
+				alert("The website was not able to get permission");
+			} else if(err.code == 2) {
+				alert("Location information was unavailable");
+			} else if(err.code == 3) {
+				alert("Timed out getting location");
+			}
+		})
+	}
 
+	$('#find_location').on('click', function() {
+		getLocation(function (latitude, longitude) {
+			$("#latitude").val(latitude);
+			$("#longitude").val(longitude);
+		})
+		return false
+	});
+
+	if ($('#auto_location').length) {
+		function getAutoLocation () {
+			return localStorage.getItem('autoLocation') === 'true'
+		}
+
+		function fillLocation() {
+			if (!getAutoLocation()) {
+				return
+			}
+
+			getLocation(function(latitude, longitude, accuracy) {
+				$('#location').val(`geo:${latitude},${longitude};u=${accuracy}`)
+			})
+		}
+
+		$('#auto_location').prop('checked', getAutoLocation())
+
+		$('#auto_location').on('change', function(event) {
+			localStorage.setItem('autoLocation', event.target.checked)
+			fillLocation()
+		})
+
+		fillLocation()
+	}
 });
 
 $.fn.countdown = function(duration) {
-  var container = $(this[0]);
-  var countdown = setInterval(function() {
-    if (--duration) {
-      container.html(
-        "Redirecting in " + duration + " second" + (duration != 1 ? "s" : "")
-      );
-    } else {
-      container.html("Redirecting&hellip;");
-      clearInterval(countdown);
-      document.location = document.location;
-    }
-  }, 1000);
+	var container = $(this[0]);
+	var countdown = setInterval(function() {
+		if (--duration) {
+			container.html(
+				"Redirecting in " + duration + " second" + (duration != 1 ? "s" : "")
+			);
+		} else {
+			container.html("Redirecting&hellip;");
+			clearInterval(countdown);
+			document.location = document.location;
+		}
+	}, 1000);
 }
 

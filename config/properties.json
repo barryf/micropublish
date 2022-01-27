@@ -18,7 +18,8 @@
     "visibility",
     "mp-channel",
     "photo",
-    "listen-of"
+    "listen-of",
+    "location"
   ],
   "types": {
     "h-entry": {
