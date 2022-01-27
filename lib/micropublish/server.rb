@@ -175,7 +175,7 @@ module Micropublish
       end
     end
 
-    get %r{/edit/h\-entry/(note|article|bookmark|reply|repost|like|rsvp|checkin|photo|listen)} do
+    get %r{/edit/h\-entry/(note|article|bookmark|reply|repost|like|rsvp|checkin|photo|listen|ate|drank)} do
         |subtype|
       require_session
       render_edit(subtype)
