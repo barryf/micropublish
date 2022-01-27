@@ -23,7 +23,7 @@ module Micropublish
     end
 
     def media_endpoint
-      config['media-endpoint']
+      config['media-endpoint'] if config
     end
 
     def source_all(url)
