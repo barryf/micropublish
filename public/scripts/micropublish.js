@@ -101,6 +101,33 @@ $(function() {
 
 		fillLocation()
 	}
+
+	$('#upload_photo').on('click', function() {
+		$('#photo_file').click()
+	});
+
+	$('#photo_file').on('change', function(event) {
+		var fd = new FormData();
+		var files = event.target.files[0];
+		fd.append('file', files);
+
+		$.ajax({
+			url: '/media',
+			type: 'post',
+			data: fd,
+			contentType: false,
+			processData: false,
+			success: function(response){
+				let val = $('#photo').val() + '\n' + response
+				val = val.trim()
+				$('#photo').val(val)
+				$('#photo').attr('rows', val.split('\n').length || 1)
+			},
+			error: function(xhr, desc, error) {
+				alert(xhr.responseText);
+			}
+		});
+	});
 });
 
 $.fn.countdown = function(duration) {

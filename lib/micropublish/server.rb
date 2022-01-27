@@ -307,6 +307,25 @@ module Micropublish
       end
     end
 
+    post '/media' do
+      require_session
+
+      unless media_endpoint
+        status 500
+        return "Media endpoint is not configured for this user."
+      end
+
+      unless params[:file] && params[:file][:tempfile]
+        status 400
+        return "No file was sent."
+      end
+
+      new_request = Request.new(media_endpoint, session[:token], false)
+      location = new_request.upload(params[:file][:tempfile])
+
+      location
+    end
+
     helpers do
       def micropub
         require_session
@@ -328,6 +347,10 @@ module Micropublish
 
       def channels
         session[:channels] ||= micropub.channels
+      end
+
+      def media_endpoint
+        micropub.media_endpoint
       end
 
       def logged_in?
@@ -373,6 +396,7 @@ module Micropublish
         @required = post_types[subtype]['required']
         @action_url = '/new'
         @action_label = "Create"
+        @media = !media_endpoint.nil?
         # insert @username at start of content if replying to a tweet
         if @subtype == 'reply' && params.key?('in-reply-to') &&
             !@post.properties.key?('content')
@@ -410,6 +434,7 @@ module Micropublish
         @edit = true
         @action_url = '/edit'
         @action_label = "Update"
+        @media = !media_endpoint.nil?
         erb :form
       end
 
