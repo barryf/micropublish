@@ -130,7 +130,7 @@
 
           <p class="help-block">
             Enter the name of the food you ate.
-            <code>ate[]</code>
+            <code>ate</code>
           </p>
         </div>
       <% end %>
@@ -148,8 +148,8 @@
             value="<%= h @post.properties['drank'][0]['properties']['name'][0] if @post.properties.key?('drank') %>">
 
           <p class="help-block">
-            Enter the name of the food you drank.
-            <code>drank[]</code>
+            Enter the name of the drink you drank.
+            <code>drank</code>
           </p>
         </div>
       <% end %>
