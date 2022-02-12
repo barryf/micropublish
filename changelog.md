@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.0] - 2022-02-12
+
+### Added
+
+- New "food" and "drink" post types - thanks @hacdias. Your server must specify
+  these types in its config properties to see them on the dashboard.
+- Location property with geo-location support - thanks @hacdias. Your server
+  must specify `location` in its config for a type's properties to see the field
+  when creating a post.
+
 ## [2.6.1] - 2021-11-22
 
 ### Changed
