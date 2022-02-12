@@ -19,6 +19,8 @@
     "mp-channel",
     "photo",
     "listen-of",
+    "ate",
+    "drank",
     "location"
   ],
   "types": {
@@ -165,6 +167,36 @@
         ],
         "required": [
           "listen-of"
+        ]
+      },
+      "food": {
+        "name": "Food",
+        "icon": "cutlery",
+        "properties": [
+          "ate",
+          "photo",
+          "content",
+          "category",
+          "post-status",
+          "visibility"
+        ],
+        "required": [
+          "ate"
+        ]
+      },
+      "drink": {
+        "name": "Drink",
+        "icon": "coffee",
+        "properties": [
+          "drank",
+          "photo",
+          "content",
+          "category",
+          "post-status",
+          "visibility"
+        ],
+        "required": [
+          "drank"
         ]
       }
     }
