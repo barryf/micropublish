@@ -20,7 +20,8 @@
     "photo",
     "listen-of",
     "ate",
-    "drank"
+    "drank",
+    "location"
   ],
   "types": {
     "h-entry": {

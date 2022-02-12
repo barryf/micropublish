@@ -359,6 +359,28 @@
         </div>
       <% end %>
 
+      <% if @all || @properties.include?('location') %>
+        <div class="form-group">
+          <label>
+            Location
+            &nbsp;
+            <input type="checkbox" id="auto_location">
+            <span style="font-weight: normal;">Auto-detect?</span>
+            <% if @required.include?('location') %><span class="required" title="required">*</span><% end %>
+          </label>
+
+          <input type="text" class="form-control"  name="location[]" id="location"
+            <% if @required.include?('location') %>required<% end %>
+            value="<%= h @post.properties['location'][0] if @post.properties.key?('location') %>">
+
+            <p class="help-block">
+              Enter a location for the post. If you check the "Auto-detect?" checkbox, a Geo URI
+              will be generated for you. The browser will remember your choice for the next time.
+              <code>location</code>
+            </p>
+        </div>
+      <% end %>
+
       <% if @all || @properties.include?('post-status') || @properties.include?('visibility') %>
         <div class="form-group">
           <div class="form-inline">
