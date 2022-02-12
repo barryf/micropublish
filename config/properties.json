@@ -168,8 +168,8 @@
           "listen-of"
         ]
       },
-      "ate": {
-        "name": "Ate",
+      "food": {
+        "name": "Food",
         "icon": "cutlery",
         "properties": [
           "ate",
@@ -183,9 +183,9 @@
           "ate"
         ]
       },
-      "drank": {
-        "name": "Drank",
-        "icon": "beer",
+      "drink": {
+        "name": "Drink",
+        "icon": "coffee",
         "properties": [
           "drank",
           "photo",
