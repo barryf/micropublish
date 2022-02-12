@@ -116,7 +116,7 @@
         <%= autogrow_script('listen-of') %>
       <% end %>
 
-      <% if @properties.include?('ate') %>
+      <% if @all || @properties.include?('ate') %>
         <input type="hidden" name="ate[][type][]" value="h-food">
         <div class="form-group">
           <label>
@@ -135,7 +135,7 @@
         </div>
       <% end %>
 
-      <% if @properties.include?('drank') %>
+      <% if @all || @properties.include?('drank') %>
         <input type="hidden" name="drank[][type][]" value="h-food">
         <div class="form-group">
           <label>
