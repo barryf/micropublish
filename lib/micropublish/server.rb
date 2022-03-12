@@ -312,12 +312,12 @@ module Micropublish
 
       unless media_endpoint
         status 500
-        return "Media endpoint is not configured for this user."
+        return "Media endpoint is not configured for your server."
       end
 
       unless params[:file] && params[:file][:tempfile]
         status 400
-        return "No file was sent."
+        return "No file was returned from your media endpoint."
       end
 
       new_request = Request.new(media_endpoint, session[:token], false)
