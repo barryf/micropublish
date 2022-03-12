@@ -103,7 +103,8 @@ $(function() {
 	}
 
 	$('#upload_photo').on('click', function() {
-		$('#photo_file').click()
+		$('#photo_file').click();
+		return false;
 	});
 
 	$('#photo_file').on('change', function(event) {
@@ -118,10 +119,10 @@ $(function() {
 			contentType: false,
 			processData: false,
 			success: function(response){
-				let val = $('#photo').val() + '\n' + response
-				val = val.trim()
-				$('#photo').val(val)
-				$('#photo').attr('rows', val.split('\n').length || 1)
+				var val = $('#photo').val() + '\n' + response;
+				val = val.trim();
+				$('#photo').val(val);
+				$('#photo').attr('rows', val.split('\n').length || 1);
 			},
 			error: function(xhr, desc, error) {
 				alert(xhr.responseText);
