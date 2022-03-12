@@ -165,15 +165,18 @@
             ><%= h @post.properties['photo'].join("\n") if @post.properties.key?('photo') %></textarea>
 
             <% if @media %>
-              <script>document.write(`
-                <input type="file" id="photo_file" name="file" style="display: none;" />
-                <button type="button" class="btn btn-default" style="margin-top: 5px;" id="upload_photo" data-toggle="button" aria-pressed="false" autocomplete="off">Upload Photo</button>
-              `)</script>
+              <input type="file" id="photo_file" name="file" style="display: none;" />
+              <button type="button" class="btn btn-default" style="margin-top: 5px;" id="upload_photo" data-toggle="button" aria-pressed="false" autocomplete="off">Upload</button>
             <% end %>
 
           <p class="help-block">
             Enter the URL of the photo.
             You can enter multiple URLs separated by whitespace if your server supports this.
+            <% if @media %>
+              <br>
+              Alternatively, click the "Upload" button to send a file to your media endpoint.
+              The photo field will then be filled with the URL that is returned.
+            <% end %>
             <code>photo[]</code>
           </p>
         </div>
