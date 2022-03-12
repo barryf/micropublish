@@ -310,17 +310,15 @@ module Micropublish
     post '/media' do
       require_session
 
-      unless media_endpoint
-        status 500
-        return "Media endpoint is not configured for your server."
-      end
-
       unless params[:file] && params[:file][:tempfile]
         status 400
-        return "No file was returned from your media endpoint."
+        return "No file was submitted."
       end
 
-      new_request = Request.new(media_endpoint, session[:token], false)
+      # if no media endpoint, fall back to micropub endpoint
+      url =  media_endpoint || session[:micropub]
+
+      new_request = Request.new(url, session[:token], false)
       location = new_request.upload(params[:file][:tempfile])
 
       location
