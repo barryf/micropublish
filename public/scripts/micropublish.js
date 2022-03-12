@@ -69,34 +69,6 @@ $(function() {
 		})
 	}
 
-	$('#upload_photo').on('click', function() {
-		$('#photo_file').click();
-		return false;
-	});
-
-	$('#photo_file').on('change', function(event) {
-		var fd = new FormData();
-		var files = event.target.files[0];
-		fd.append('file', files);
-
-		$.ajax({
-			url: '/media',
-			type: 'post',
-			data: fd,
-			contentType: false,
-			processData: false,
-			success: function(response) {
-				var val = $('#photo').val() + '\n' + response;
-				val = val.trim();
-				$('#photo').val(val);
-				$('#photo').attr('rows', val.split('\n').length || 1);
-			},
-			error: function(xhr, desc, error) {
-				alert(xhr.responseText);
-			}
-		});
-	});
-
 	$('#find_location').on('click', function() {
 		getLocation(function (latitude, longitude) {
 			$("#latitude").val(latitude);
