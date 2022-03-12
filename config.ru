@@ -28,7 +28,7 @@ if ENV.key?('REDIS_URL')
 end
 
 # automatically parse json in the body
-use Rack::PostBodyContentTypeParser
+use Rack::JSONBodyParser
 
 require 'micropublish'
 run Micropublish::Server
