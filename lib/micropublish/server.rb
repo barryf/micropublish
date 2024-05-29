@@ -375,8 +375,7 @@ module Micropublish
 
       def new_request
         require_session
-        Request.new(session[:micropub], session[:token],
-          session.key?('format') && session[:format] == :json)
+        Request.new(session[:micropub], session[:token], default_format == :json)
       end
 
       def format_form_encoded(content)
