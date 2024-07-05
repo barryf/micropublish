@@ -1,5 +1,14 @@
 (() => {
-  const mediaEndpoint = document.querySelector("#content-html").dataset.mediaEndpoint;
+  const mediaEndpoint = document.querySelector("#content-html")?.dataset?.mediaEndpoint;
+  const trixFileTools = document.querySelector(".trix-button-group--file-tools");
+
+  if (!mediaEndpoint && trixFileTools) {
+    trixFileTools.style.display = "none";
+
+    document.addEventListener("trix-file-accept", (event) => {
+      event.preventDefault();
+    })
+  }
 
   function uploadFileAttachment(attachment) {
     uploadFile(attachment.file, setProgress, setAttributes);
