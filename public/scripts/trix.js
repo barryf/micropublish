@@ -1,5 +1,6 @@
 (() => {
   const mediaEndpoint = document.querySelector("#content-html")?.dataset?.mediaEndpoint;
+  const token = document.querySelector("#content-html")?.dataset?.mediaToken;
   const trixFileTools = document.querySelector(".trix-button-group--file-tools");
 
   if (!mediaEndpoint && trixFileTools) {
@@ -27,6 +28,7 @@
     var xhr = new XMLHttpRequest();
 
     xhr.open("POST", mediaEndpoint, true);
+    xhr.setRequestHeader("Authorization", `Bearer ${token}`);
 
     xhr.upload.addEventListener("progress", function (event) {
       var progress = (event.loaded / event.total) * 100;

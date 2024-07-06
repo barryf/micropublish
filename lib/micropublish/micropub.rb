@@ -1,5 +1,6 @@
 module Micropublish
   class Micropub
+    attr_reader :token
 
     def initialize(micropub, token)
       @micropub = micropub
@@ -48,8 +49,6 @@ module Micropublish
       begin
         body = JSON.parse(response.body)
         body['properties'] = convert_content_images_to_trix(body['properties'])
-
-        body
       rescue JSON::ParserError
         raise MicropubError.new("There was an error retrieving the source " +
           "for \"#{url}\" from your endpoint. Please ensure you enter the " +

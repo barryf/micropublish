@@ -317,7 +317,7 @@
               <textarea id="content" class="form-control" rows="5" name="content[][html]"><%= content_html_value %></textarea>
               <%= autogrow_script('content') %>
             <% else %>
-              <textarea id="content-html" class="form-control" rows="5" name="content[][html]" data-media-endpoint="<%= micropub.media_endpoint %>"><%= content_html_value %></textarea>
+              <textarea id="content-html" class="form-control" rows="5" name="content[][html]" data-media-endpoint="<%= micropub.media_endpoint %>" data-media-token="<%= micropub.token %>"><%= content_html_value %></textarea>
               <trix-editor input="content-html" style="display: none;"></trix-editor>
             <% end %>
             <p class="help-block">
