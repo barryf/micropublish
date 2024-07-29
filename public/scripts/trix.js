@@ -1,9 +1,8 @@
 (() => {
-  const mediaEndpoint = document.querySelector("#content-html")?.dataset?.mediaEndpoint;
-  const token = document.querySelector("#content-html")?.dataset?.mediaToken;
+  const mediaEndpointEnabled = document.querySelector("#content-html")?.dataset?.mediaEndpointEnabled !== undefined;
   const trixFileTools = document.querySelector(".trix-button-group--file-tools");
 
-  if (!mediaEndpoint && trixFileTools) {
+  if (!mediaEndpointEnabled && trixFileTools) {
     trixFileTools.style.display = "none";
 
     document.addEventListener("trix-file-accept", (event) => {
@@ -27,8 +26,7 @@
     var formData = createFormData(file);
     var xhr = new XMLHttpRequest();
 
-    xhr.open("POST", mediaEndpoint, true);
-    xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+    xhr.open("POST", '/media', true);
 
     xhr.upload.addEventListener("progress", function (event) {
       var progress = (event.loaded / event.total) * 100;
@@ -55,7 +53,7 @@
     return data;
   }
 
-  if (!mediaEndpoint) {
+  if (!mediaEndpointEnabled) {
     return;
   }
 
