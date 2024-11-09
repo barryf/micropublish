@@ -12,9 +12,9 @@ gem 'nokogiri'
 gem 'foreman'
 gem 'kramdown'
 gem 'redis'
+gem 'rackup'
 
 group :development do
-  gem 'rackup'
   gem 'dotenv'
 end
 
