@@ -7,7 +7,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.9.1] - 2024-11-09
+
+### Changed
+
+- Upgrade to Ruby 3.3.5 from 2.6.8. Render (the host for micropublish.net) had
+  announced EOL for versions <3.1.0. Shotgun, which was used to auto-reload in
+  development mode, is incompatible so it's been replaced with rackup. A more
+  permanent (auto-reloading) solution is needed.
+- For session management a stronger secret (>64 bytes) is now needed.
+
 ## [2.9.0] - 2024-08-26
+
+### Changed
 
 - Upgrade the [Trix](https://trix-editor.org) editor and support inline photo
   uploads in articles. This requires a media endpoint to be defined in your
