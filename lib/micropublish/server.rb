@@ -22,7 +22,7 @@ module Micropublish
       set :server, :puma
 
       # use a cookie that lasts for 30 days
-      secret = ENV['COOKIE_SECRET'] || Random.new_seed.to_s
+      secret = ENV['COOKIE_SECRET'] || SecureRandom.hex(64)
       use Rack::Session::Cookie, secret: secret, expire_after: 2_592_000
     end
 
