@@ -1,5 +1,6 @@
 module Micropublish
   class Micropub
+    attr_reader :token
 
     def initialize(micropub, token)
       @micropub = micropub
@@ -44,13 +45,16 @@ module Micropublish
       uri = URI(@micropub)
       uri.query = (uri.query.nil? ? "" : uri.query + "&") + URI.encode_www_form(query)
       response = HTTParty.get(uri.to_s, headers: headers)
+
       begin
         body = JSON.parse(response.body)
+        body['properties'] = convert_content_images_to_trix(body['properties'])
       rescue JSON::ParserError
         raise MicropubError.new("There was an error retrieving the source " +
           "for \"#{url}\" from your endpoint. Please ensure you enter the " +
           "URL for a valid MF2 post.")
       end
+
       if body.key?('error_description')
         raise MicropubError.new("Micropub server returned an error: " +
           "\"#{body['error_description']}\".")
@@ -58,7 +62,45 @@ module Micropublish
         raise MicropubError.new("Micropub server returned an unspecified " +
           "error. Please check your server's logs for details.")
       end
+
       body
+    end
+
+    def convert_content_images_to_trix(properties)
+      return properties unless properties.has_key?("content") && properties["content"]&.first["html"]
+
+      doc = Nokogiri::HTML5.fragment(properties["content"]&.first["html"])
+
+      doc.css('img').each do |image|
+        image_src = image['src']
+        image_alt = image['alt']
+
+        attachment = CGI.escapeHTML({
+          "contentType": "image",
+          "href": "#{image_src}?content-disposition=attachment",
+          "url": image_src
+        }.to_json)
+
+        attributes = CGI.escapeHTML({
+          caption: image_alt,
+          presentation: "gallery"
+        }.to_json)
+
+        figure = %Q(
+          <figure
+            data-trix-attachment=\"#{attachment}\"
+            data-trix-attributes=\"#{attributes}\"
+            class=\"attachment attachment--preview\"><img
+              src=\"#{image_src}\">
+            <figcaption class=\"attachment__caption attachment__caption--edited\">#{image_alt}</figcaption>
+          </figure>
+        )
+
+        image.replace(figure)
+      end
+
+      properties["content"]&.first["html"] = doc.to_html
+      properties
     end
 
     def validate_url!(url)

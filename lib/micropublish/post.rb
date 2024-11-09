@@ -31,7 +31,8 @@ module Micropublish
             end
         end
       end
-      props
+
+      remove_trix_attributes(props)
     end
 
     def validate_properties!(required=[])
@@ -155,6 +156,31 @@ module Micropublish
       content_tidy = content.strip.gsub(/\s+/, " ")
       name_tidy = @properties['name'][0].strip.gsub(/\s+/, " ")
       content_tidy.start_with?(name_tidy)
+    end
+
+    private
+
+    def self.remove_trix_attributes(hash)
+      return hash unless hash.has_key?("content") && hash["content"]&.first["html"]
+
+      doc = Nokogiri::HTML5.fragment(hash["content"]&.first["html"])
+
+      doc.css('figure[data-trix-attachment]').each do |attachment|
+        image_src = attachment.at_css('img')['src'] if attachment.at_css('img')
+        figcaption = attachment.at_css('figcaption').content.strip if attachment.at_css('figcaption')
+
+        if image_src
+          img_tag = Nokogiri::XML::Node.new('img', doc)
+          img_tag['src'] = image_src
+          img_tag['alt'] = figcaption if figcaption
+
+          attachment.replace(img_tag)
+        end
+      end
+
+      hash["content"]&.first["html"] = doc.to_html
+
+      hash
     end
 
   end

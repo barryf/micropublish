@@ -7,6 +7,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.9.0] - 2024-08-26
+
+- Upgrade the [Trix](https://trix-editor.org) editor and support inline photo
+  uploads in articles. This requires a media endpoint to be defined in your
+  server's Micropub config.
+  Many thanks to @gorka for contributing this enhancement.
+
 ## [2.8.0] - 2022-03-12
 
 ### Added
