@@ -7,6 +7,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.0] - 2025-02-09
+
+### Added
+
+- Extended endpoint discovery to allow servers to specify their IndieAuth Server 
+  Metadata endpoint as an alternative to the existing (legacy) headers/body 
+  methods. Thanks to @gRegorLove for raising this.
+
 ## [2.9.1] - 2024-11-09
 
 ### Changed
