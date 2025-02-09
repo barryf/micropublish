@@ -40,13 +40,14 @@ describe Micropublish::EndpointsFinder do
         token_endpoint: 'https://tokens.indieauth.com/token'
       }.to_json
     )
+    stub_request(:get, 'https://example.com/').to_return(status: 200)
   end
 
   context "given a website url" do
 
     describe "#get_url" do
       it "should retrieve a successful response from a valid url" do
-        url = 'https://example-body.com/'
+        url = 'https://example.com/'
         endpoints_finder = Micropublish::EndpointsFinder.new(url)
         response = endpoints_finder.get_url(url)
         expect(response.code.to_i).to eql(200)
