@@ -33,7 +33,7 @@ module Micropublish
     def find_metadata_url(response)
       header_links = LinkHeader.parse(response.headers['Link'])
       link = header_links.find_link(['rel', 'indieauth-metadata'])
-      if link.respond_to?('href') && !link.href.empty?
+      if link.respond_to?('href') && !link.href.nil? && !link.href.empty?
         return URI.join(@url, link.href).to_s
       end
       html_links = Nokogiri::HTML(response.body).css('link')
@@ -51,10 +51,10 @@ module Micropublish
       begin
         body = JSON.parse(metadata_response.body)
       rescue JSON::ParserError
-        raise AuthError.new("Could not parse metadata JSON at #{metadata_url}.")
+        raise AuthError.new("Could not parse server metadata JSON at #{metadata_url}.")
       end
       RELS.each do |rel|
-        if body.key?(rel) && !body[rel].empty? && !@links.key?(rel.to_sym)
+        if body.key?(rel) && !body[rel].nil? && !body[rel].empty? && !@links.key?(rel.to_sym)
           absolute_url = URI.join(@url, body[rel]).to_s
           @links[rel.to_sym] = absolute_url
         end
@@ -65,7 +65,7 @@ module Micropublish
       links = LinkHeader.parse(response.headers['Link'])
       RELS.each do |rel|
         link = links.find_link(['rel', rel])
-        if link.respond_to?('href') && !@links.key?(rel.to_sym)
+        if link.respond_to?('href') && !link.href.nil? && !link.href.empty? && !@links.key?(rel.to_sym)
           absolute_url = URI.join(@url, link.href).to_s
           @links[rel.to_sym] = absolute_url
         end
@@ -76,7 +76,7 @@ module Micropublish
       links = Nokogiri::HTML(response.body).css('link')
       links.each do |link|
         if RELS.include?(link[:rel]) && !@links.key?(link[:rel].to_sym) &&
-            !link[:href].empty?
+            !link[:href].nil? && !link[:href].empty?
           absolute_url = URI.join(@url, link[:href]).to_s
           @links[link[:rel].to_sym] = absolute_url
         end
@@ -87,7 +87,7 @@ module Micropublish
       RELS.each do |link|
         unless @links.key?(link.to_sym)
           raise AuthError.new(
-            "Client could not find \"#{link}\" in body or header from \"#{@url}\".")
+            "Client could not find \"#{link}\" in server metadata, headers or body from \"#{@url}\".")
         end
       end
     end
