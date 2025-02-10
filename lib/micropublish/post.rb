@@ -138,8 +138,8 @@ module Micropublish
       elsif @properties.key?('listen-of') &&
           Auth.valid_uri?(@properties['listen-of'][0])
         'listen'
-      elsif @properties.key?('photo') &&
-          @properties['photo'].is_a?(Array)
+      elsif @properties.key?('photo') && @properties['photo'].is_a?(Array) &&
+          @properties['photo'].size > 0
         'photo'
       elsif @properties.key?('name') && !@properties['name'].empty? &&
           !content_start_with_name?
