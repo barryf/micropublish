@@ -7,6 +7,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.1] - 2025-02-11
+
+### Fixed
+
+- Fixed Post Type Discovery for photo posts by looking for `photo` property
+  when editing. Thanks to @hacdias for submitting the PR to fix this.
+
 ## [2.10.0] - 2025-02-09
 
 ### Added
