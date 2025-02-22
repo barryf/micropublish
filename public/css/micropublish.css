@@ -115,6 +115,41 @@ body {
   color: var(--text-color);
 }
 
+/* Bootstrap modal overrides */
+.modal-content {
+  background-color: var(--panel-bg);
+  border-color: var(--border-color);
+}
+
+.modal-header {
+  background-color: var(--nav-bg);
+  border-bottom-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.modal-body {
+  color: var(--text-color);
+}
+
+.modal-footer {
+  background-color: var(--nav-bg);
+  border-top-color: var(--border-color);
+}
+
+.modal-backdrop {
+  background-color: #000;
+}
+
+.close {
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+.close:hover {
+  color: var(--text-color);
+  opacity: 1;
+}
+
 /* Code and pre overrides */
 pre, code {
   background-color: var(--code-bg);
