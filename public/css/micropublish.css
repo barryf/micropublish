@@ -1,65 +1,249 @@
+:root {
+  --bg-color: #ffffff;
+  --text-color: #333333;
+  --nav-bg: #f8f8f8;
+  --nav-border: #e7e7e7;
+  --link-color: #337ab7;
+  --code-bg: #f5f5f5;
+  --border-color: #ddd;
+  --help-text: #737373;
+  --input-bg: #ffffff;
+  --input-border: #ccc;
+  --btn-default-bg: #ffffff;
+  --btn-default-border: #ccc;
+  --panel-bg: #ffffff;
+  --well-bg: #f5f5f5;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #1a1a1a;
+    --text-color: #e0e0e0;
+    --nav-bg: #3d3d3d;
+    --nav-border: #404040;
+    --link-color: #63a9e8;
+    --code-bg: #2d2d2d;
+    --border-color: #404040;
+    --help-text: #b0b0b0;
+    --input-bg: #2d2d2d;
+    --input-border: #404040;
+    --btn-default-bg: #2d2d2d;
+    --btn-default-border: #404040;
+    --panel-bg: #2d2d2d;
+    --well-bg: #2d2d2d;
+  }
+}
+
+/* Base styles */
 body {
-	padding-bottom: 1em;
+  padding-bottom: 1em;
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
-pre {
-  white-space: pre-wrap;
+
+/* Bootstrap navbar overrides */
+.navbar-default {
+  background-color: var(--nav-bg);
+  border-color: var(--nav-border);
 }
+
+.navbar-default .navbar-brand,
+.navbar-default .navbar-nav > li > a {
+  color: var(--text-color);
+}
+
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-nav > li > a:hover {
+  color: var(--link-color);
+}
+
+/* Bootstrap form overrides */
+.form-control {
+  background-color: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text-color);
+}
+
+.form-control:focus {
+  border-color: var(--link-color);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+}
+
+/* Bootstrap button overrides */
+.btn-default {
+  background-color: var(--btn-default-bg);
+  border-color: var(--btn-default-border);
+  color: var(--text-color);
+}
+
+.btn-default:hover,
+.btn-default:focus {
+  background-color: var(--nav-bg);
+  border-color: var(--nav-border);
+  color: var(--text-color);
+}
+
+/* Bootstrap panel overrides */
+.panel {
+  background-color: var(--panel-bg);
+  border-color: var(--border-color);
+}
+
+.panel-default > .panel-heading {
+  background-color: var(--nav-bg);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.panel-footer {
+  background-color: var(--nav-bg);
+  border-top-color: var(--border-color);
+  color: var(--text-color);
+}
+
+/* Bootstrap well overrides */
+.well {
+  background-color: var(--well-bg);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+/* Bootstrap alert overrides */
+.alert {
+  background-color: var(--nav-bg);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+/* Bootstrap modal overrides */
+.modal-content {
+  background-color: var(--panel-bg);
+  border-color: var(--border-color);
+}
+
+.modal-header {
+  background-color: var(--nav-bg);
+  border-bottom-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.modal-body {
+  color: var(--text-color);
+}
+
+.modal-footer {
+  background-color: var(--nav-bg);
+  border-top-color: var(--border-color);
+}
+
+.modal-backdrop {
+  background-color: #000;
+}
+
+.close {
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+.close:hover {
+  color: var(--text-color);
+  opacity: 1;
+}
+
+/* Code and pre overrides */
+pre, code {
+  background-color: var(--code-bg);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+/* Link overrides */
+a {
+  color: var(--link-color);
+}
+
+a:hover, a:focus {
+  color: var(--link-color);
+  text-decoration: underline;
+}
+
+/* Original micropublish.css styles */
 .input-array input {
   margin-bottom: 3px;
 }
+
 .add-remove-buttons {
   text-align: right;
 }
+
 .new-buttons {
   padding-bottom: 5px;
-	padding-right: 10px;
+  padding-right: 10px;
 }
+
 .new-buttons a {
   margin-bottom: 10px;
-	margin-right: 5px;
-	width: 90px;
+  margin-right: 5px;
+  width: 90px;
+  color: var(--link-color);
 }
+
 .new-buttons span {
-	font-size: 180%;
-	line-height: 1.5em;
+  font-size: 180%;
+  line-height: 1.5em;
 }
+
 trix-editor {
   min-height: 160px !important;
+  background-color: var(--input-bg) !important;
+  color: var(--text-color) !important;
 }
+
 .logout {
-	float: right;
+  float: right;
 }
+
 #helpable-toggle {
-	float: right;
-	font-weight: normal;
+  float: right;
+  font-weight: normal;
 }
+
 .helpable .help-block {
-	sdisplay: none;
+  display: none;
 }
+
+.help-block {
+  color: var(--help-text);
+}
+
 .help-block code {
-	display: block;
-	background: none;
-	color: inherit;
-	padding: 2px 0;
+  background: none;
+  color: inherit;
+  padding: 2px 0;
 }
+
 #static .badge {
-	cursor: move !important;
+  cursor: move !important;
 }
+
 #static img {
-	margin-left: 20px;
+  margin-left: 20px;
 }
-#preview-content .alert, #preview-content pre {
-	margin-bottom: 0;
+
+#preview-content .alert,
+#preview-content pre {
+  margin-bottom: 0;
 }
+
 .required {
-	color: red;
+  color: red;
 }
 
 @media screen and (max-width: 700px) {
   form.logout { float: none; }
-	#static img {
-		float: none !important;
-		margin-left: 0;
-		max-width: 100%;
-	}
+  #static img {
+    float: none !important;
+    margin-left: 0;
+    max-width: 100%;
+  }
 }
