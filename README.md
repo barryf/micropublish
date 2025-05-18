@@ -140,6 +140,26 @@ If you host on your own server you will need to define the `COOKIE_SECRET`
 environment variable. You should use a long, secure, (ideally) random string
 to help secure data stored in the user's cookie.
 
+### Docker
+
+There is a [Dockerfile](./Dockerfile) and a [docker-compose](./docker-compose.yml) file.
+
+A local dev environment can be started like so:
+
+```sh
+COOKIE_SECRET=super_secret_and_super_unique_and_super_random_jkafhakdhaskhdakdncaskjhadljfaskdbnl \
+RACK_ENV=development \
+DEV_ME=http://myhostnameorlocalhost:4000 \
+DEV_MICROPUB=http://myhostnameorlocalhost:8000/micropub \
+DEV_SCOPE="create update delete undelete" \
+DEV_TOKEN=XXXXXXXXXXXXXXXX \
+docker compose up --build
+```
+
+- The `DEV_` envs are only used of `RACK_ENV=development`!
+- There is also the `FORCE_SSL` which will enforce redirection to `https://` if set to `1`.
+  Per default it is expected that a reverse proxy is taking care of that.
+
 ---
 
 ## Bookmarklets
@@ -165,7 +185,7 @@ will need to update if you are hosting Micropublish yourself.
 
 If you would like any help with setting up your Micropub endpoint, your best
 option is to
-[join the `#indieweb` channel][irc] on Freenode IRC.
+[join the `#indieweb` channel][irc] on libera.chat.
 
 For Micropublish specific help, [get in touch][bfcontact] and I'll be happy
 to help.

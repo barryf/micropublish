@@ -8,7 +8,7 @@ module Micropublish
     configure do
       helpers Helpers
 
-      use Rack::SSL if settings.production?
+      use Rack::SSL if ENV['FORCE_SSL'] == '1'
 
       root_path = "#{File.dirname(__FILE__)}/../../"
       set :views, "#{root_path}views"
@@ -28,9 +28,10 @@ module Micropublish
 
     before do
       unless settings.production?
-        session[:me] = 'http://localhost:4444/'
-        session[:micropub] = 'http://localhost:3333/micropub'
-        session[:scope] = 'create update delete undelete'
+        session[:me] = ENV['DEV_ME'] || 'http://localhost:4444/'
+        session[:micropub] = ENV['DEV_MICROPUB'] || 'http://localhost:3333/micropub'
+        session[:scope] = ENV['DEV_SCOPE'] || 'create update delete undelete'
+        session[:token] = ENV['DEV_TOKEN'] || nil
       end
     end
 
