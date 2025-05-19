@@ -156,9 +156,9 @@ DEV_TOKEN=XXXXXXXXXXXXXXXX \
 docker compose up --build
 ```
 
-- The `DEV_` envs are only used of `RACK_ENV=development`!
-- There is also the `FORCE_SSL` which will enforce redirection to `https://` if set to `1`.
-  Per default it is expected that a reverse proxy is taking care of that.
+- The `DEV_` envs are only used with `RACK_ENV=development`.
+- There is also a `FORCE_SSL` variable which will force redirection to `https://` if set to `1`.
+  By default it is expected that a reverse proxy is taking care of that.
 
 ---
 

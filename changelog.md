@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.12.0] - 2025-05-19
+
+### Added
+
+- Support has been added for running Micropublish and redis with Docker using 
+  the `docker-compose.yml` file. 
+- Optionally pass in `DEV_` environment variables if running in development
+  mode (see new section in `README.md` for details).
+- Thanks to @perryflynn for contributing these changes.
+
 ## [2.11.0] - 2025-02-22
 
 ### Added
