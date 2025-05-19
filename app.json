@@ -6,6 +6,10 @@
     "COOKIE_SECRET": {
       "description": "A long, secure, (ideally) random string used to secure data stored in the user's cookie.",
       "value": ""
+    },
+    "FORCE_SSL": {
+      "description": "Enable redirect from http:// to https:// - highly recommended if no reverse proxy is used which would take care of TLS termination",
+      "value": "1"
     }
   },
   "addons": [

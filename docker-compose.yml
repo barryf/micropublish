@@ -1,0 +1,39 @@
+services:
+  redis:
+    restart: always
+    image: redis:7-alpine
+    networks:
+      internal_network:
+        aliases:
+          - redis
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+    volumes:
+      - micropublish-redis:/data
+
+  web:
+    build: .
+    restart: always
+    networks:
+      - external_network
+      - internal_network
+    ports:
+      - '9292:9292'
+    environment:
+      REDIS_URL: 'redis://redis:6379'
+      COOKIE_SECRET: ${COOKIE_SECRET:-super_secret_and_super_unique_and_super_random_jkafhakdhaskhdakdncaskjhadljfaskdbnl}
+      RACK_ENV: ${RACK_ENV:-production}
+      DEV_ME: ${DEV_ME:-http://localhost:4000}
+      DEV_MICROPUB: ${DEV_MICROPUB:-http://localhost:8000/micropub}
+      DEV_SCOPE: ${DEV_SCOPE:-create update delete undelete}
+      DEV_TOKEN: ${DEV_TOKEN:-}
+    depends_on:
+      - redis
+
+networks:
+  external_network:
+  internal_network:
+    internal: true
+
+volumes:
+  micropublish-redis:
