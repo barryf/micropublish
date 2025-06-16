@@ -246,7 +246,7 @@
               <% if @required.include?('checkin') %>required<% end %>
               value="<%= h @post.properties['checkin'][0]['properties']['longitude'][0] if @post.properties.key?('checkin') && @post.properties['checkin'].is_a?(Array) %>">
             <script>
-              document.write("&nbsp; <button type=\"button\" class=\"btn btn-default\" id=\"find_location\" data-toggle=\"button\" aria-pressed=\"false\" autocomplete=\"off\">Find</button>");
+              document.write("&nbsp; <button type=\"button\" class=\"btn btn-default\" id=\"find_location_checkin\" data-toggle=\"button\" aria-pressed=\"false\" autocomplete=\"off\">Find</button>");
             </script>
           </div>
           <p class="help-block">
@@ -380,15 +380,20 @@
             <% if @required.include?('location') %><span class="required" title="required">*</span><% end %>
           </label>
 
-          <input type="text" class="form-control"  name="location[]" id="location"
-            <% if @required.include?('location') %>required<% end %>
-            value="<%= h @post.properties['location'][0] if @post.properties.key?('location') %>">
+          <div class="form-inline">
+            <input type="text" class="form-control"  name="location[]" id="location"
+              <% if @required.include?('location') %>required<% end %>
+              value="<%= h @post.properties['location'][0] if @post.properties.key?('location') %>">
+            <script>
+              document.write("&nbsp; <button type=\"button\" class=\"btn btn-default\" id=\"find_location\" data-toggle=\"button\" aria-pressed=\"false\" autocomplete=\"off\">Find</button>");
+            </script>
+          </div>
 
-            <p class="help-block">
-              Enter a location for the post. If you check the "Auto-detect?" checkbox, a Geo URI
-              will be generated for you. The browser will remember your choice for the next time.
-              <code>location</code>
-            </p>
+          <p class="help-block">
+            Enter a location for the post. If you check the "Auto-detect?" checkbox, a Geo URI
+            will be generated for you. The browser will remember your choice for the next time.
+            <code>location</code>
+          </p>
         </div>
       <% end %>
 

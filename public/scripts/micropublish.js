@@ -69,10 +69,17 @@ $(function() {
 		})
 	}
 
-	$('#find_location').on('click', function() {
+	$('#find_location_checkin').on('click', function() {
 		getLocation(function (latitude, longitude) {
 			$("#latitude").val(latitude);
 			$("#longitude").val(longitude);
+		})
+		return false
+	});
+
+	$('#find_location').on('click', function() {
+		getLocation(function (latitude, longitude, accuracy) {
+			$('#location').val(`geo:${latitude},${longitude};u=${accuracy}`)
 		})
 		return false
 	});
@@ -84,6 +91,11 @@ $(function() {
 
 		function fillLocation() {
 			if (!getAutoLocation()) {
+				return
+			}
+
+			// Do not overwrite location if already set (e.g. editing existent post)
+			if ($('#location').val()) {
 				return
 			}
 
