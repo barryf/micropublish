@@ -7,12 +7,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.12.1] - 2025-06-16
+
+### Fixed
+
+- Adds a Find button next to the location field. This allows to automatically
+  add a location without having the auto-detect on.
+- If auto-detect is on, and we're editing a post that already contains a
+  location, don't replace it by default.
+- Thanks to @hacdias for the PR.
+
 ## [2.12.0] - 2025-05-19
 
 ### Added
 
-- Support has been added for running Micropublish and redis with Docker using 
-  the `docker-compose.yml` file. 
+- Support has been added for running Micropublish and redis with Docker using
+  the `docker-compose.yml` file.
 - Optionally pass in `DEV_` environment variables if running in development
   mode (see new section in `README.md` for details).
 - Thanks to @perryflynn for contributing these changes.
@@ -22,7 +32,7 @@ and this project adheres to
 ### Added
 
 - Introduces a dark mode that is enabled based on the system setting. This uses
-  overrides to the Bootstrap library to implement the dark mode via CSS 
+  overrides to the Bootstrap library to implement the dark mode via CSS
   variables.
 
 ## [2.10.1] - 2025-02-11
@@ -36,8 +46,8 @@ and this project adheres to
 
 ### Added
 
-- Extended endpoint discovery to allow servers to specify their IndieAuth Server 
-  Metadata endpoint as an alternative to the existing (legacy) headers/body 
+- Extended endpoint discovery to allow servers to specify their IndieAuth Server
+  Metadata endpoint as an alternative to the existing (legacy) headers/body
   methods. Thanks to @gRegorLove for raising this.
 
 ## [2.9.1] - 2024-11-09
