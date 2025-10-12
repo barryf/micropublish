@@ -7,6 +7,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.0] - 2025-10-12
+
+### Fixed
+
+- Updated dependencies for nokogiri, rexml, puma, sinatra, rack, redis and more.
+- Updated optional use of Sentry to use recommended gem and approach.
+
 ## [2.12.1] - 2025-06-16
 
 ### Fixed

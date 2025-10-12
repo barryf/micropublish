@@ -8,7 +8,7 @@ gem 'rack-contrib'
 gem 'rack-ssl'
 gem 'link_header'
 gem 'httparty'
-gem 'nokogiri'
+gem 'nokogiri', '>= 1.18.4'
 gem 'foreman'
 gem 'kramdown'
 gem 'redis'
@@ -25,5 +25,5 @@ group :test do
 end
 
 group :production do
-  gem 'sentry-raven'
+  gem 'sentry-ruby'
 end

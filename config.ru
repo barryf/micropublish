@@ -10,11 +10,12 @@ Dotenv.load unless env == :production
 
 # optionally use sentry in production
 if env == :production && ENV.key?('SENTRY_DSN')
-  Raven.configure do |config|
+  Sentry.init do |config|
     config.dsn = ENV['SENTRY_DSN']
-    config.processors -= [Raven::Processor::PostData]
+    config.breadcrumbs_logger = [:active_support_logger, :http_logger]
+    config.traces_sample_rate = 0.0
   end
-  use Raven::Rack
+  use Sentry::Rack::CaptureExceptions
 end
 
 # optionally use redis to cache server config
