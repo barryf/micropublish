@@ -31,14 +31,14 @@ GEM
     mustermann (3.0.4)
       ruby2_keywords (~> 0.0.1)
     nio4r (2.7.4)
-    nokogiri (1.18.10)
+    nokogiri (1.19.2)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     public_suffix (6.0.2)
     puma (7.0.4)
       nio4r (~> 2.0)
     racc (1.8.1)
-    rack (3.2.3)
+    rack (3.2.6)
     rack-contrib (2.5.0)
       rack (< 4)
     rack-protection (4.2.1)
@@ -99,7 +99,7 @@ DEPENDENCIES
   httparty (>= 0.24.0)
   kramdown
   link_header
-  nokogiri (>= 1.18.4)
+  nokogiri (>= 1.19.1)
   puma
   rack-contrib
   rack-ssl
@@ -115,4 +115,4 @@ RUBY VERSION
    ruby 3.3.5p100
 
 BUNDLED WITH
-   2.5.16
+   2.5.22
