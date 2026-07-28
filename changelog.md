@@ -7,6 +7,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Updated nokogiri, puma and concurrent-ruby to resolve security
+  vulnerabilities reported by `bundler-audit`, including a ReDoS in nokogiri's
+  CSS selector tokenizer and two remote memory exhaustion issues in puma's
+  PROXY protocol v1 parser (CVE-2026-47736, CVE-2026-47737).
+
 ## [2.13.0] - 2025-10-12
 
 ### Fixed
