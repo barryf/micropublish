@@ -7,6 +7,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.2] - 2026-11-20
+
+### Fixed
+
+- Upgraded Ruby from 3.3.5 to 3.3.14 to fix Ruby2Shell (CVE-2026-132825,
+  GHSA-34m4-m9fh-gqp5), a pre-auth heap overflow in Ruby's string case
+  conversion that could lead to remote code execution. The Gemfile now
+  requires at least Ruby 3.3.14 and the Docker image pins `ruby:3.3.14-slim`.
+- Updated all gem dependencies to their latest versions, including puma 8.1.2,
+  nokogiri 1.19.7, rack 3.2.8, sinatra 4.2.2, redis 6.0.0 and
+  sentry-ruby 7.3.0.
+
 ## [2.13.1] - 2026-07-28
 
 ### Fixed
