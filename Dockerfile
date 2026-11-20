@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # --> Stage 1: Runtime and Build Base Image
-ARG RUBY_VERSION=3.3
+ARG RUBY_VERSION=3.3.14
 FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 WORKDIR /app
 SHELL [ "/bin/bash", "-c" ]
